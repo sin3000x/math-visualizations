@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import katex from "katex";
 
 type Point = { x: number; y: number };
 
@@ -11,6 +12,7 @@ const MAX = 2.8;
 const PLOT_SCALE = VIEW_H / (MAX - MIN);
 const PLOT_W = (MAX - MIN) * PLOT_SCALE;
 const PLOT_X = (VIEW_W - PLOT_W) / 2;
+const WALL_TOLERANCE = 0.035;
 
 const steps = [
   {
@@ -24,17 +26,12 @@ const steps = [
     body: "现在只能留在蓝色区域。最陡的下降方向仍然存在，但它穿过了边界。",
   },
   {
-    eyebrow: "03 · 驻点条件",
-    title: "约束力抵消下降动力",
-    body: "拖动 λ。蓝色约束力达到合适大小时，两支箭头首尾抵消，系统达到一阶平衡。",
+    eyebrow: "03 · 驻点与互补松弛",
+    title: "接触才有约束力",
+    body: "边界上调节 λ，让约束力抵消下降动力；把 x 拖进可行域内部，λ 会立即归零。",
   },
   {
-    eyebrow: "04 · 互补松弛",
-    title: "没有接触，就没有约束力",
-    body: "把粒子拖进可行域内部，再增大 λ，观察互补松弛为什么会失败。",
-  },
-  {
-    eyebrow: "05 · 法向锥",
+    eyebrow: "04 · 法向锥",
     title: "拐角能同时提供两股约束力",
     body: "在拐角处，负梯度落进两个外法向量张成的锥。KKT 不再只是两条曲线相切。",
   },
@@ -44,7 +41,6 @@ const presets = [
   { point: { x: 1.55, y: 1.2 }, lambda: 0 },
   { point: { x: 0.5, y: 0.5 }, lambda: 0 },
   { point: { x: 0.5, y: 0.5 }, lambda: 1 },
-  { point: { x: 1.25, y: 1.05 }, lambda: 0 },
   { point: { x: 0, y: 0 }, lambda: 1 },
 ];
 
@@ -61,20 +57,82 @@ function fmt(value: number) {
   return clean.toFixed(2);
 }
 
+function MathFormula({ latex }: { latex: string }) {
+  return (
+    <span
+      className="math-formula"
+      dangerouslySetInnerHTML={{
+        __html: katex.renderToString(latex, {
+          throwOnError: false,
+          strict: false,
+        }),
+      }}
+    />
+  );
+}
+
+function SvgFormula({
+  x,
+  y,
+  width,
+  latex,
+  prefix,
+  suffix,
+  className = "",
+}: {
+  x: number;
+  y: number;
+  width: number;
+  latex: string;
+  prefix?: string;
+  suffix?: string;
+  className?: string;
+}) {
+  return (
+    <foreignObject x={x} y={y} width={width} height="32" className={`svg-formula ${className}`}>
+      <div>
+        {prefix && <span className="svg-formula-copy">{prefix}</span>}
+        <MathFormula latex={latex} />
+        {suffix && <span className="svg-formula-copy">{suffix}</span>}
+      </div>
+    </foreignObject>
+  );
+}
+
 function Arrow({
   from,
   vector,
   tone,
   label,
+  latex,
+  labelNormalOffset = 18,
+  labelTangentOffset = 0,
   dashed = false,
 }: {
   from: Point;
   vector: Point;
   tone: "red" | "blue" | "amber";
   label: string;
+  latex?: string;
+  labelNormalOffset?: number;
+  labelTangentOffset?: number;
   dashed?: boolean;
 }) {
   const end = { x: from.x + vector.x, y: from.y + vector.y };
+  const midpoint = { x: from.x + vector.x / 2, y: from.y + vector.y / 2 };
+  const screenVector = {
+    x: sx(end.x) - sx(from.x),
+    y: sy(end.y) - sy(from.y),
+  };
+  const screenLength = Math.hypot(screenVector.x, screenVector.y) || 1;
+  const labelCenter = {
+    x: sx(midpoint.x)
+      - (screenVector.y / screenLength) * labelNormalOffset
+      + (screenVector.x / screenLength) * labelTangentOffset,
+    y: sy(midpoint.y)
+      + (screenVector.x / screenLength) * labelNormalOffset
+      + (screenVector.y / screenLength) * labelTangentOffset,
+  };
   const marker = `url(#arrow-${tone})`;
   return (
     <g className={`vector vector-${tone}`} data-role={label}>
@@ -86,9 +144,11 @@ function Arrow({
         markerEnd={marker}
         strokeDasharray={dashed ? "7 6" : undefined}
       />
-      <text x={sx(end.x) + 10} y={sy(end.y) - 10}>
-        {label}
-      </text>
+      {latex ? (
+        <SvgFormula x={labelCenter.x - 75} y={labelCenter.y - 16} width={150} latex={latex} className={`svg-vector-${tone}`} />
+      ) : (
+        <text x={sx(end.x) + 10} y={sy(end.y) - 10}>{label}</text>
+      )}
     </g>
   );
 }
@@ -100,7 +160,7 @@ export default function Home() {
   const [playing, setPlaying] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
-  const isCorner = step === 4;
+  const isCorner = step === 3;
   const hasWall = step > 0 && !isCorner;
 
   const selectStep = useCallback((next: number) => {
@@ -131,21 +191,23 @@ export default function Home() {
   const drive = { x: -grad.x * driveScale, y: -grad.y * driveScale };
 
   const wallG = 1 - point.x - point.y;
-  const onWall = Math.abs(wallG) < 0.035;
+  const onWall = Math.abs(wallG) < WALL_TOLERANCE;
   const lambdaEffective = hasWall ? lambda : 0;
   const reaction = {
-    x: lambdaEffective * 0.88,
-    y: lambdaEffective * 0.88,
+    x: lambdaEffective * driveScale,
+    y: lambdaEffective * driveScale,
   };
   const stationarity = hasWall
     ? Math.hypot(grad.x - lambda, grad.y - lambda)
     : isCorner
       ? 0
       : Math.hypot(grad.x, grad.y);
-  const primalOk = !hasWall || wallG <= 0.035;
+  const primalOk = !hasWall || wallG <= WALL_TOLERANCE;
   const compValue = hasWall ? Math.abs(lambda * wallG) : 0;
   const compOk = compValue < 0.04;
   const stationarityOk = stationarity < 0.08;
+  const equilibriumOk = (stationarityOk && compOk && primalOk) || isCorner;
+  const showDrive = hasWall || isCorner || !stationarityOk;
 
   const contours = useMemo(() => [0.48, 0.86, 1.25, 1.67, 2.12, 2.58], []);
 
@@ -168,6 +230,11 @@ export default function Home() {
     if (isCorner) {
       x = Math.max(0, x);
       y = Math.max(0, y);
+    }
+    if (step === 2) {
+      const nextOnWall = Math.abs(1 - x - y) < WALL_TOLERANCE;
+      if (!nextOnWall) setLambda(0);
+      else if (!onWall) setLambda(1);
     }
     setPoint({ x, y });
   }
@@ -205,8 +272,8 @@ export default function Home() {
       {showHelp && (
         <aside className="help-strip">
           <span>拖动图中的白色粒子</span>
-          <span>切换下方五个章节</span>
-          <span>在第 3、4 章调节 λ</span>
+          <span>切换下方四个章节</span>
+          <span>在第 3 章调节 λ</span>
           <span>绿色亮起表示条件成立</span>
         </aside>
       )}
@@ -214,12 +281,21 @@ export default function Home() {
       <section className="lab-layout">
         <div className="canvas-card">
           <div className="canvas-head">
-            <div>
+            <div className="canvas-heading-copy">
               <span className="chapter-label">{steps[step].eyebrow}</span>
-              <h2>{steps[step].title}</h2>
+              <div className="canvas-title-row">
+                <h2>{steps[step].title}</h2>
+                <div className={`canvas-verdict ${equilibriumOk ? "canvas-verdict-ok" : ""}`}>
+                  <span>{equilibriumOk ? "✓" : "↗"}</span>
+                  <div>
+                    <strong>{equilibriumOk ? "KKT 平衡成立" : "系统仍想移动"}</strong>
+                    <small>{equilibriumOk ? "满足一阶最优条件" : "继续观察箭头与约束"}</small>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="live-coordinates" aria-live="polite">
-              x = ({fmt(point.x)}, {fmt(point.y)})
+              <MathFormula latex={`x=(${fmt(point.x)},\\,${fmt(point.y)})`} />
             </div>
           </div>
 
@@ -274,8 +350,15 @@ export default function Home() {
                     x1={sx(-1.8)} y1={sy(2.8)} x2={sx(2.8)} y2={sy(-1.8)}
                     className="constraint-line"
                   />
-                  <text x={sx(1.65)} y={sy(-0.48)} className="constraint-label">g(x)=1−x₁−x₂=0</text>
-                  <text x={sx(1.55)} y={sy(1.75)} className="region-label">可行域 · g(x) ≤ 0</text>
+                  <SvgFormula x={sx(1.52)} y={sy(-0.48) - 18} width={175} latex="g(x)=1-x_1-x_2=0" className="constraint-formula" />
+                  <SvgFormula
+                    x={sx(1.55)}
+                    y={sy(1.75) - 18}
+                    width={170}
+                    latex={"g(x)\\le 0"}
+                    prefix="可行域"
+                    className="region-formula"
+                  />
                 </g>
               )}
 
@@ -291,7 +374,7 @@ export default function Home() {
                     d={`M ${sx(0)} ${sy(0)} L ${sx(-1.15)} ${sy(0)} A 107 107 0 0 1 ${sx(0)} ${sy(-1.15)} Z`}
                     className="normal-cone"
                   />
-                  <text x={sx(-1.25)} y={sy(-0.92)} className="cone-label">法向锥 N<tspan baselineShift="sub">F</tspan>(x*)</text>
+                  <SvgFormula x={sx(-1.25)} y={sy(-0.92) - 20} width={150} latex={"N_F(x^\\ast)"} className="cone-formula" />
                   <text x={sx(1.38)} y={sy(1.78)} className="region-label">可行域</text>
                 </g>
               )}
@@ -299,46 +382,52 @@ export default function Home() {
               <g className="axes">
                 <line x1={sx(MIN)} y1={sy(0)} x2={sx(MAX)} y2={sy(0)} />
                 <line x1={sx(0)} y1={0} x2={sx(0)} y2={VIEW_H} />
-                <text x={sx(MAX) - 24} y={sy(0) - 10}>x₁</text>
-                <text x={sx(0) + 10} y={20}>x₂</text>
+                <SvgFormula x={sx(MAX) - 28} y={sy(0) - 30} width={35} latex="x_1" />
+                <SvgFormula x={sx(0) + 8} y={1} width={35} latex="x_2" />
               </g>
 
               <g className="contours" data-role="objective-contours">
-                {contours.map((r, index) => (
+                {contours.map((r) => (
                   <circle
                     key={r}
                     cx={sx(center.x)}
                     cy={sy(center.y)}
                     r={r * PLOT_SCALE}
-                    className={index === 1 && step === 1 ? "contour emphasis" : "contour"}
+                    className="contour"
                   />
                 ))}
-                <text x={sx(center.x + 1.42)} y={sy(center.y + 1.42)} className="contour-label">f(x) 等高线</text>
+                <SvgFormula
+                  x={sx(center.x + 1.42)}
+                  y={sy(center.y + 1.42) - 18}
+                  width={125}
+                  latex="f(x)"
+                  suffix="等高线"
+                  className="contour-formula"
+                />
               </g>
 
-              {hasWall && onWall && (
-                <line
-                  x1={sx(point.x - 0.72)} y1={sy(point.y + 0.72)}
-                  x2={sx(point.x + 0.72)} y2={sy(point.y - 0.72)}
-                  className="tangent-line"
-                />
-              )}
-
-              <Arrow from={point} vector={drive} tone="red" label="−∇f" />
+              {showDrive && <Arrow from={point} vector={drive} tone="red" label="−∇f" latex={"-\\nabla f"} />}
               {hasWall && lambda > 0.015 && (
-                <Arrow from={point} vector={reaction} tone="blue" label="约束力" />
+                <Arrow
+                  from={point}
+                  vector={reaction}
+                  tone="blue"
+                  label="约束力"
+                  latex={"\\text{约束力}=-\\lambda\\nabla g"}
+                  labelNormalOffset={58}
+                  labelTangentOffset={28}
+                />
               )}
               {isCorner && (
                 <>
-                  <Arrow from={point} vector={{ x: 0.82, y: 0 }} tone="blue" label="−λ₁∇g₁" />
-                  <Arrow from={point} vector={{ x: 0, y: 0.54 }} tone="amber" label="−λ₂∇g₂" />
+                  <Arrow from={point} vector={{ x: 0.82, y: 0 }} tone="blue" label="−λ₁∇g₁" latex={"-\\lambda_1\\nabla g_1"} />
+                  <Arrow from={point} vector={{ x: 0, y: 0.54 }} tone="amber" label="−λ₂∇g₂" latex={"-\\lambda_2\\nabla g_2"} />
                 </>
               )}
 
               <g className="particle" data-role="draggable-point">
-                <circle cx={sx(point.x)} cy={sy(point.y)} r="21" className="particle-halo" />
                 <circle cx={sx(point.x)} cy={sy(point.y)} r="9" className="particle-core" />
-                <text x={sx(point.x) + 15} y={sy(point.y) + 25}>x</text>
+                <SvgFormula x={sx(point.x) + 13} y={sy(point.y) + 9} width={28} latex="x" className="particle-formula" />
               </g>
             </svg>
 
@@ -349,9 +438,13 @@ export default function Home() {
             </div>
           </div>
 
-          <p className="scene-copy">{steps[step].body}</p>
+          <p className="scene-copy">
+            {step === 0 ? (
+              <>红色箭头是下降方向 <MathFormula latex={"-\\nabla f"} />。只要它还不为零，粒子就有继续下降的空间。</>
+            ) : steps[step].body}
+          </p>
 
-          {(step === 2 || step === 3) && (
+          {step === 2 && (
             <div className="lambda-control">
               <div className="control-heading">
                 <label htmlFor="lambda">约束力强度 λ</label>
@@ -365,11 +458,25 @@ export default function Home() {
                 step="0.01"
                 value={lambda}
                 onChange={(event) => {
-                  setLambda(Number(event.target.value));
+                  setLambda(onWall ? Number(event.target.value) : 0);
                   setPlaying(false);
                 }}
+                disabled={!onWall}
               />
               <div className="range-labels"><span>0 · 没有推力</span><span>2 · 强推力</span></div>
+              <small className="lambda-auto-note">
+                {onWall ? (
+                  <>
+                    <MathFormula latex={"-\\nabla g"} /> 决定方向，
+                    <MathFormula latex={"\\lambda"} /> 决定强度；本例接触时
+                    <MathFormula latex={"\\lambda=1"} />
+                  </>
+                ) : (
+                  <>
+                    未接触边界，约束不施力：<MathFormula latex={"\\lambda=0"} />
+                  </>
+                )}
+              </small>
             </div>
           )}
         </div>
@@ -382,30 +489,25 @@ export default function Home() {
 
           <div className="equation-block">
             <span className="equation-label">目标函数</span>
-            <strong>{isCorner ? "f=(x₁+1.1)²+(x₂+0.72)²" : "f=x₁²+x₂²"}</strong>
+            <strong>
+              <MathFormula latex={isCorner ? "f=(x_1+1.1)^2+(x_2+0.72)^2" : "f=x_1^2+x_2^2"} />
+            </strong>
           </div>
 
           <div className="metrics">
-            <div><span>g(x)</span><strong>{hasWall ? fmt(wallG) : "—"}</strong></div>
-            <div><span>λ</span><strong>{isCorner ? "λ₁, λ₂" : lambda.toFixed(2)}</strong></div>
-            <div><span>‖∇ₓL‖</span><strong>{isCorner ? "0.00" : stationarity.toFixed(2)}</strong></div>
+            <div><span><MathFormula latex="g(x)" /></span><strong>{hasWall ? fmt(wallG) : "—"}</strong></div>
+            <div><span><MathFormula latex={"\\lambda"} /></span><strong>{isCorner ? "λ₁, λ₂" : lambda.toFixed(2)}</strong></div>
+            <div><span><MathFormula latex={"\\lVert\\nabla_x L\\rVert"} /></span><strong>{isCorner ? "0.00" : stationarity.toFixed(2)}</strong></div>
           </div>
 
           <div className="checklist">
             <h3>KKT 检查器</h3>
-            <CheckRow label="原始可行" formula={isCorner ? "x₁,x₂ ≥ 0" : "g(x) ≤ 0"} ok={primalOk} neutral={step === 0} />
-            <CheckRow label="对偶可行" formula="λ ≥ 0" ok />
-            <CheckRow label="互补松弛" formula="λg(x) = 0" ok={compOk} neutral={step === 0} />
-            <CheckRow label="驻点条件" formula="∇f + λ∇g = 0" ok={stationarityOk || isCorner} />
+            <CheckRow label="原始可行" formula={isCorner ? "x_1,x_2 \\ge 0" : "g(x) \\le 0"} ok={primalOk} neutral={step === 0} />
+            <CheckRow label="对偶可行" formula={"\\lambda \\ge 0"} ok />
+            <CheckRow label="互补松弛" formula={"\\lambda g(x) = 0"} ok={compOk} neutral={step === 0} />
+            <CheckRow label="驻点条件" formula={"\\nabla f + \\lambda \\nabla g = 0"} ok={stationarityOk || isCorner} />
           </div>
 
-          <div className={`verdict ${((stationarityOk && compOk && primalOk) || isCorner) ? "verdict-ok" : ""}`}>
-            <span>{((stationarityOk && compOk && primalOk) || isCorner) ? "✓" : "↗"}</span>
-            <div>
-              <strong>{((stationarityOk && compOk && primalOk) || isCorner) ? "KKT 平衡成立" : "系统仍想移动"}</strong>
-              <small>{((stationarityOk && compOk && primalOk) || isCorner) ? "当前点满足一阶最优条件" : "继续观察箭头与约束"}</small>
-            </div>
-          </div>
         </aside>
       </section>
 
@@ -427,7 +529,7 @@ export default function Home() {
 
       <footer>
         <span>KKT 的几何本质</span>
-        <strong>−∇f(x*) ∈ N<sub>F</sub>(x*)</strong>
+        <strong><MathFormula latex={"-\\nabla f(x^\\ast) \\in N_F(x^\\ast)"} /></strong>
         <span>下降方向落入可行域的法向锥</span>
       </footer>
     </main>
@@ -438,7 +540,7 @@ function CheckRow({ label, formula, ok, neutral = false }: { label: string; form
   return (
     <div className={`check-row ${neutral ? "neutral" : ok ? "ok" : "fail"}`}>
       <span className="check-icon">{neutral ? "·" : ok ? "✓" : "×"}</span>
-      <div><strong>{label}</strong><small>{formula}</small></div>
+      <div><strong>{label}</strong><small><MathFormula latex={formula} /></small></div>
     </div>
   );
 }
