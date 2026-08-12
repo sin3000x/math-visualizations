@@ -8,6 +8,9 @@ const VIEW_W = 760;
 const VIEW_H = 520;
 const MIN = -2.8;
 const MAX = 2.8;
+const PLOT_SCALE = VIEW_H / (MAX - MIN);
+const PLOT_W = (MAX - MIN) * PLOT_SCALE;
+const PLOT_X = (VIEW_W - PLOT_W) / 2;
 
 const steps = [
   {
@@ -46,11 +49,11 @@ const presets = [
 ];
 
 function sx(x: number) {
-  return ((x - MIN) / (MAX - MIN)) * VIEW_W;
+  return PLOT_X + (x - MIN) * PLOT_SCALE;
 }
 
 function sy(y: number) {
-  return VIEW_H - ((y - MIN) / (MAX - MIN)) * VIEW_H;
+  return VIEW_H - (y - MIN) * PLOT_SCALE;
 }
 
 function fmt(value: number) {
@@ -150,8 +153,10 @@ export default function Home() {
     const svg = svgRef.current;
     if (!svg) return;
     const rect = svg.getBoundingClientRect();
-    let x = MIN + ((event.clientX - rect.left) / rect.width) * (MAX - MIN);
-    let y = MAX - ((event.clientY - rect.top) / rect.height) * (MAX - MIN);
+    const svgX = ((event.clientX - rect.left) / rect.width) * VIEW_W;
+    const svgY = ((event.clientY - rect.top) / rect.height) * VIEW_H;
+    let x = MIN + (svgX - PLOT_X) / PLOT_SCALE;
+    let y = MAX - svgY / PLOT_SCALE;
     x = Math.max(MIN, Math.min(MAX, x));
     y = Math.max(MIN, Math.min(MAX, y));
 
@@ -292,9 +297,9 @@ export default function Home() {
               )}
 
               <g className="axes">
-                <line x1={0} y1={sy(0)} x2={VIEW_W} y2={sy(0)} />
+                <line x1={sx(MIN)} y1={sy(0)} x2={sx(MAX)} y2={sy(0)} />
                 <line x1={sx(0)} y1={0} x2={sx(0)} y2={VIEW_H} />
-                <text x={VIEW_W - 24} y={sy(0) - 10}>x₁</text>
+                <text x={sx(MAX) - 24} y={sy(0) - 10}>x₁</text>
                 <text x={sx(0) + 10} y={20}>x₂</text>
               </g>
 
@@ -304,7 +309,7 @@ export default function Home() {
                     key={r}
                     cx={sx(center.x)}
                     cy={sy(center.y)}
-                    r={(r / (MAX - MIN)) * VIEW_W}
+                    r={r * PLOT_SCALE}
                     className={index === 1 && step === 1 ? "contour emphasis" : "contour"}
                   />
                 ))}
