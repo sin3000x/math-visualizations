@@ -2,9 +2,18 @@ import { SCENE_VIEWPORT, type SceneDefinition } from "./types";
 
 const sceneDefinitions = [
   {
-    id: "kkt-force-balance",
+    id: "gradient-contour-primer",
     conceptId: "kkt-conditions",
     order: 10,
+    route: "/",
+    title: "先看懂等高线与梯度",
+    summary: "拖动粒子，观察函数值、梯度与等高线如何一起变化，为理解后面的 KKT 力学图景做好准备。",
+    viewport: SCENE_VIEWPORT,
+  },
+  {
+    id: "kkt-force-balance",
+    conceptId: "kkt-conditions",
+    order: 20,
     route: "/",
     title: "当下降方向撞上边界",
     summary: "把 KKT 条件看成一场力的平衡。拖动粒子，亲手感受“可行”如何改变最优。",
@@ -46,4 +55,5 @@ export function getConceptScenes(conceptId: string): SceneDefinition[] {
     .sort((left, right) => left.order - right.order);
 }
 
-export const currentScene = getScene("kkt-force-balance");
+export const gradientContourScene = getScene("gradient-contour-primer");
+export const forceBalanceScene = getScene("kkt-force-balance");
