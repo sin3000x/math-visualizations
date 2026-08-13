@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import katex from "katex";
+import { currentScene } from "@/lib/scenes/registry";
 
 type Point = { x: number; y: number };
 
@@ -13,6 +14,7 @@ const PLOT_SCALE = VIEW_H / (MAX - MIN);
 const PLOT_W = (MAX - MIN) * PLOT_SCALE;
 const PLOT_X = (VIEW_W - PLOT_W) / 2;
 const WALL_TOLERANCE = 0.035;
+const CURVE_A = 0.32;
 
 const steps = [
   {
@@ -31,9 +33,14 @@ const steps = [
     body: "边界上调节 λ，让约束力抵消下降动力；把 x 拖进可行域内部，λ 会立即归零。",
   },
   {
-    eyebrow: "04 · 法向锥",
-    title: "拐角能同时提供两股约束力",
-    body: "在拐角处，负梯度落进两个外法向量张成的锥。KKT 不再只是两条曲线相切。",
+    eyebrow: "04 · 多重接触",
+    title: "直边与曲边分别提供支持力",
+    body: "两条边分别提供法向支持力；它们的合力抵消下降动力。离开某条边，对应的 λ 会立即归零。",
+  },
+  {
+    eyebrow: "05 · 法向锥",
+    title: "所有外法向组合成一个锥",
+    body: "在拐角处，两股外法向量的所有非负组合铺满法向锥。最优时，负梯度正好落在这个锥里。",
   },
 ];
 
@@ -41,6 +48,7 @@ const presets = [
   { point: { x: 1.55, y: 1.2 }, lambda: 0 },
   { point: { x: 0.5, y: 0.5 }, lambda: 0 },
   { point: { x: 0.5, y: 0.5 }, lambda: 1 },
+  { point: { x: 0, y: 0 }, lambda: 1 },
   { point: { x: 0, y: 0 }, lambda: 1 },
 ];
 
@@ -55,6 +63,44 @@ function sy(y: number) {
 function fmt(value: number) {
   const clean = Math.abs(value) < 0.005 ? 0 : value;
   return clean.toFixed(2);
+}
+
+function curveBoundary(x: number) {
+  return -CURVE_A * x * x;
+}
+
+function cornerConstraintValues(point: Point) {
+  return {
+    g1: -point.x,
+    g2: curveBoundary(point.x) - point.y,
+  };
+}
+
+function cornerKktLambdas(point: Point) {
+  const { g1, g2 } = cornerConstraintValues(point);
+  const grad = {
+    x: 2 * (point.x + 1.1),
+    y: 2 * (point.y + 0.72),
+  };
+  const onG1 = Math.abs(g1) < WALL_TOLERANCE;
+  const onG2 = Math.abs(g2) < WALL_TOLERANCE;
+
+  if (onG1 && onG2) {
+    const lambda2 = Math.max(0, grad.y);
+    return {
+      lambda1: Math.max(0, grad.x - 2 * CURVE_A * point.x * lambda2),
+      lambda2,
+    };
+  }
+
+  const gradG2 = { x: -2 * CURVE_A * point.x, y: -1 };
+  const lambda2 = onG2
+    ? Math.max(0, -(grad.x * gradG2.x + grad.y * gradG2.y) / (gradG2.x ** 2 + gradG2.y ** 2))
+    : 0;
+  return {
+    lambda1: onG1 ? Math.max(0, grad.x) : 0,
+    lambda2,
+  };
 }
 
 function MathFormula({ latex }: { latex: string }) {
@@ -108,15 +154,17 @@ function Arrow({
   labelNormalOffset = 18,
   labelTangentOffset = 0,
   dashed = false,
+  showLabel = true,
 }: {
   from: Point;
   vector: Point;
-  tone: "red" | "blue" | "amber";
+  tone: "red" | "blue" | "amber" | "violet";
   label: string;
   latex?: string;
   labelNormalOffset?: number;
   labelTangentOffset?: number;
   dashed?: boolean;
+  showLabel?: boolean;
 }) {
   const end = { x: from.x + vector.x, y: from.y + vector.y };
   const midpoint = { x: from.x + vector.x / 2, y: from.y + vector.y / 2 };
@@ -144,11 +192,11 @@ function Arrow({
         markerEnd={marker}
         strokeDasharray={dashed ? "7 6" : undefined}
       />
-      {latex ? (
+      {showLabel && latex ? (
         <SvgFormula x={labelCenter.x - 75} y={labelCenter.y - 16} width={150} latex={latex} className={`svg-vector-${tone}`} />
-      ) : (
+      ) : showLabel ? (
         <text x={sx(end.x) + 10} y={sy(end.y) - 10}>{label}</text>
-      )}
+      ) : null}
     </g>
   );
 }
@@ -157,16 +205,19 @@ export default function Home() {
   const [step, setStep] = useState(0);
   const [point, setPoint] = useState<Point>(presets[0].point);
   const [lambda, setLambda] = useState(0);
+  const [cornerLambdas, setCornerLambdas] = useState(() => cornerKktLambdas(presets[3].point));
   const [playing, setPlaying] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
-  const isCorner = step === 3;
-  const hasWall = step > 0 && !isCorner;
+  const hasCornerConstraints = step >= 3;
+  const showsNormalCone = step === 4;
+  const hasWall = step > 0 && !hasCornerConstraints;
 
   const selectStep = useCallback((next: number) => {
     setStep(next);
     setPoint(presets[next].point);
     setLambda(presets[next].lambda);
+    if (next >= 3) setCornerLambdas(cornerKktLambdas(presets[next].point));
   }, []);
 
   useEffect(() => {
@@ -176,40 +227,100 @@ export default function Home() {
         const next = (current + 1) % steps.length;
         setPoint(presets[next].point);
         setLambda(presets[next].lambda);
+        if (next >= 3) setCornerLambdas(cornerKktLambdas(presets[next].point));
         return next;
       });
     }, 4800);
     return () => window.clearInterval(timer);
   }, [playing]);
 
-  const center = isCorner ? { x: -1.1, y: -0.72 } : { x: 0, y: 0 };
+  const center = hasCornerConstraints ? { x: -1.1, y: -0.72 } : { x: 0, y: 0 };
   const grad = {
     x: 2 * (point.x - center.x),
     y: 2 * (point.y - center.y),
   };
-  const driveScale = isCorner ? 0.36 : 0.44;
+  const driveScale = hasCornerConstraints ? 0.36 : 0.44;
   const drive = { x: -grad.x * driveScale, y: -grad.y * driveScale };
 
   const wallG = 1 - point.x - point.y;
   const onWall = Math.abs(wallG) < WALL_TOLERANCE;
+  const cornerConstraints = cornerConstraintValues(point);
+  const cornerOnG1 = Math.abs(cornerConstraints.g1) < WALL_TOLERANCE;
+  const cornerOnG2 = Math.abs(cornerConstraints.g2) < WALL_TOLERANCE;
+  const cornerGradG1 = { x: -1, y: 0 };
+  const cornerGradG2 = { x: -2 * CURVE_A * point.x, y: -1 };
+  const normalConeFormula = cornerOnG1 && cornerOnG2
+    ? "N_F(x)=\\left\\{\\lambda_1\\nabla g_1(x)+\\lambda_2\\nabla g_2(x)\\mid\\lambda_1,\\lambda_2\\ge0\\right\\}"
+    : cornerOnG1
+      ? "N_F(x)=\\left\\{\\lambda_1\\nabla g_1(x)\\mid\\lambda_1\\ge0\\right\\}"
+      : cornerOnG2
+        ? "N_F(x)=\\left\\{\\lambda_2\\nabla g_2(x)\\mid\\lambda_2\\ge0\\right\\}"
+        : "N_F(x)=\\{0\\}";
+  const coneRayScale = 4.8;
+  const coneRay1End = {
+    x: point.x + cornerGradG1.x * coneRayScale,
+    y: point.y + cornerGradG1.y * coneRayScale,
+  };
+  const coneRay2End = {
+    x: point.x + cornerGradG2.x * coneRayScale,
+    y: point.y + cornerGradG2.y * coneRayScale,
+  };
+  const coneFarCorner = {
+    x: point.x + (cornerGradG1.x + cornerGradG2.x) * coneRayScale,
+    y: point.y + (cornerGradG1.y + cornerGradG2.y) * coneRayScale,
+  };
+  const coneLabelDirection = cornerOnG1 && cornerOnG2
+    ? { x: -0.72, y: -0.72 }
+    : cornerOnG1
+      ? cornerGradG1
+      : cornerGradG2;
   const lambdaEffective = hasWall ? lambda : 0;
   const reaction = {
     x: lambdaEffective * driveScale,
     y: lambdaEffective * driveScale,
   };
-  const stationarity = hasWall
-    ? Math.hypot(grad.x - lambda, grad.y - lambda)
-    : isCorner
-      ? 0
+  const cornerReaction1 = {
+    x: -cornerLambdas.lambda1 * cornerGradG1.x * driveScale,
+    y: -cornerLambdas.lambda1 * cornerGradG1.y * driveScale,
+  };
+  const cornerReaction2 = {
+    x: -cornerLambdas.lambda2 * cornerGradG2.x * driveScale,
+    y: -cornerLambdas.lambda2 * cornerGradG2.y * driveScale,
+  };
+  const cornerReactionTotal = {
+    x: cornerReaction1.x + cornerReaction2.x,
+    y: cornerReaction1.y + cornerReaction2.y,
+  };
+  const stationarity = hasCornerConstraints
+    ? Math.hypot(
+        grad.x + cornerLambdas.lambda1 * cornerGradG1.x + cornerLambdas.lambda2 * cornerGradG2.x,
+        grad.y + cornerLambdas.lambda1 * cornerGradG1.y + cornerLambdas.lambda2 * cornerGradG2.y,
+      )
+    : hasWall
+      ? Math.hypot(grad.x - lambda, grad.y - lambda)
       : Math.hypot(grad.x, grad.y);
-  const primalOk = !hasWall || wallG <= WALL_TOLERANCE;
-  const compValue = hasWall ? Math.abs(lambda * wallG) : 0;
+  const primalOk = hasCornerConstraints
+    ? cornerConstraints.g1 <= WALL_TOLERANCE && cornerConstraints.g2 <= WALL_TOLERANCE
+    : !hasWall || wallG <= WALL_TOLERANCE;
+  const compValue = hasCornerConstraints
+    ? Math.abs(cornerLambdas.lambda1 * cornerConstraints.g1) + Math.abs(cornerLambdas.lambda2 * cornerConstraints.g2)
+    : hasWall ? Math.abs(lambda * wallG) : 0;
   const compOk = compValue < 0.04;
+  const dualOk = hasCornerConstraints
+    ? cornerLambdas.lambda1 >= 0 && cornerLambdas.lambda2 >= 0
+    : lambda >= 0;
   const stationarityOk = stationarity < 0.08;
-  const equilibriumOk = (stationarityOk && compOk && primalOk) || isCorner;
-  const showDrive = hasWall || isCorner || !stationarityOk;
+  const equilibriumOk = stationarityOk && compOk && primalOk && dualOk;
+  const showDrive = hasWall || hasCornerConstraints || !stationarityOk;
 
   const contours = useMemo(() => [0.48, 0.86, 1.25, 1.67, 2.12, 2.58], []);
+  const curvePoints = useMemo(
+    () => Array.from({ length: 41 }, (_, index) => {
+      const x = (Math.sqrt(-MIN / CURVE_A) * index) / 40;
+      return { x, y: curveBoundary(x) };
+    }),
+    [],
+  );
 
   function pointerToWorld(event: React.PointerEvent<SVGSVGElement>) {
     const svg = svgRef.current;
@@ -227,9 +338,12 @@ export default function Home() {
       x += shift;
       y += shift;
     }
-    if (isCorner) {
+    if (hasCornerConstraints) {
       x = Math.max(0, x);
-      y = Math.max(0, y);
+      x = Math.min(MAX, x);
+      y = Math.max(curveBoundary(x), y);
+      y = Math.min(MAX, y);
+      setCornerLambdas(cornerKktLambdas({ x, y }));
     }
     if (step === 2) {
       const nextOnWall = Math.abs(1 - x - y) < WALL_TOLERANCE;
@@ -265,15 +379,15 @@ export default function Home() {
 
       <section className="hero-copy">
         <p className="kicker">INTERACTIVE MATHEMATICS · 交互数学</p>
-        <h1>当下降方向撞上边界</h1>
-        <p>把 KKT 条件看成一场力的平衡。拖动粒子，亲手感受“可行”如何改变最优。</p>
+        <h1>{currentScene.title}</h1>
+        <p>{currentScene.summary}</p>
       </section>
 
       {showHelp && (
         <aside className="help-strip">
           <span>拖动图中的白色粒子</span>
-          <span>切换下方四个章节</span>
-          <span>在第 3 章调节 λ</span>
+          <span>切换下方五个章节</span>
+          <span>在第 3、4 章调节 λ</span>
           <span>绿色亮起表示条件成立</span>
         </aside>
       )}
@@ -313,19 +427,22 @@ export default function Home() {
               onPointerUp={(event) => event.currentTarget.releasePointerCapture(event.pointerId)}
             >
               <defs>
+                <clipPath id="plot-clip">
+                  <rect width={VIEW_W} height={VIEW_H} rx="18" />
+                </clipPath>
                 <radialGradient id="plot-glow" cx="50%" cy="50%" r="60%">
                   <stop offset="0%" stopColor="#273346" stopOpacity="0.55" />
                   <stop offset="100%" stopColor="#0d1119" stopOpacity="0" />
                 </radialGradient>
-                {(["red", "blue", "amber"] as const).map((tone) => (
+                {(["red", "blue", "amber", "violet"] as const).map((tone) => (
                   <marker
                     key={tone}
                     id={`arrow-${tone}`}
                     viewBox="0 0 10 10"
                     refX="8"
                     refY="5"
-                    markerWidth="7"
-                    markerHeight="7"
+                    markerWidth={tone === "violet" ? "5" : "7"}
+                    markerHeight={tone === "violet" ? "5" : "7"}
                     orient="auto-start-reverse"
                   >
                     <path d="M 0 0 L 10 5 L 0 10 z" />
@@ -362,25 +479,53 @@ export default function Home() {
                 </g>
               )}
 
-              {isCorner && (
+              {hasCornerConstraints && (
                 <g data-role="corner-feasible-region">
                   <polygon
-                    points={`${sx(0)},${sy(0)} ${sx(2.8)},${sy(0)} ${sx(2.8)},${sy(2.8)} ${sx(0)},${sy(2.8)}`}
+                    points={`${curvePoints.map((sample) => `${sx(sample.x)},${sy(sample.y)}`).join(" ")} ${VIEW_W},${VIEW_H} ${VIEW_W},0 ${sx(0)},0`}
                     className="feasible-fill corner-fill"
                   />
-                  <line x1={sx(0)} y1={sy(0)} x2={sx(2.8)} y2={sy(0)} className="constraint-line" />
-                  <line x1={sx(0)} y1={sy(0)} x2={sx(0)} y2={sy(2.8)} className="constraint-line" />
+                  <line x1={sx(0)} y1={sy(0)} x2={sx(0)} y2={0} className="constraint-line" />
                   <path
-                    d={`M ${sx(0)} ${sy(0)} L ${sx(-1.15)} ${sy(0)} A 107 107 0 0 1 ${sx(0)} ${sy(-1.15)} Z`}
-                    className="normal-cone"
+                    d={`M ${curvePoints.map((sample) => `${sx(sample.x)} ${sy(sample.y)}`).join(" L ")}`}
+                    className="constraint-line corner-curve"
                   />
-                  <SvgFormula x={sx(-1.25)} y={sy(-0.92) - 20} width={150} latex={"N_F(x^\\ast)"} className="cone-formula" />
-                  <text x={sx(1.38)} y={sy(1.78)} className="region-label">可行域</text>
+                  <SvgFormula x={sx(0.08)} y={sy(2.25) - 18} width={140} latex={"g_1(x)=-x_1=0"} className="constraint-formula" />
+                  <SvgFormula x={sx(1.38)} y={sy(curveBoundary(1.38)) - 27} width={205} latex={"g_2(x)=-0.32x_1^2-x_2=0"} className="constraint-formula" />
+                  <text x={sx(1.05)} y={sy(1.92)} className="region-label">可行域</text>
+                </g>
+              )}
+
+              {showsNormalCone && (
+                <g data-role="normal-cone" clipPath="url(#plot-clip)">
+                  {cornerOnG1 && cornerOnG2 ? (
+                    <path
+                      d={`M ${sx(point.x)} ${sy(point.y)} L ${sx(coneRay1End.x)} ${sy(coneRay1End.y)} L ${sx(coneFarCorner.x)} ${sy(coneFarCorner.y)} L ${sx(coneRay2End.x)} ${sy(coneRay2End.y)} Z`}
+                      className="normal-cone"
+                    />
+                  ) : cornerOnG1 || cornerOnG2 ? (
+                    <line
+                      x1={sx(point.x)}
+                      y1={sy(point.y)}
+                      x2={sx((cornerOnG1 ? coneRay1End : coneRay2End).x)}
+                      y2={sy((cornerOnG1 ? coneRay1End : coneRay2End).y)}
+                      className="normal-cone-ray"
+                    />
+                  ) : (
+                    <circle cx={sx(point.x)} cy={sy(point.y)} r="6" className="normal-cone-zero" />
+                  )}
+                  <SvgFormula
+                    x={sx(point.x + coneLabelDirection.x * 1.35) - 50}
+                    y={sy(point.y + coneLabelDirection.y * 1.35) - 18}
+                    width={150}
+                    latex={"N_F(x)"}
+                    className="cone-formula"
+                  />
                 </g>
               )}
 
               <g className="axes">
-                <line x1={sx(MIN)} y1={sy(0)} x2={sx(MAX)} y2={sy(0)} />
+                <line x1={0} y1={sy(0)} x2={VIEW_W} y2={sy(0)} />
                 <line x1={sx(0)} y1={0} x2={sx(0)} y2={VIEW_H} />
                 <SvgFormula x={sx(MAX) - 28} y={sy(0) - 30} width={35} latex="x_1" />
                 <SvgFormula x={sx(0) + 8} y={1} width={35} latex="x_2" />
@@ -418,10 +563,39 @@ export default function Home() {
                   labelTangentOffset={28}
                 />
               )}
-              {isCorner && (
+              {hasCornerConstraints && (
                 <>
-                  <Arrow from={point} vector={{ x: 0.82, y: 0 }} tone="blue" label="−λ₁∇g₁" latex={"-\\lambda_1\\nabla g_1"} />
-                  <Arrow from={point} vector={{ x: 0, y: 0.54 }} tone="amber" label="−λ₂∇g₂" latex={"-\\lambda_2\\nabla g_2"} />
+                  {cornerLambdas.lambda1 > 0.015 && (
+                    <Arrow
+                      from={point}
+                      vector={cornerReaction1}
+                      tone="blue"
+                      label="−λ₁∇g₁"
+                      latex={"-\\lambda_1\\nabla g_1"}
+                      labelNormalOffset={34}
+                      labelTangentOffset={10}
+                    />
+                  )}
+                  {cornerLambdas.lambda2 > 0.015 && (
+                    <Arrow
+                      from={point}
+                      vector={cornerReaction2}
+                      tone="amber"
+                      label="−λ₂∇g₂"
+                      latex={"-\\lambda_2\\nabla g_2"}
+                      labelNormalOffset={-38}
+                      labelTangentOffset={8}
+                    />
+                  )}
+                  {cornerLambdas.lambda1 > 0.015 && cornerLambdas.lambda2 > 0.015 && (
+                    <Arrow
+                      from={point}
+                      vector={cornerReactionTotal}
+                      tone="violet"
+                      label="约束合力"
+                      showLabel={false}
+                    />
+                  )}
                 </>
               )}
 
@@ -434,6 +608,7 @@ export default function Home() {
             <div className="plot-legend" aria-hidden="true">
               <span><i className="legend-red" />下降动力</span>
               <span><i className="legend-blue" />约束反力</span>
+              {hasCornerConstraints && <span><i className="legend-violet" />约束合力</span>}
               <span><i className="legend-cyan" />可行域</span>
             </div>
           </div>
@@ -443,6 +618,18 @@ export default function Home() {
               <>红色箭头是下降方向 <MathFormula latex={"-\\nabla f"} />。只要它还不为零，粒子就有继续下降的空间。</>
             ) : steps[step].body}
           </p>
+
+          {showsNormalCone && (
+            <div className="normal-cone-definition" aria-label="法向锥的集合定义">
+              <span>法向锥集合</span>
+              <strong>
+                <MathFormula latex={normalConeFormula} />
+              </strong>
+              <small>
+                最优时：<MathFormula latex={"-\\nabla f(x)\\in N_F(x)"} />
+              </small>
+            </div>
+          )}
 
           {step === 2 && (
             <div className="lambda-control">
@@ -479,6 +666,58 @@ export default function Home() {
               </small>
             </div>
           )}
+
+          {step === 3 && (
+            <div className="lambda-control corner-lambda-controls">
+              <div className="corner-lambda-row">
+                <div className="control-heading">
+                  <label htmlFor="lambda-1"><MathFormula latex={"\\lambda_1"} /> · 直边支持力</label>
+                  <output>{cornerLambdas.lambda1.toFixed(2)}</output>
+                </div>
+                <input
+                  id="lambda-1"
+                  type="range"
+                  min="0"
+                  max="3"
+                  step="0.01"
+                  value={cornerLambdas.lambda1}
+                  onChange={(event) => {
+                    setCornerLambdas((current) => ({
+                      ...current,
+                      lambda1: cornerOnG1 ? Number(event.target.value) : 0,
+                    }));
+                    setPlaying(false);
+                  }}
+                  disabled={!cornerOnG1}
+                />
+              </div>
+              <div className="corner-lambda-row">
+                <div className="control-heading">
+                  <label htmlFor="lambda-2"><MathFormula latex={"\\lambda_2"} /> · 曲边支持力</label>
+                  <output>{cornerLambdas.lambda2.toFixed(2)}</output>
+                </div>
+                <input
+                  id="lambda-2"
+                  type="range"
+                  min="0"
+                  max="3"
+                  step="0.01"
+                  value={cornerLambdas.lambda2}
+                  onChange={(event) => {
+                    setCornerLambdas((current) => ({
+                      ...current,
+                      lambda2: cornerOnG2 ? Number(event.target.value) : 0,
+                    }));
+                    setPlaying(false);
+                  }}
+                  disabled={!cornerOnG2}
+                />
+              </div>
+              <small className="lambda-auto-note">
+                拖动时自动按接触状态更新：离开边界取 0，接触边界取法向平衡所需的 KKT 值。
+              </small>
+            </div>
+          )}
         </div>
 
         <aside className="inspector">
@@ -490,22 +729,28 @@ export default function Home() {
           <div className="equation-block">
             <span className="equation-label">目标函数</span>
             <strong>
-              <MathFormula latex={isCorner ? "f=(x_1+1.1)^2+(x_2+0.72)^2" : "f=x_1^2+x_2^2"} />
+              <MathFormula latex={hasCornerConstraints ? "f=(x_1+1.1)^2+(x_2+0.72)^2" : "f=x_1^2+x_2^2"} />
             </strong>
           </div>
 
           <div className="metrics">
-            <div><span><MathFormula latex="g(x)" /></span><strong>{hasWall ? fmt(wallG) : "—"}</strong></div>
-            <div><span><MathFormula latex={"\\lambda"} /></span><strong>{isCorner ? "λ₁, λ₂" : lambda.toFixed(2)}</strong></div>
-            <div><span><MathFormula latex={"\\lVert\\nabla_x L\\rVert"} /></span><strong>{isCorner ? "0.00" : stationarity.toFixed(2)}</strong></div>
+            <div>
+              <span><MathFormula latex={hasCornerConstraints ? "g_1,\\,g_2" : "g(x)"} /></span>
+              <strong>{hasCornerConstraints ? `${fmt(cornerConstraints.g1)}, ${fmt(cornerConstraints.g2)}` : hasWall ? fmt(wallG) : "—"}</strong>
+            </div>
+            <div>
+              <span><MathFormula latex={hasCornerConstraints ? "\\lambda_1,\\,\\lambda_2" : "\\lambda"} /></span>
+              <strong>{hasCornerConstraints ? `${fmt(cornerLambdas.lambda1)}, ${fmt(cornerLambdas.lambda2)}` : lambda.toFixed(2)}</strong>
+            </div>
+            <div><span><MathFormula latex={"\\lVert\\nabla_x L\\rVert"} /></span><strong>{stationarity.toFixed(2)}</strong></div>
           </div>
 
           <div className="checklist">
             <h3>KKT 检查器</h3>
-            <CheckRow label="原始可行" formula={isCorner ? "x_1,x_2 \\ge 0" : "g(x) \\le 0"} ok={primalOk} neutral={step === 0} />
-            <CheckRow label="对偶可行" formula={"\\lambda \\ge 0"} ok />
-            <CheckRow label="互补松弛" formula={"\\lambda g(x) = 0"} ok={compOk} neutral={step === 0} />
-            <CheckRow label="驻点条件" formula={"\\nabla f + \\lambda \\nabla g = 0"} ok={stationarityOk || isCorner} />
+            <CheckRow label="原始可行" formula={hasCornerConstraints ? "g_1(x),g_2(x) \\le 0" : "g(x) \\le 0"} ok={primalOk} neutral={step === 0} />
+            <CheckRow label="对偶可行" formula={hasCornerConstraints ? "\\lambda_1,\\lambda_2 \\ge 0" : "\\lambda \\ge 0"} ok={dualOk} />
+            <CheckRow label="互补松弛" formula={hasCornerConstraints ? "\\lambda_i g_i(x)=0" : "\\lambda g(x) = 0"} ok={compOk} neutral={step === 0} />
+            <CheckRow label="驻点条件" formula={hasCornerConstraints ? "\\nabla f+\\lambda_1\\nabla g_1+\\lambda_2\\nabla g_2=0" : "\\nabla f + \\lambda \\nabla g = 0"} ok={stationarityOk} />
           </div>
 
         </aside>
