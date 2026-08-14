@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MathFormula } from "@/components/math/MathFormula";
 import { SvgFormula } from "@/components/math/SvgFormula";
 import { Arrow } from "@/components/plot/Arrow";
+import { CopyrightNotice } from "@/components/site/CopyrightNotice";
 import {
   CONTOUR_RADII,
   MAX,
@@ -22,12 +23,18 @@ import { contourSectionPath, project3d, SURFACE_LINES, surfacePath } from "@/lib
 import { CURVE_A, WALL_TOLERANCE, cornerConstraintValues, cornerKktLambdas, curveBoundary } from "@/lib/math/kkt";
 import { forceBalanceScene, gradientContourScene } from "@/lib/scenes/registry";
 import { kktPresets as presets, kktSteps as steps, primerSteps } from "@/scenes/content";
+import { conditionSteps, KktConditionsScene } from "@/scenes/KktConditionsScene";
+import { cqSteps, KktConstraintQualificationsScene } from "@/scenes/KktConstraintQualificationsScene";
+import { KktWorkedExampleScene, workedExampleSteps } from "@/scenes/KktWorkedExampleScene";
 
 export default function KktVisualizationExperience() {
   const [sceneIndex, setSceneIndex] = useState(0);
   const [primerStep, setPrimerStep] = useState(0);
   const [primerPoint, setPrimerPoint] = useState<Point>({ x: 1.55, y: 1.2 });
   const [step, setStep] = useState(0);
+  const [conditionsStep, setConditionsStep] = useState(0);
+  const [workedExampleStep, setWorkedExampleStep] = useState(0);
+  const [cqStep, setCqStep] = useState(0);
   const [point, setPoint] = useState<Point>(presets[0].point);
   const [lambda, setLambda] = useState(0);
   const [cornerLambdas, setCornerLambdas] = useState(() => cornerKktLambdas(presets[3].point));
@@ -35,6 +42,9 @@ export default function KktVisualizationExperience() {
   const svgRef = useRef<SVGSVGElement>(null);
   const primerSvgRef = useRef<SVGSVGElement>(null);
   const isPrimer = sceneIndex === 0;
+  const isForceBalance = sceneIndex === 1;
+  const isConditionsAssembly = sceneIndex === 2;
+  const isWorkedExample = sceneIndex === 3;
   const hasCornerConstraints = step >= 3;
   const showsNormalCone = step === 4;
   const hasWall = step > 0 && !hasCornerConstraints;
@@ -65,7 +75,10 @@ export default function KktVisualizationExperience() {
       if (/^[1-5]$/.test(event.key)) {
         event.preventDefault();
         if (isPrimer) selectPrimerStep(Math.min(primerSteps.length - 1, Number(event.key) - 1));
-        else selectStep(Number(event.key) - 1);
+        else if (isForceBalance) selectStep(Number(event.key) - 1);
+        else if (isConditionsAssembly) setConditionsStep(Math.min(conditionSteps.length - 1, Number(event.key) - 1));
+        else if (isWorkedExample) setWorkedExampleStep(Math.min(workedExampleSteps.length - 1, Number(event.key) - 1));
+        else setCqStep(Math.min(cqSteps.length - 1, Number(event.key) - 1));
         return;
       }
 
@@ -77,17 +90,49 @@ export default function KktVisualizationExperience() {
       if (isPrimer) {
         if (forward && primerStep === primerSteps.length - 1) setSceneIndex(1);
         else selectPrimerStep(Math.max(0, Math.min(primerSteps.length - 1, primerStep + (forward ? 1 : -1))));
-      } else if (backward && step === 0) {
-        setSceneIndex(0);
-        setPrimerStep(primerSteps.length - 1);
+      } else if (isForceBalance) {
+        if (backward && step === 0) {
+          setSceneIndex(0);
+          setPrimerStep(primerSteps.length - 1);
+        } else if (forward && step === steps.length - 1) {
+          setSceneIndex(2);
+          setConditionsStep(0);
+        } else {
+          selectStep(Math.max(0, Math.min(steps.length - 1, step + (forward ? 1 : -1))));
+        }
+      } else if (isConditionsAssembly) {
+        if (backward && conditionsStep === 0) {
+          setSceneIndex(1);
+          selectStep(steps.length - 1);
+        } else if (forward && conditionsStep === conditionSteps.length - 1) {
+          setSceneIndex(3);
+          setWorkedExampleStep(0);
+        } else {
+          setConditionsStep(Math.max(0, Math.min(conditionSteps.length - 1, conditionsStep + (forward ? 1 : -1))));
+        }
+      } else if (isWorkedExample) {
+        if (backward && workedExampleStep === 0) {
+          setSceneIndex(2);
+          setConditionsStep(conditionSteps.length - 1);
+        } else if (forward && workedExampleStep === workedExampleSteps.length - 1) {
+          setSceneIndex(4);
+          setCqStep(0);
+        } else {
+          setWorkedExampleStep(Math.max(0, Math.min(workedExampleSteps.length - 1, workedExampleStep + (forward ? 1 : -1))));
+        }
       } else {
-        selectStep(Math.max(0, Math.min(steps.length - 1, step + (forward ? 1 : -1))));
+        if (backward && cqStep === 0) {
+          setSceneIndex(3);
+          setWorkedExampleStep(workedExampleSteps.length - 1);
+        } else {
+          setCqStep(Math.max(0, Math.min(cqSteps.length - 1, cqStep + (forward ? 1 : -1))));
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isPrimer, isRecordingMode, primerStep, selectPrimerStep, selectStep, step]);
+  }, [conditionsStep, cqStep, isConditionsAssembly, isForceBalance, isPrimer, isRecordingMode, isWorkedExample, primerStep, selectPrimerStep, selectStep, step, workedExampleStep]);
 
   async function toggleFullscreen() {
     (document.activeElement as HTMLElement | null)?.blur();
@@ -194,6 +239,41 @@ export default function KktVisualizationExperience() {
     }),
     [],
   );
+
+  if (sceneIndex === 2) {
+    return (
+      <KktConditionsScene
+        step={conditionsStep}
+        isRecordingMode={isRecordingMode}
+        onSelectStep={setConditionsStep}
+        onToggleFullscreen={toggleFullscreen}
+        onNextScene={() => { setSceneIndex(3); setWorkedExampleStep(0); }}
+      />
+    );
+  }
+
+  if (sceneIndex === 3) {
+    return (
+      <KktWorkedExampleScene
+        step={workedExampleStep}
+        isRecordingMode={isRecordingMode}
+        onSelectStep={setWorkedExampleStep}
+        onToggleFullscreen={toggleFullscreen}
+        onNextScene={() => { setSceneIndex(4); setCqStep(0); }}
+      />
+    );
+  }
+
+  if (sceneIndex === 4) {
+    return (
+      <KktConstraintQualificationsScene
+        step={cqStep}
+        isRecordingMode={isRecordingMode}
+        onSelectStep={setCqStep}
+        onToggleFullscreen={toggleFullscreen}
+      />
+    );
+  }
 
   function pointerToWorld(event: React.PointerEvent<SVGSVGElement>) {
     const svg = svgRef.current;
@@ -490,7 +570,7 @@ export default function KktVisualizationExperience() {
           <button className="next-scene" onClick={() => setSceneIndex(1)}><span>下一幕 →</span><strong>进入 KKT 力的平衡</strong></button>
         </nav>
 
-        <footer><span>核心关系</span><strong><MathFormula latex={"\\nabla f(x)\\perp\\{f(x)=c\\}"} /></strong><span>负梯度指向下降最快方向</span></footer>
+        <footer><span>核心关系</span><strong><MathFormula latex={"\\nabla f(x)\\perp\\{f(x)=c\\}"} /></strong><span>负梯度指向下降最快方向</span><CopyrightNotice /></footer>
       </main>
     );
   }
@@ -877,7 +957,7 @@ export default function KktVisualizationExperience() {
         </aside>
       </section>
 
-      <nav className="chapter-nav" aria-label="KKT 演示章节">
+      <nav className="chapter-nav force-nav" aria-label="KKT 演示章节">
         {steps.map((item, index) => (
           <button
             key={item.eyebrow}
@@ -888,12 +968,17 @@ export default function KktVisualizationExperience() {
             <strong>{item.title}</strong>
           </button>
         ))}
+        <button className="next-scene" onClick={() => { setSceneIndex(2); setConditionsStep(0); }}>
+          <span>下一幕 →</span>
+          <strong>把图景写成 KKT 条件</strong>
+        </button>
       </nav>
 
       <footer>
         <span>KKT 的几何本质</span>
         <strong><MathFormula latex={"-\\nabla f(x^\\ast) \\in N_F(x^\\ast)"} /></strong>
         <span>下降方向落入可行域的法向锥</span>
+        <CopyrightNotice />
       </footer>
     </main>
   );
