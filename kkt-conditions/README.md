@@ -1,12 +1,13 @@
 # KKT Conditions · 几何实验室
 
-用几何和物理直觉逐步解释 Karush–Kuhn–Tucker 条件。整个概念由五个 1920×1080 Scene 组成：
+用几何和物理直觉逐步解释 Karush–Kuhn–Tucker 条件。整个概念由六个 1920×1080 Scene 组成：
 
 1. `gradient-contour-primer`：等高线、梯度和负梯度。
 2. `kkt-force-balance`：不等式边界的支持力、互补松弛和法向锥。
 3. `kkt-conditions-assembly`：逐条组装 KKT 条件，最后加入等式约束。
 4. `kkt-worked-example`：手算一个同时含不等式与等式约束的完整例题。
 5. `kkt-constraint-qualifications`：用退化法向、共同内移方向和严格内点直观解释 LICQ、MFCQ 与 Slater。
+6. `kkt-summary`：用几何意义、必要性与充分性收束整套 KKT 逻辑。
 
 方向键可跨步骤、跨 Scene 导航；数字键跳转当前 Scene 内步骤；全屏录制模式保证一幕完整进入 1920×1080。
 
@@ -18,6 +19,7 @@ scenes/KktVisualizationExperience   # Scene 状态与跨 Scene 编排
 scenes/KktConditionsScene           # Scene 3，独立维护
 scenes/KktWorkedExampleScene        # Scene 4，完整手算例题
 scenes/KktConstraintQualificationsScene # Scene 5，约束资格条件
+scenes/KktSummaryScene              # Scene 6，三句话总结
 scenes/content.ts                    # Scene 1/2 的步骤文案和预设
 lib/scenes/registry.ts               # 稳定 Scene ID、顺序和元数据
 lib/math/kkt.ts                      # 无副作用 KKT/边界计算

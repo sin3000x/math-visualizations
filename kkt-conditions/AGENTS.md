@@ -11,6 +11,7 @@
 | KKT 条件组装 | `kkt-conditions-assembly` | `scenes/KktConditionsScene.tsx` | `app/globals.css` 中 `KKT conditions assembly Scene` 区域 |
 | KKT 手算例题 | `kkt-worked-example` | `scenes/KktWorkedExampleScene.tsx` | `app/globals.css` 中 `Complete hand-calculation Scene` 区域 |
 | 约束资格条件 | `kkt-constraint-qualifications` | `scenes/KktConstraintQualificationsScene.tsx` | `app/globals.css` 中 `Constraint qualifications Scene` 区域 |
+| KKT 总结 | `kkt-summary` | `scenes/KktSummaryScene.tsx` | `app/globals.css` 中 `KKT summary Scene` 区域 |
 
 Scene 的稳定 ID、标题和顺序只在 `lib/scenes/registry.ts` 修改。
 
@@ -26,6 +27,8 @@ Scene 的稳定 ID、标题和顺序只在 `lib/scenes/registry.ts` 修改。
 - “第五幕 LICQ、MFCQ、Slater 文案或公式”：只读 `KktConstraintQualificationsScene.tsx` 的 `cqSteps` 和 `CqExplanation`。
 - “第五幕法向、共同内移方向、严格内点图示”：只读 `KktConstraintQualificationsScene.tsx` 的 `CqDiagram` 及其子图。
 - “第五幕全屏比例、字号、间距”：只改 `.cq-*` 与 `.recording-mode .cq-*` 样式。
+- “第六幕总结文案、三层逻辑、迷你力学图”：只读 `KktSummaryScene.tsx`。
+- “第六幕全屏比例、字号、间距”：只改 `.summary-*` 与 `.recording-mode .summary-*` 样式。
 - “跨 Scene 键盘导航”：只读 `KktVisualizationExperience.tsx` 顶部的导航状态和 `handleKeyDown`。
 - “KaTeX 公共渲染”：读 `components/math/MathFormula.tsx` 和 `SvgFormula.tsx`。
 - “二维坐标比例或指针反变换”：读 `lib/geometry/plot.ts`。

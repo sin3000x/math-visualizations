@@ -38,9 +38,10 @@ type Props = {
   isRecordingMode: boolean;
   onSelectStep: (step: number) => void;
   onToggleFullscreen: () => void;
+  onNextScene: () => void;
 };
 
-export function KktConstraintQualificationsScene({ step, isRecordingMode, onSelectStep, onToggleFullscreen }: Props) {
+export function KktConstraintQualificationsScene({ step, isRecordingMode, onSelectStep, onToggleFullscreen, onNextScene }: Props) {
   return (
     <main className={`site-shell cq-scene ${isRecordingMode ? "recording-mode" : ""}`}>
       <header className="topbar">
@@ -91,6 +92,10 @@ export function KktConstraintQualificationsScene({ step, isRecordingMode, onSele
             <strong>{item.title}</strong>
           </button>
         ))}
+        <button className="next-scene" onClick={onNextScene}>
+          <span>下一幕 →</span>
+          <strong>最后带走这三句话</strong>
+        </button>
       </nav>
 
       <footer>

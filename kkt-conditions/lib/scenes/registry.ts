@@ -46,6 +46,15 @@ const sceneDefinitions = [
     summary: "用法向量、共同内移方向和严格内点，直观看懂 LICQ、MFCQ 与 Slater 条件。",
     viewport: SCENE_VIEWPORT,
   },
+  {
+    id: "kkt-summary",
+    conceptId: "kkt-conditions",
+    order: 60,
+    route: "/",
+    title: "最后带走这三句话",
+    summary: "用几何意义、必要性与充分性收束整套 KKT 逻辑，并说明非凸问题中 KKT 点只是候选点。",
+    viewport: SCENE_VIEWPORT,
+  },
 ] as const satisfies readonly SceneDefinition[];
 
 function validateSceneRegistry(scenes: readonly SceneDefinition[]) {
@@ -87,3 +96,4 @@ export const forceBalanceScene = getScene("kkt-force-balance");
 export const conditionsAssemblyScene = getScene("kkt-conditions-assembly");
 export const workedExampleScene = getScene("kkt-worked-example");
 export const constraintQualificationsScene = getScene("kkt-constraint-qualifications");
+export const summaryScene = getScene("kkt-summary");

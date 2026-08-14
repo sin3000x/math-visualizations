@@ -26,6 +26,7 @@ import { kktPresets as presets, kktSteps as steps, primerSteps } from "@/scenes/
 import { conditionSteps, KktConditionsScene } from "@/scenes/KktConditionsScene";
 import { cqSteps, KktConstraintQualificationsScene } from "@/scenes/KktConstraintQualificationsScene";
 import { KktWorkedExampleScene, workedExampleSteps } from "@/scenes/KktWorkedExampleScene";
+import { KktSummaryScene, summarySteps } from "@/scenes/KktSummaryScene";
 
 export default function KktVisualizationExperience() {
   const [sceneIndex, setSceneIndex] = useState(0);
@@ -35,6 +36,7 @@ export default function KktVisualizationExperience() {
   const [conditionsStep, setConditionsStep] = useState(0);
   const [workedExampleStep, setWorkedExampleStep] = useState(0);
   const [cqStep, setCqStep] = useState(0);
+  const [summaryStep, setSummaryStep] = useState(0);
   const [point, setPoint] = useState<Point>(presets[0].point);
   const [lambda, setLambda] = useState(0);
   const [cornerLambdas, setCornerLambdas] = useState(() => cornerKktLambdas(presets[3].point));
@@ -45,6 +47,8 @@ export default function KktVisualizationExperience() {
   const isForceBalance = sceneIndex === 1;
   const isConditionsAssembly = sceneIndex === 2;
   const isWorkedExample = sceneIndex === 3;
+  const isCq = sceneIndex === 4;
+  const isSummary = sceneIndex === 5;
   const hasCornerConstraints = step >= 3;
   const showsNormalCone = step === 4;
   const hasWall = step > 0 && !hasCornerConstraints;
@@ -78,7 +82,8 @@ export default function KktVisualizationExperience() {
         else if (isForceBalance) selectStep(Number(event.key) - 1);
         else if (isConditionsAssembly) setConditionsStep(Math.min(conditionSteps.length - 1, Number(event.key) - 1));
         else if (isWorkedExample) setWorkedExampleStep(Math.min(workedExampleSteps.length - 1, Number(event.key) - 1));
-        else setCqStep(Math.min(cqSteps.length - 1, Number(event.key) - 1));
+        else if (isCq) setCqStep(Math.min(cqSteps.length - 1, Number(event.key) - 1));
+        else setSummaryStep(Math.min(summarySteps.length - 1, Number(event.key) - 1));
         return;
       }
 
@@ -120,19 +125,29 @@ export default function KktVisualizationExperience() {
         } else {
           setWorkedExampleStep(Math.max(0, Math.min(workedExampleSteps.length - 1, workedExampleStep + (forward ? 1 : -1))));
         }
-      } else {
+      } else if (isCq) {
         if (backward && cqStep === 0) {
           setSceneIndex(3);
           setWorkedExampleStep(workedExampleSteps.length - 1);
+        } else if (forward && cqStep === cqSteps.length - 1) {
+          setSceneIndex(5);
+          setSummaryStep(0);
         } else {
           setCqStep(Math.max(0, Math.min(cqSteps.length - 1, cqStep + (forward ? 1 : -1))));
+        }
+      } else if (isSummary) {
+        if (backward && summaryStep === 0) {
+          setSceneIndex(4);
+          setCqStep(cqSteps.length - 1);
+        } else {
+          setSummaryStep(Math.max(0, Math.min(summarySteps.length - 1, summaryStep + (forward ? 1 : -1))));
         }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [conditionsStep, cqStep, isConditionsAssembly, isForceBalance, isPrimer, isRecordingMode, isWorkedExample, primerStep, selectPrimerStep, selectStep, step, workedExampleStep]);
+  }, [conditionsStep, cqStep, isConditionsAssembly, isCq, isForceBalance, isPrimer, isRecordingMode, isSummary, isWorkedExample, primerStep, selectPrimerStep, selectStep, step, summaryStep, workedExampleStep]);
 
   async function toggleFullscreen() {
     (document.activeElement as HTMLElement | null)?.blur();
@@ -270,6 +285,18 @@ export default function KktVisualizationExperience() {
         step={cqStep}
         isRecordingMode={isRecordingMode}
         onSelectStep={setCqStep}
+        onToggleFullscreen={toggleFullscreen}
+        onNextScene={() => { setSceneIndex(5); setSummaryStep(0); }}
+      />
+    );
+  }
+
+  if (sceneIndex === 5) {
+    return (
+      <KktSummaryScene
+        step={summaryStep}
+        isRecordingMode={isRecordingMode}
+        onSelectStep={setSummaryStep}
         onToggleFullscreen={toggleFullscreen}
       />
     );
