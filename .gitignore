@@ -1,3 +1,15 @@
 .DS_Store
 .idea/
 .vscode/
+
+# Video recordings and exports
+*.mp4
+*.mov
+*.m4v
+*.webm
+*.mkv
+*.avi
+*.wmv
+*.flv
+*.mpeg
+*.mpg
