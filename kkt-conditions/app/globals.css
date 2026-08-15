@@ -109,6 +109,10 @@ button { color: inherit; }
 .svg-vector-blue > div { color: #8cadff; font-weight: 700; }
 .svg-vector-amber > div, .cone-formula > div { color: var(--amber); font-weight: 700; }
 .svg-vector-violet > div { color: var(--violet); font-weight: 800; filter: drop-shadow(0 2px 3px #0d1119); }
+.force-balance-scene .svg-vector-red > div,
+.force-balance-scene .svg-vector-blue > div,
+.force-balance-scene .svg-vector-amber > div,
+.force-balance-scene .svg-vector-violet > div { font-size: 21px; }
 .constraint-formula > div { color: #6ee8df; font-weight: 700; }
 .region-formula > div { color: #54dad4; font-weight: 800; }
 .contour-formula > div { color: #8f9bad; }
@@ -391,7 +395,7 @@ footer strong { color: var(--ink); font-size: 20px; font-weight: 600; }
 .cq-explanation { position: relative; margin-top: 22px; display: grid; gap: 12px; }
 .cq-formula-card, .cq-definition, .cq-plain-language, .cq-consequence { padding: 13px 15px; border-radius: 10px; background: rgba(255,255,255,.74); }
 .cq-formula-card, .cq-definition { display: grid; gap: 8px; }
-.cq-formula-card > span, .cq-definition > span, .cq-consequence > span { color: #7b818c; font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.cq-formula-card > span:not(.math-formula), .cq-definition > span:not(.math-formula), .cq-consequence > span:not(.math-formula) { color: #7b818c; font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .cq-formula-card > .math-formula { color: var(--ink); font-size: 21px; }
 .cq-formula-card > .math-formula { align-self: start; line-height: 1; transform: translateY(-4px); }
 .cq-definition > .math-formula { color: var(--ink); font-size: 16px; overflow-x: auto; }
@@ -509,16 +513,31 @@ footer strong { color: var(--ink); font-size: 20px; font-weight: 600; }
 .summary-lane.violet .summary-verdict { color: #c9aefa; }
 .summary-nav { grid-template-columns: repeat(3, 1fr); }
 
-/* 1920×1080 recording mode: one complete Scene, with no page scrolling. */
+/* 16:9 recording canvas: centered inside any fullscreen viewport. */
+body:has(.recording-mode) {
+  overflow: hidden;
+  background: #171b24;
+}
+
 .recording-mode {
-  width: 100vw;
-  height: 100vh;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: min(100vh, calc(100vw * 9 / 16));
   min-height: 0;
+  margin: auto;
   padding: 22px 32px 18px;
   display: grid;
   grid-template-rows: minmax(0, 1fr) 64px;
   gap: 12px;
   overflow: hidden;
+  background:
+    linear-gradient(rgba(20,25,37,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20,25,37,.035) 1px, transparent 1px),
+    var(--paper);
+  background-size: 28px 28px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.2), 0 20px 60px rgba(0,0,0,.28);
 }
 .recording-mode .topbar,
 .recording-mode .hero-copy { display: none; }
@@ -671,6 +690,41 @@ footer strong { color: var(--ink); font-size: 20px; font-weight: 600; }
 .recording-mode .summary-lane-copy > p { font-size: 18px; }
 .recording-mode .summary-mini-plot { height: 155px; }
 .recording-mode .summary-verdict { min-width: 300px; padding: 20px; font-size: 28px; }
+
+@media (max-height: 900px) {
+  .recording-mode.cq-scene { padding-block: 14px 12px; gap: 8px; }
+  .recording-mode .cq-card { padding: 12px 16px; }
+  .recording-mode .cq-card .canvas-head { margin-bottom: 7px; }
+  .recording-mode .cq-card .canvas-head h2 { font-size: 27px; }
+  .recording-mode .cq-board { gap: 14px; grid-template-columns: minmax(0, 1.6fr) minmax(500px, .9fr); }
+  .recording-mode .cq-visual-column,
+  .recording-mode .cq-explanation-column { padding: 13px 15px; }
+  .recording-mode .cq-visual-column > .board-label,
+  .recording-mode .cq-explanation-column > .board-label { font-size: 13px; }
+  .recording-mode .cq-explanation-column h3 { margin: 9px 0 6px; font-size: 28px; }
+  .recording-mode .cq-explanation-column > p { font-size: 15px; line-height: 1.48; }
+  .recording-mode .cq-explanation { margin-top: 8px; gap: 7px; }
+  .recording-mode .cq-formula-card,
+  .recording-mode .cq-definition,
+  .recording-mode .cq-plain-language,
+  .recording-mode .cq-consequence { padding: 11px 14px; }
+  .recording-mode .cq-formula-card,
+  .recording-mode .cq-definition { gap: 6px; }
+  .recording-mode .cq-definition > .math-formula { font-size: 16px; }
+  .recording-mode .cq-plain-language { gap: 5px; }
+  .recording-mode .cq-plain-language span { font-size: 14px; line-height: 1.42; }
+  .recording-mode .cq-failure,
+  .recording-mode .cq-convex-note { padding: 10px 12px; }
+  .recording-mode .cq-failure span,
+  .recording-mode .cq-convex-note span { font-size: 14px; line-height: 1.4; }
+  .recording-mode .cq-consequence { grid-template-columns: 68px minmax(0, 1fr); gap: 8px; }
+  .recording-mode .cq-consequence > .math-formula { font-size: 15px; }
+  .recording-mode .cq-logic-card { padding: 11px 13px; }
+  .recording-mode .cq-logic-card .math-formula { font-size: 15px; }
+  .recording-mode .cq-logic-card span { font-size: 13px; }
+  .recording-mode .cq-nav span { font-size: 10px; }
+  .recording-mode .cq-nav strong { font-size: 13px; }
+}
 
 @media (max-width: 940px) {
   .site-shell { padding-inline: 20px; }

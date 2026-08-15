@@ -603,7 +603,7 @@ export default function KktVisualizationExperience() {
   }
 
   return (
-    <main className={`site-shell ${isRecordingMode ? "recording-mode" : ""}`}>
+    <main className={`site-shell force-balance-scene ${isRecordingMode ? "recording-mode" : ""}`}>
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark">∇</span>
@@ -790,8 +790,8 @@ export default function KktVisualizationExperience() {
                   tone="blue"
                   label="约束力"
                   latex={"\\text{约束力}=-\\lambda\\nabla g"}
-                  labelNormalOffset={58}
-                  labelTangentOffset={28}
+                  labelNormalOffset={78}
+                  labelTangentOffset={38}
                 />
               )}
               {hasCornerConstraints && (
@@ -814,7 +814,7 @@ export default function KktVisualizationExperience() {
                       tone="amber"
                       label="−λ₂∇g₂"
                       latex={"-\\lambda_2\\nabla g_2"}
-                      labelNormalOffset={-38}
+                      labelNormalOffset={-55}
                       labelTangentOffset={8}
                     />
                   )}

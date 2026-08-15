@@ -143,7 +143,7 @@ function CqExplanation({ step }: { step: number }) {
       <div className="cq-explanation">
         <div className="cq-definition">
           <span>MFCQ</span>
-          <MathFormula latex={"\\begin{aligned}\\exists d:\\quad &\\nabla h_j(x^*)^\\top d=0,\\\\ &\\nabla g_i(x^*)^\\top d<0\\quad(i\\in\\mathcal A)\\end{aligned}"} />
+          <MathFormula latex={"\\begin{aligned}&\\{\\nabla h_j(x^*)\\}_{j=1}^p\\text{ 线性无关},\\\\ &\\exists d\\text{ 使得}\\\\ &\\nabla h_j(x^*)^\\top d=0\\quad(j=1,\\ldots,p),\\\\ &\\nabla g_i(x^*)^\\top d<0\\quad(i\\in\\mathcal A(x^*))\\end{aligned}"} />
         </div>
         <div className="cq-plain-language"><strong>直白地说</strong><span>沿着等式约束允许的方向，必须能一步同时离开所有正在接触的墙。</span></div>
         <div className="cq-failure"><strong>为什么平衡会失去保证？</strong><span>没有共同内移方向时，几面墙的法向可能先彼此形成“自平衡”。乘子可以无限放大，下降力也未必能被一组有限支持力可靠地分解。</span></div>
@@ -256,7 +256,7 @@ function LicqDiagram() {
       <line x1="520" y1="250" x2="440" y2="250" className="cq-normal-arrow" markerEnd="url(#cq-arrow-blue)" />
       <line x1="520" y1="280" x2="440" y2="280" className="cq-normal-arrow duplicate" markerEnd="url(#cq-arrow-blue)" />
       <SvgFormula x={370} y={190} width={270} latex={"\\nabla g_2=2\\nabla g_1"} className="cq-label-blue" />
-      <text x="570" y="485" textAnchor="middle" className="cq-diagram-note bad">同一面墙被重复编码</text>
+      <text x="570" y="450" textAnchor="middle" className="cq-diagram-note bad">同一面墙被重复编码</text>
     </CqSvgFrame>
   );
 }
@@ -273,7 +273,7 @@ function MfcqDiagram() {
       <circle cx="310" cy="360" r="9" className="cq-point" />
       <line x1="310" y1="360" x2="220" y2="270" className="cq-escape-arrow" markerEnd="url(#cq-arrow-amber)" />
       <SvgFormula x={205} y={220} width={160} latex={"d"} className="cq-label-amber" />
-      <text x="190" y="460" textAnchor="middle" className="cq-diagram-note good">一步同时离开两面墙</text>
+      <text x="190" y="445" textAnchor="middle" className="cq-diagram-note good">一步同时离开两面墙</text>
 
       <line x1="570" y1="110" x2="570" y2="360" className="cq-wall" />
       <circle cx="570" cy="265" r="9" className="cq-point" />
@@ -281,7 +281,7 @@ function MfcqDiagram() {
       <line x1="570" y1="280" x2="660" y2="280" className="cq-conflict-arrow" markerEnd="url(#cq-arrow-red)" />
       <SvgFormula x={425} y={205} width={145} latex={"d_1<0"} className="cq-label-bad cq-conflict-formula" />
       <SvgFormula x={590} y={300} width={155} latex={"-d_1<0"} className="cq-label-bad cq-conflict-formula" />
-      <text x="570" y="460" textAnchor="middle" className="cq-diagram-note bad">两个要求互相冲突</text>
+      <text x="570" y="445" textAnchor="middle" className="cq-diagram-note bad">两个要求互相冲突</text>
     </CqSvgFrame>
   );
 }
@@ -296,7 +296,7 @@ function SlaterDiagram() {
       <SvgFormula x={392} y={235} width={180} latex={"\\bar x"} className="cq-label-amber" />
       <SvgFormula x={275} y={315} width={205} latex={"g_i(\\bar x)<0"} className="cq-label-good" />
       <text x="365" y="45" textAnchor="middle" className="cq-panel-title">存在严格内点：与每一面墙都有余量</text>
-      <text x="365" y="490" textAnchor="middle" className="cq-diagram-note good">（不是要求最优点在内部）</text>
+      <text x="365" y="450" textAnchor="middle" className="cq-diagram-note good">（不是要求最优点在内部）</text>
     </CqSvgFrame>
   );
 }

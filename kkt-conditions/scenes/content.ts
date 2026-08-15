@@ -50,8 +50,8 @@ export type ScenePreset = { point: Point; lambda: number };
 
 export const kktPresets: readonly ScenePreset[] = [
   { point: { x: 1.55, y: 1.2 }, lambda: 0 },
-  { point: { x: 0.5, y: 0.5 }, lambda: 0 },
-  { point: { x: 0.5, y: 0.5 }, lambda: 1 },
-  { point: { x: 0, y: 0 }, lambda: 1 },
-  { point: { x: 0, y: 0 }, lambda: 1 },
+  { point: { x: 1.15, y: 0.75 }, lambda: 0 },
+  { point: { x: 1.15, y: 0.75 }, lambda: 0 },
+  { point: { x: 0.85, y: 0.45 }, lambda: 0 },
+  { point: { x: 0.85, y: 0.45 }, lambda: 0 },
 ];

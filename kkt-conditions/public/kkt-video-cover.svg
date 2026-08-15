@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">KKT 条件演示视频封面</title>
+  <desc id="desc">纯黑背景，中央是黄色 KKT 条件标题，下方用红蓝相向箭头表示驱动力与约束力的平衡。</desc>
+  <rect width="1920" height="1080" fill="#000000"/>
+
+  <!-- Essential content is centered inside the 1440×1080 4:3 safe area. -->
+  <g font-family="Georgia, Times New Roman, Songti SC, STSong, serif" text-anchor="middle">
+    <text x="960" y="368" fill="#FFE600" font-size="190" font-weight="700">KKT 条件</text>
+    <text x="960" y="510" fill="#FFFFFF" font-size="74" font-weight="600" letter-spacing="8">最优解为什么会停下？</text>
+  </g>
+
+  <!-- A single visual idea: opposing forces meet at equilibrium. -->
+  <g transform="translate(960 735)">
+    <line x1="-350" y1="0" x2="-68" y2="0" stroke="#FF6658" stroke-width="18" stroke-linecap="round"/>
+    <path d="M -75 -25 L -34 0 L -75 25 Z" fill="#FF6658"/>
+    <line x1="350" y1="0" x2="68" y2="0" stroke="#34CFE0" stroke-width="18" stroke-linecap="round"/>
+    <path d="M 75 -25 L 34 0 L 75 25 Z" fill="#34CFE0"/>
+    <circle r="42" fill="#FFE600"/>
+    <circle r="18" fill="#000000"/>
+  </g>
+
+  <g font-family="Georgia, Times New Roman, Songti SC, STSong, serif" font-size="42" font-weight="700">
+    <text x="610" y="850" fill="#FF6658" text-anchor="middle">驱动力</text>
+    <text x="1310" y="850" fill="#34CFE0" text-anchor="middle">约束力</text>
+  </g>
+</svg>
