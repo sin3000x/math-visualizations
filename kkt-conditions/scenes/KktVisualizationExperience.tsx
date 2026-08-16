@@ -65,6 +65,61 @@ export default function KktVisualizationExperience() {
     setPrimerPoint({ x: 1.55, y: 1.2 });
   }, []);
 
+  const navigate = useCallback((direction: -1 | 1) => {
+    const forward = direction === 1;
+    if (isPrimer) {
+      if (forward && primerStep === primerSteps.length - 1) setSceneIndex(1);
+      else selectPrimerStep(Math.max(0, Math.min(primerSteps.length - 1, primerStep + direction)));
+    } else if (isForceBalance) {
+      if (!forward && step === 0) {
+        setSceneIndex(0);
+        setPrimerStep(primerSteps.length - 1);
+      } else if (forward && step === steps.length - 1) {
+        setSceneIndex(2);
+        setConditionsStep(0);
+      } else {
+        selectStep(Math.max(0, Math.min(steps.length - 1, step + direction)));
+      }
+    } else if (isConditionsAssembly) {
+      if (!forward && conditionsStep === 0) {
+        setSceneIndex(1);
+        selectStep(steps.length - 1);
+      } else if (forward && conditionsStep === conditionSteps.length - 1) {
+        setSceneIndex(3);
+        setWorkedExampleStep(0);
+      } else {
+        setConditionsStep(Math.max(0, Math.min(conditionSteps.length - 1, conditionsStep + direction)));
+      }
+    } else if (isWorkedExample) {
+      if (!forward && workedExampleStep === 0) {
+        setSceneIndex(2);
+        setConditionsStep(conditionSteps.length - 1);
+      } else if (forward && workedExampleStep === workedExampleSteps.length - 1) {
+        setSceneIndex(4);
+        setCqStep(0);
+      } else {
+        setWorkedExampleStep(Math.max(0, Math.min(workedExampleSteps.length - 1, workedExampleStep + direction)));
+      }
+    } else if (isCq) {
+      if (!forward && cqStep === 0) {
+        setSceneIndex(3);
+        setWorkedExampleStep(workedExampleSteps.length - 1);
+      } else if (forward && cqStep === cqSteps.length - 1) {
+        setSceneIndex(5);
+        setSummaryStep(0);
+      } else {
+        setCqStep(Math.max(0, Math.min(cqSteps.length - 1, cqStep + direction)));
+      }
+    } else if (isSummary) {
+      if (!forward && summaryStep === 0) {
+        setSceneIndex(4);
+        setCqStep(cqSteps.length - 1);
+      } else {
+        setSummaryStep(Math.max(0, Math.min(summarySteps.length - 1, summaryStep + direction)));
+      }
+    }
+  }, [conditionsStep, cqStep, isConditionsAssembly, isCq, isForceBalance, isPrimer, isSummary, isWorkedExample, primerStep, selectPrimerStep, selectStep, step, summaryStep, workedExampleStep]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
@@ -92,62 +147,20 @@ export default function KktVisualizationExperience() {
       if (!forward && !backward) return;
 
       event.preventDefault();
-      if (isPrimer) {
-        if (forward && primerStep === primerSteps.length - 1) setSceneIndex(1);
-        else selectPrimerStep(Math.max(0, Math.min(primerSteps.length - 1, primerStep + (forward ? 1 : -1))));
-      } else if (isForceBalance) {
-        if (backward && step === 0) {
-          setSceneIndex(0);
-          setPrimerStep(primerSteps.length - 1);
-        } else if (forward && step === steps.length - 1) {
-          setSceneIndex(2);
-          setConditionsStep(0);
-        } else {
-          selectStep(Math.max(0, Math.min(steps.length - 1, step + (forward ? 1 : -1))));
-        }
-      } else if (isConditionsAssembly) {
-        if (backward && conditionsStep === 0) {
-          setSceneIndex(1);
-          selectStep(steps.length - 1);
-        } else if (forward && conditionsStep === conditionSteps.length - 1) {
-          setSceneIndex(3);
-          setWorkedExampleStep(0);
-        } else {
-          setConditionsStep(Math.max(0, Math.min(conditionSteps.length - 1, conditionsStep + (forward ? 1 : -1))));
-        }
-      } else if (isWorkedExample) {
-        if (backward && workedExampleStep === 0) {
-          setSceneIndex(2);
-          setConditionsStep(conditionSteps.length - 1);
-        } else if (forward && workedExampleStep === workedExampleSteps.length - 1) {
-          setSceneIndex(4);
-          setCqStep(0);
-        } else {
-          setWorkedExampleStep(Math.max(0, Math.min(workedExampleSteps.length - 1, workedExampleStep + (forward ? 1 : -1))));
-        }
-      } else if (isCq) {
-        if (backward && cqStep === 0) {
-          setSceneIndex(3);
-          setWorkedExampleStep(workedExampleSteps.length - 1);
-        } else if (forward && cqStep === cqSteps.length - 1) {
-          setSceneIndex(5);
-          setSummaryStep(0);
-        } else {
-          setCqStep(Math.max(0, Math.min(cqSteps.length - 1, cqStep + (forward ? 1 : -1))));
-        }
-      } else if (isSummary) {
-        if (backward && summaryStep === 0) {
-          setSceneIndex(4);
-          setCqStep(cqSteps.length - 1);
-        } else {
-          setSummaryStep(Math.max(0, Math.min(summarySteps.length - 1, summaryStep + (forward ? 1 : -1))));
-        }
-      }
+      navigate(forward ? 1 : -1);
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [conditionsStep, cqStep, isConditionsAssembly, isCq, isForceBalance, isPrimer, isRecordingMode, isSummary, isWorkedExample, primerStep, selectPrimerStep, selectStep, step, summaryStep, workedExampleStep]);
+  }, [isConditionsAssembly, isCq, isForceBalance, isPrimer, isRecordingMode, isSummary, isWorkedExample, navigate, selectPrimerStep, selectStep]);
+
+  useEffect(() => {
+    const syncFullscreenState = () => {
+      if (!document.fullscreenElement) setIsRecordingMode(false);
+    };
+    document.addEventListener("fullscreenchange", syncFullscreenState);
+    return () => document.removeEventListener("fullscreenchange", syncFullscreenState);
+  }, []);
 
   async function toggleFullscreen() {
     (document.activeElement as HTMLElement | null)?.blur();
@@ -166,6 +179,17 @@ export default function KktVisualizationExperience() {
       }
     }
   }
+
+  const mobileControls = (
+    <MobileControls
+      canGoBack={sceneIndex > 0 || primerStep > 0}
+      canGoForward={sceneIndex < 5 || summaryStep < summarySteps.length - 1}
+      isRecordingMode={isRecordingMode}
+      onBack={() => navigate(-1)}
+      onForward={() => navigate(1)}
+      onExitRecording={toggleFullscreen}
+    />
+  );
 
   const center = hasCornerConstraints ? { x: -1.1, y: -0.72 } : { x: 0, y: 0 };
   const grad = {
@@ -257,48 +281,60 @@ export default function KktVisualizationExperience() {
 
   if (sceneIndex === 2) {
     return (
-      <KktConditionsScene
-        step={conditionsStep}
-        isRecordingMode={isRecordingMode}
-        onSelectStep={setConditionsStep}
-        onToggleFullscreen={toggleFullscreen}
-        onNextScene={() => { setSceneIndex(3); setWorkedExampleStep(0); }}
-      />
+      <>
+        <KktConditionsScene
+          step={conditionsStep}
+          isRecordingMode={isRecordingMode}
+          onSelectStep={setConditionsStep}
+          onToggleFullscreen={toggleFullscreen}
+          onNextScene={() => { setSceneIndex(3); setWorkedExampleStep(0); }}
+        />
+        {mobileControls}
+      </>
     );
   }
 
   if (sceneIndex === 3) {
     return (
-      <KktWorkedExampleScene
-        step={workedExampleStep}
-        isRecordingMode={isRecordingMode}
-        onSelectStep={setWorkedExampleStep}
-        onToggleFullscreen={toggleFullscreen}
-        onNextScene={() => { setSceneIndex(4); setCqStep(0); }}
-      />
+      <>
+        <KktWorkedExampleScene
+          step={workedExampleStep}
+          isRecordingMode={isRecordingMode}
+          onSelectStep={setWorkedExampleStep}
+          onToggleFullscreen={toggleFullscreen}
+          onNextScene={() => { setSceneIndex(4); setCqStep(0); }}
+        />
+        {mobileControls}
+      </>
     );
   }
 
   if (sceneIndex === 4) {
     return (
-      <KktConstraintQualificationsScene
-        step={cqStep}
-        isRecordingMode={isRecordingMode}
-        onSelectStep={setCqStep}
-        onToggleFullscreen={toggleFullscreen}
-        onNextScene={() => { setSceneIndex(5); setSummaryStep(0); }}
-      />
+      <>
+        <KktConstraintQualificationsScene
+          step={cqStep}
+          isRecordingMode={isRecordingMode}
+          onSelectStep={setCqStep}
+          onToggleFullscreen={toggleFullscreen}
+          onNextScene={() => { setSceneIndex(5); setSummaryStep(0); }}
+        />
+        {mobileControls}
+      </>
     );
   }
 
   if (sceneIndex === 5) {
     return (
-      <KktSummaryScene
-        step={summaryStep}
-        isRecordingMode={isRecordingMode}
-        onSelectStep={setSummaryStep}
-        onToggleFullscreen={toggleFullscreen}
-      />
+      <>
+        <KktSummaryScene
+          step={summaryStep}
+          isRecordingMode={isRecordingMode}
+          onSelectStep={setSummaryStep}
+          onToggleFullscreen={toggleFullscreen}
+        />
+        {mobileControls}
+      </>
     );
   }
 
@@ -377,6 +413,7 @@ export default function KktVisualizationExperience() {
     const grad3dEnd = project3d(grad3dEndX, grad3dEndY, 0);
 
     return (
+      <>
       <main className={`site-shell primer-scene ${isRecordingMode ? "recording-mode" : ""}`}>
         <header className="topbar">
           <div className="brand"><span className="brand-mark">∇</span><span>KKT · 几何实验室</span></div>
@@ -599,10 +636,13 @@ export default function KktVisualizationExperience() {
 
         <footer><span>核心关系</span><strong><MathFormula latex={"\\nabla f(x)\\perp\\{f(x)=c\\}"} /></strong><span>负梯度指向下降最快方向</span><CopyrightNotice /></footer>
       </main>
+      {mobileControls}
+      </>
     );
   }
 
   return (
+    <>
     <main className={`site-shell force-balance-scene ${isRecordingMode ? "recording-mode" : ""}`}>
       <header className="topbar">
         <div className="brand">
@@ -1008,6 +1048,35 @@ export default function KktVisualizationExperience() {
         <CopyrightNotice />
       </footer>
     </main>
+    {mobileControls}
+    </>
+  );
+}
+
+type MobileControlsProps = {
+  canGoBack: boolean;
+  canGoForward: boolean;
+  isRecordingMode: boolean;
+  onBack: () => void;
+  onForward: () => void;
+  onExitRecording: () => void;
+};
+
+function MobileControls({ canGoBack, canGoForward, isRecordingMode, onBack, onForward, onExitRecording }: MobileControlsProps) {
+  return (
+    <div className={`mobile-controls ${isRecordingMode ? "is-recording" : ""}`} aria-label="移动端演示控制">
+      <button type="button" onClick={onBack} disabled={!canGoBack} aria-label="上一步，必要时返回上一幕">
+        <span aria-hidden="true">←</span> 上一页
+      </button>
+      {isRecordingMode && (
+        <button type="button" className="exit-recording" onClick={onExitRecording} aria-label="退出全屏录制模式">
+          <span aria-hidden="true">×</span> 退出录制
+        </button>
+      )}
+      <button type="button" onClick={onForward} disabled={!canGoForward} aria-label="下一步，必要时进入下一幕">
+        下一页 <span aria-hidden="true">→</span>
+      </button>
+    </div>
   );
 }
 
