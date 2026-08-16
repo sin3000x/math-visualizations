@@ -1,0 +1,6 @@
+wrangler.json
+.dev.vars
+.vite
+.DS_Store
+**/*.mp4
+videos/**

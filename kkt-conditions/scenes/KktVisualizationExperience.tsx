@@ -41,6 +41,7 @@ export default function KktVisualizationExperience() {
   const [lambda, setLambda] = useState(0);
   const [cornerLambdas, setCornerLambdas] = useState(() => cornerKktLambdas(presets[3].point));
   const [isRecordingMode, setIsRecordingMode] = useState(false);
+  const [recordingStartedOnMobile, setRecordingStartedOnMobile] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
   const primerSvgRef = useRef<SVGSVGElement>(null);
   const isPrimer = sceneIndex === 0;
@@ -127,6 +128,7 @@ export default function KktVisualizationExperience() {
 
       if (event.key === "Escape" && isRecordingMode) {
         setIsRecordingMode(false);
+        setRecordingStartedOnMobile(false);
         if (document.fullscreenElement) void document.exitFullscreen();
         return;
       }
@@ -156,7 +158,10 @@ export default function KktVisualizationExperience() {
 
   useEffect(() => {
     const syncFullscreenState = () => {
-      if (!document.fullscreenElement) setIsRecordingMode(false);
+      if (!document.fullscreenElement) {
+        setIsRecordingMode(false);
+        setRecordingStartedOnMobile(false);
+      }
     };
     document.addEventListener("fullscreenchange", syncFullscreenState);
     return () => document.removeEventListener("fullscreenchange", syncFullscreenState);
@@ -166,10 +171,12 @@ export default function KktVisualizationExperience() {
     (document.activeElement as HTMLElement | null)?.blur();
     if (isRecordingMode) {
       setIsRecordingMode(false);
+      setRecordingStartedOnMobile(false);
       if (document.fullscreenElement) await document.exitFullscreen();
       return;
     }
 
+    setRecordingStartedOnMobile(window.matchMedia("(max-width: 620px)").matches);
     setIsRecordingMode(true);
     if (!document.fullscreenElement) {
       try {
@@ -185,6 +192,7 @@ export default function KktVisualizationExperience() {
       canGoBack={sceneIndex > 0 || primerStep > 0}
       canGoForward={sceneIndex < 5 || summaryStep < summarySteps.length - 1}
       isRecordingMode={isRecordingMode}
+      recordingStartedOnMobile={recordingStartedOnMobile}
       onBack={() => navigate(-1)}
       onForward={() => navigate(1)}
       onExitRecording={toggleFullscreen}
@@ -1057,14 +1065,15 @@ type MobileControlsProps = {
   canGoBack: boolean;
   canGoForward: boolean;
   isRecordingMode: boolean;
+  recordingStartedOnMobile: boolean;
   onBack: () => void;
   onForward: () => void;
   onExitRecording: () => void;
 };
 
-function MobileControls({ canGoBack, canGoForward, isRecordingMode, onBack, onForward, onExitRecording }: MobileControlsProps) {
+function MobileControls({ canGoBack, canGoForward, isRecordingMode, recordingStartedOnMobile, onBack, onForward, onExitRecording }: MobileControlsProps) {
   return (
-    <div className={`mobile-controls ${isRecordingMode ? "is-recording" : ""}`} aria-label="移动端演示控制">
+    <div className={`mobile-controls ${isRecordingMode ? "is-recording" : ""} ${recordingStartedOnMobile ? "mobile-origin" : ""}`} aria-label="移动端演示控制">
       <button type="button" onClick={onBack} disabled={!canGoBack} aria-label="上一步，必要时返回上一幕">
         <span aria-hidden="true">←</span> 上一页
       </button>
