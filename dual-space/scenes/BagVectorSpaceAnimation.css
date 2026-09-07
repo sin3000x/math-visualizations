@@ -1,0 +1,12 @@
+.law-animation { width: 100%; min-height: 0; display: grid; grid-template-rows: minmax(320px, 1fr) 64px; align-self: stretch; padding-bottom: 24px; }
+.law-motion-stage { position: relative; width: 100%; min-height: 320px; }
+.law-motion-node { position: absolute; top: 52%; width: max-content; font-size: 36px; }
+.law-motion-node .axiom-bag { width: 160px; height: 180px; }
+.law-motion-node .axiom-bag-label { font-size: 30px; }
+.law-motion-node .axiom-bag .fruit-bag.compact { transform: translate(-50%, -50%) scale(.86); }
+.law-bracket { font-size: 170px; font-weight: 200; color: var(--cyan); }
+.law-animation-3 .law-motion-node:not(:last-child) .axiom-bag-label { opacity: calc(1 - var(--merge)); }
+.law-animation-3 .law-motion-node:not(:last-child) .fruit-bag { border-color: rgba(216,184,117,calc(1 - var(--merge))); background: transparent; }
+.law-animation-3 .law-motion-node:not(:last-child) .bag-handle { opacity: calc(1 - var(--merge)); }
+.law-animation-3 .law-motion-node:not(:last-child) .fruit-measure > .math-formula { opacity: calc(1 - var(--merge)); }
+.law-animation-2 [data-motion-id="zero"] .axiom-bag-label { opacity: calc(1 - var(--merge)); }

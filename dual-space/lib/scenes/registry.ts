@@ -19,6 +19,15 @@ const sceneDefinitions = [
     summary: "用购买与退货的实数重量，逐条验证袋子空间的八条线性空间公理。",
     viewport: SCENE_VIEWPORT,
   },
+  {
+    id: "checkout-operations",
+    conceptId: "dual-space-episode-1",
+    order: 30,
+    route: "/",
+    title: "收银台的加法与数乘",
+    summary: "对同一袋逐点相加、按实数缩放报价，定义新的收银台。",
+    viewport: SCENE_VIEWPORT,
+  },
 ] as const satisfies readonly SceneDefinition[];
 
 export function validateSceneRegistry(scenes: readonly SceneDefinition[]) {

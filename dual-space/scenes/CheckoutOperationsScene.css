@@ -1,0 +1,17 @@
+.checkout-operations { background: #000; position: relative; }
+.checkout-equations { display: grid; align-content: center; justify-items: center; gap: 110px; padding: 60px 40px; }
+.checkout-motion-row { position: relative; width: 1320px; height: 190px; }
+.checkout-motion-node { position: absolute; top: 50%; transform: translate(-50%, -50%); width: max-content; font-size: 34px; color: #b9bab2; }
+.equation-checkout { width: 124px; }
+.equation-checkout .checkout-icon { display: block; width: 124px; }
+.checkout-f { color: #62d2c3; }
+.checkout-g { color: #f4c95d; }
+.equation-checkout .checkout-screen-shell, .equation-checkout .checkout-body { stroke: currentColor; }
+.checkout-parenthesis { display: inline-block; color: #b9bab2; font-size: 38px; transform: scaleY(2.8); }
+.checkout-equation-bag { position: relative; width: 142px; height: 148px; }
+.checkout-equation-bag .fruit-bag.compact { position: absolute; left: 50%; top: 50%; margin: 0; transform: translate(-50%, -50%) scale(.68); }
+.checkout-definition-symbol { position: relative; color: #b69aef; font-size: 38px; }
+.checkout-definition-symbol > span:first-child { position: absolute; left: 50%; bottom: calc(100% - 10px); transform: translateX(-50%); white-space: nowrap; font-size: 13px; }
+.checkout-result { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity .55s ease; }
+.checkout-result[data-visible="true"] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .checkout-result { transition: none; } }

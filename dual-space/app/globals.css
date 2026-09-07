@@ -6,7 +6,7 @@ body { min-width: 320px; background-image: linear-gradient(rgba(74,70,61,.055) 1
 button { font: inherit; cursor: pointer; }
 .math-formula { display: inline-block; white-space: nowrap; }
 
-.experience { width: min(1660px, calc(100vw - 40px)); height: min(940px, calc(100vh - 40px)); min-height: 680px; margin: 0 auto; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 18px; }
+.experience { width: min(1660px, calc(100vw - 40px)); margin: 0 auto; display: grid; grid-template-rows: auto auto; gap: 18px; }
 .page-toolbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .page-toolbar > div:first-child > span { color: #9f4d42; font-size: 13px; font-weight: 800; letter-spacing: .14em; }
 .page-toolbar h1 { margin: 5px 0 0; font: 700 clamp(30px, 2.6vw, 48px)/1.08 Georgia, "Songti SC", serif; }
@@ -15,6 +15,8 @@ button { font: inherit; cursor: pointer; }
 .page-toolbar button:disabled { cursor: default; opacity: .25; }
 .page-toolbar .record-button { width: auto; padding: 0 22px; background: #282a24; }
 .step-count { min-width: 48px; color: #77746b; text-align: center; font-size: 13px; font-weight: 800; }
+.scene-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; container-type: inline-size; }
+.scene-frame > .intro-canvas, .scene-frame > .axiom-canvas { position: absolute; inset: 0 auto auto 0; width: 1440px; height: 810px; transform: scale(calc(100cqw / 1440px)); transform-origin: top left; }
 
 .intro-canvas { --coral: #ed6a5a; --yellow: #f4c95d; --cyan: #62d2c3; position: relative; min-height: 0; overflow: hidden; display: grid; grid-template-columns: 1fr .7fr 1fr; align-items: center; gap: 34px; padding: clamp(34px, 4vw, 72px); border: 1px solid #252525; border-radius: 24px; color: #f6f2e7; background: #000; box-shadow: 0 22px 65px rgba(38,36,29,.2); }
 
@@ -154,24 +156,21 @@ button { font: inherit; cursor: pointer; }
 body:has(.recording-mode) { overflow: hidden; background: #000; }
 .recording-mode { position: fixed; inset: 0; z-index: 20; width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); min-height: 0; margin: auto; display: block; }
 .recording-mode .page-toolbar { display: none; }
-.recording-mode .intro-canvas, .recording-mode .axiom-canvas { width: 100%; height: 100%; border: 0; border-radius: 0; box-shadow: none; }
+.recording-mode .scene-frame { width: 100%; height: 100%; }
+.recording-mode .intro-canvas, .recording-mode .axiom-canvas { border: 0; border-radius: 0; box-shadow: none; }
 .recording-mode .intro-canvas { padding: clamp(42px, 4vw, 76px); }
 
 @media (max-width: 960px) {
   #root { height: auto; min-height: 100%; padding: 10px; }
-  .experience { width: 100%; height: auto; min-height: 0; }
-  .intro-canvas { grid-template-columns: 1fr; padding: 24px; }
-  .world { height: auto; min-height: 440px; }
-  .transaction-stage { height: 430px; }
-  .axiom-canvas { grid-template-columns: 1fr; overflow: visible; }
-  .operation-definition { padding: 32px 18px; }
-  .definition-row { transform: scale(.72); }
-  .space-setup { flex-direction: column; }
-  .bag-set, .scalar-set { min-width: min(100%, 700px); }
-  .setup-bags { transform: scale(.72); }
-  .axiom-index { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.11); }
-  .axiom-index ol { grid-template-columns: repeat(2, 1fr); }
-  .axiom-stage { min-height: 620px; }
-  .axiom-row { flex-wrap: wrap; }
+  .experience { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .chosen-bag, .motion-line i, .reveal.visible { animation: none; opacity: 1; transform: none; } }
+
+.scene-navigation { display: flex; flex-wrap: wrap; gap: 10px; }
+.scene-navigation button { border: 1px solid #aaa69b; border-radius: 10px; padding: 10px 16px; background: transparent; color: #5b5b51; font: inherit; font-size: 15px; cursor: pointer; }
+.scene-navigation button[aria-current="page"] { background: #282a24; border-color: #282a24; color: #f6f3e9; }
+.recording-mode .scene-navigation { display: none; }
+@media (max-width: 700px) {
+  .page-toolbar { flex-wrap: wrap; }
+  .scene-navigation button { font-size: 13px; padding: 8px 10px; }
+}

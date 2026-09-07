@@ -1,13 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getConceptScenes } from "../lib/scenes/registry";
-import { BagVectorSpaceScene } from "../scenes/BagVectorSpaceScene";
+import { BagVectorSpaceScene, type PropertyAnimationHandle } from "../scenes/BagVectorSpaceScene";
 import { bagVectorSpaceStepCount, introSteps } from "../scenes/content";
 import { DualSpaceIntroScene } from "../scenes/DualSpaceIntroScene";
 
+import { CheckoutOperationsScene } from "../scenes/CheckoutOperationsScene";
+
 const conceptScenes = getConceptScenes("dual-space-episode-1");
-const sceneStepCounts = [introSteps.length, bagVectorSpaceStepCount] as const;
+const sceneStepCounts = [introSteps.length, bagVectorSpaceStepCount, 4] as const;
 
 export default function App() {
+  const animationRef = useRef<PropertyAnimationHandle>(null);
   const [recording, setRecording] = useState(false);
   const [sceneIndex, setSceneIndex] = useState(0);
   const [step, setStep] = useState(0);
@@ -15,6 +18,7 @@ export default function App() {
   const stepCount = sceneStepCounts[sceneIndex];
 
   const navigate = useCallback((direction: 1 | -1) => {
+    if (animationRef.current?.navigate(direction)) return;
     const next = step + direction;
     if (next >= 0 && next < sceneStepCounts[sceneIndex]) {
       setStep(next);
@@ -57,7 +61,7 @@ export default function App() {
       if (!forward && !backward) return;
 
       event.preventDefault();
-      navigate(forward ? 1 : -1);
+      if (!event.repeat) navigate(forward ? 1 : -1);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -97,7 +101,17 @@ export default function App() {
           <button className="record-button" type="button" onClick={() => void enterRecording()}>全屏录制</button>
         </div>
       </div>
-      {sceneIndex === 0 ? <DualSpaceIntroScene step={step} /> : <BagVectorSpaceScene step={step} />}
+      <nav className="scene-navigation" aria-label="场景导航">
+        {conceptScenes.map((candidate, index) => (
+          <button key={candidate.id} type="button" aria-current={index === sceneIndex ? "page" : undefined}
+            onClick={() => { setSceneIndex(index); setStep(0); }}>
+            {candidate.title}
+          </button>
+        ))}
+      </nav>
+      <div className="scene-frame">
+        {sceneIndex === 0 ? <DualSpaceIntroScene step={step} /> : sceneIndex === 1 ? <BagVectorSpaceScene step={step} animationRef={animationRef} /> : <CheckoutOperationsScene step={step} />}
+      </div>
     </main>
   );
 }
