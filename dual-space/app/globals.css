@@ -96,6 +96,7 @@ button { font: inherit; cursor: pointer; }
 .definition-bag { width: 210px; height: 190px; display: grid; place-items: center; }
 .definition-bag .fruit-bag.compact { transform: scale(.78); margin: 0; }
 .definition-operator { min-width: 34px; display: grid; place-items: center; color: #aaa9a1; font-size: clamp(30px, 2.2vw, 42px); line-height: 1; }
+.definition-scalar { transform: translateX(clamp(48px, 1.4vw, 24px)); }
 
 .axiom-canvas.setup-only { grid-template-columns: 1fr; }
 .space-setup { min-height: 0; display: flex; align-items: center; justify-content: center; gap: clamp(30px, 3.4vw, 64px); padding: clamp(50px, 5vw, 86px); }
@@ -112,18 +113,19 @@ button { font: inherit; cursor: pointer; }
 .scalar-members { display: flex; align-items: center; justify-content: center; gap: 34px; }
 .scalar-members > span { width: 88px; height: 88px; display: grid; place-items: center; border: 2px solid var(--cyan); border-radius: 50%; color: #f7f0dc; background: rgba(98,210,195,.07); font-size: 34px; }
 
-.axiom-stage { min-width: 0; min-height: 0; position: relative; padding: clamp(32px, 3vw, 52px) clamp(24px, 2.3vw, 44px); }
-.axiom-heading { position: absolute; z-index: 2; top: clamp(92px, 12vh, 130px); left: 0; right: 0; text-align: center; }
+.axiom-stage { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto auto minmax(0, 1fr); justify-items: center; padding: clamp(28px, 3.2vh, 48px) clamp(28px, 2.6vw, 52px) clamp(20px, 2.2vh, 32px); }
+.axiom-heading { text-align: center; }
 .axiom-heading h2 { margin: 0; font: 700 clamp(30px, 2.35vw, 45px)/1.08 Georgia, "Songti SC", serif; }
-.axiom-equation { position: absolute; z-index: 2; top: clamp(172px, 20vh, 216px); left: 50%; transform: translateX(-50%); min-height: 68px; display: grid; place-items: center; padding: 12px 30px; border: 1px solid rgba(244,201,93,.3); border-radius: 26px; color: var(--yellow); background: rgba(244,201,93,.055); font-size: clamp(22px, 1.8vw, 34px); }
-.axiom-example { position: absolute; inset: 0; min-height: 0; display: grid; place-content: center; gap: clamp(20px, 4vh, 42px); }
-.axiom-example.stacked-equation { gap: clamp(6px, 1vh, 12px); transform: translateY(clamp(94px, 11vh, 116px)); }
-.stacked-equality { min-height: clamp(64px, 7vh, 76px); display: grid; place-items: center; color: #f4efe1; font-size: clamp(52px, 3.8vw, 70px); line-height: 1; }
-.stacked-equality .math-formula { display: block; transform: rotate(90deg) scale(1.15); transform-origin: center; }
-.axiom-row { gap: clamp(26px, 2.2vw, 40px); }
+.axiom-equation { margin-top: 14px; min-height: 68px; display: grid; place-items: center; padding: 12px 30px; border: 1px solid rgba(244,201,93,.3); border-radius: 26px; color: var(--yellow); background: rgba(244,201,93,.055); font-size: clamp(22px, 1.8vw, 34px); }
+.axiom-example { width: 100%; min-height: 0; overflow: visible; display: grid; place-content: center; justify-items: center; gap: clamp(18px, 3vh, 34px); }
+.axiom-example.stacked-equation { gap: clamp(6px, 1vh, 12px); }
+.stacked-equality { min-height: clamp(88px, 9vh, 112px); display: grid; place-items: center; color: #d0d0c6; font-size: clamp(68px, 5.2vw, 92px); line-height: 1; }
+.stacked-equality .math-formula { display: block; transform: rotate(90deg) scale(1.2); transform-origin: center; }
+.axiom-row { gap: clamp(26px, 2.2vw, 40px); padding-top: clamp(38px, 4.2vh, 50px); }
 .expression-group-wrap { gap: clamp(24px, 2vw, 36px); }
 .expression-group { gap: clamp(14px, 1.2vw, 22px); }
-.axiom-term-wrap { gap: 0; }
+.axiom-term-wrap { position: relative; gap: 0; }
+.scalar-host { position: relative; display: flex; flex-direction: row; align-items: center; }
 .axiom-bag { width: clamp(104px, 7.5vw, 132px); height: 126px; position: relative; }
 .axiom-bag-label { position: absolute; left: 50%; bottom: calc(100% + 10px); width: max-content; min-width: 100%; transform: translateX(-50%); color: #f8f1dd; text-align: center; font-size: clamp(18px, 1.25vw, 24px); font-weight: 800; }
 .bag-visual { position: absolute; inset: 0; overflow: visible; }
@@ -141,12 +143,14 @@ button { font: inherit; cursor: pointer; }
 .medium-equation .axiom-bag .fruit-bag.compact { transform: translate(-50%, -50%) scale(.69); }
 .bag-operator, .bag-coefficient, .group-equality { color: #8a8b84; font-size: clamp(21px, 1.5vw, 29px); line-height: 1; }
 .bag-operator { margin-right: clamp(16px, 1.2vw, 22px); }
-.bag-coefficient { margin-right: clamp(16px, 1.2vw, 22px); color: #babbb3; }
+.axiom-term-wrap.has-scalar .bag-operator { margin-right: clamp(54px, 4.2vw, 70px); }
+.bag-coefficient { position: absolute; right: calc(100% + clamp(10px, .8vw, 14px)); top: 50%; transform: translateY(-50%); color: #babbb3; white-space: nowrap; }
 .group-equality { color: #babbb3; }
-.bag-parenthesis { min-width: 40px; display: grid; place-items: center; color: #b8b8b0; font-size: clamp(112px, 7.1vw, 130px); line-height: 1; }
-.bag-parenthesis .math-formula { display: block; line-height: 1; }
-.short-equation .bag-parenthesis { min-width: 48px; font-size: clamp(132px, 8.2vw, 150px); }
-.medium-equation .bag-parenthesis { min-width: 44px; font-size: clamp(122px, 7.7vw, 140px); }
+.bag-parenthesis { width: clamp(30px, 2.2vw, 40px); height: 198px; flex: none; color: #c5c5bc; overflow: visible; }
+.bag-parenthesis.open { margin-right: clamp(10px, .8vw, 14px); }
+.bag-parenthesis.close { margin-left: clamp(10px, .8vw, 14px); }
+.short-equation .bag-parenthesis { height: 248px; }
+.medium-equation .bag-parenthesis { height: 220px; }
 body:has(.recording-mode) { overflow: hidden; background: #000; }
 .recording-mode { position: fixed; inset: 0; z-index: 20; width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); min-height: 0; margin: auto; display: block; }
 .recording-mode .page-toolbar { display: none; }

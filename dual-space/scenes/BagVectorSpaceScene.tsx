@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 import { MathFormula } from "../components/MathFormula";
 import { HorizontalArrangement } from "../components/HorizontalArrangement";
 import type { BagVector } from "../lib/model/bagSpace";
@@ -22,11 +22,34 @@ type AlgebraDisplay = Readonly<{
   rows: readonly (readonly ExpressionGroup[])[];
 }>;
 
-function equationDensity(groups: readonly ExpressionGroup[]) {
-  const termCount = groups.reduce((count, group) => count + group.length, 0);
+function equationDensity(rows: AlgebraDisplay["rows"]) {
+  const termCount = rows.reduce(
+    (max, groups) => Math.max(max, groups.reduce((count, group) => count + group.length, 0)),
+    0,
+  );
   if (termCount <= 3) return "short-equation";
   if (termCount === 4) return "medium-equation";
   return "long-equation";
+}
+
+function BagParenthesis({ side }: { side: "open" | "close" }) {
+  const d = side === "open"
+    ? "M34 8C12 36 5 70 5 110C5 150 12 184 34 212"
+    : "M6 8C28 36 35 70 35 110C35 150 28 184 6 212";
+  return (
+    <svg className={`bag-parenthesis ${side}`} viewBox="0 0 40 220" fill="none" preserveAspectRatio="none" aria-hidden="true">
+      <path d={d} stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ScalarHost({ scalar, children }: { scalar?: string; children: ReactNode }) {
+  return (
+    <span className="scalar-host">
+      {scalar ? <span className="bag-coefficient"><MathFormula latex={scalar} /></span> : null}
+      {children}
+    </span>
+  );
 }
 
 const U = { apples: 2, bananas: 1 } as const;
@@ -164,7 +187,7 @@ function OperationDefinition() {
         <DefinitionBag bag={{ apples: 3, bananas: 3 }} />
       </HorizontalArrangement>
       <HorizontalArrangement className="definition-row">
-        <span className="definition-operator"><MathFormula latex={"2\\times"} /></span>
+        <span className="definition-operator definition-scalar"><MathFormula latex={"2~\\times"} /></span>
         <DefinitionBag bag={U} />
         <span className="definition-operator"><MathFormula latex={"="} /></span>
         <DefinitionBag bag={{ apples: 4, bananas: 2 }} />
@@ -207,23 +230,25 @@ function SpaceSetup() {
 }
 
 function VisualEquation({ rows }: { rows: AlgebraDisplay["rows"] }) {
+  const density = equationDensity(rows);
   return (
     <div className={`axiom-example${rows.length > 1 ? " stacked-equation" : ""}`}>
       {rows.map((groups, rowIndex) => (
         <Fragment key={rowIndex}>
           {rowIndex > 0 ? <div className="stacked-equality"><MathFormula latex={"="} /></div> : null}
-          <HorizontalArrangement className={`axiom-row ${equationDensity(groups)}`}>
+          <HorizontalArrangement className={`axiom-row ${density}`}>
             {groups.map((group, groupIndex) => (
               <HorizontalArrangement className="expression-group-wrap" key={groupIndex}>
                 {groupIndex > 0 ? <span className="group-equality"><MathFormula latex={"="} /></span> : null}
                 <HorizontalArrangement className="expression-group">
                   {group.map((term, termIndex) => (
-                    <HorizontalArrangement className="axiom-term-wrap" key={`${term.label}-${termIndex}`}>
+                    <HorizontalArrangement className={`axiom-term-wrap${term.scalarBefore ? " has-scalar" : ""}`} key={`${term.label}-${termIndex}`}>
                       {termIndex > 0 ? <span className="bag-operator"><MathFormula latex={term.operatorBefore ?? "+"} /></span> : null}
-                      {term.scalarBefore ? <span className="bag-coefficient"><MathFormula latex={term.scalarBefore} /></span> : null}
-                      {term.openBefore ? <span className="bag-parenthesis"><MathFormula latex={"("} /></span> : null}
-                      <ExampleBag term={term} />
-                      {term.closeAfter ? <span className="bag-parenthesis"><MathFormula latex={")"} /></span> : null}
+                      <ScalarHost scalar={term.scalarBefore}>
+                        {term.openBefore ? <BagParenthesis side="open" /> : null}
+                        <ExampleBag term={term} />
+                      </ScalarHost>
+                      {term.closeAfter ? <BagParenthesis side="close" /> : null}
                     </HorizontalArrangement>
                   ))}
                 </HorizontalArrangement>
