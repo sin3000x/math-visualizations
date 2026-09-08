@@ -24,7 +24,7 @@ test("dual-space scenes retain their teaching order", () => {
   assert.equal(bagsAndCheckoutsScene.title, "袋子的世界与收银台的世界");
   assert.deepEqual(
     getConceptScenes("dual-space-episode-1").map((scene) => scene.id),
-    ["bags-and-checkouts", "bags-form-vector-space", "checkout-operations"],
+    ["bags-and-checkouts", "bags-form-vector-space", "checkout-linearity", "checkout-operations", "checkouts-form-vector-space", "dual-space-summary"],
   );
   assert.equal(bagsFormVectorSpaceScene.order, 20);
 });

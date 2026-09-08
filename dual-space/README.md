@@ -7,6 +7,30 @@ npm install
 npm run dev
 ```
 
+## 视频导出
+
+需要本机安装 Google Chrome，并先运行 `npm install`。FFmpeg 随开发依赖安装，不依赖系统 Homebrew 动态库；也可通过 `FFMPEG_PATH` 指定编码器。导出器会自行启动并关闭 Vite 服务，无需提前打开网页或进入系统全屏。
+
+| 命令 | 输出 | 默认文件 |
+| --- | --- | --- |
+| `npm run video:debug` | 640×360，30 fps | `exports/dual-space-debug.mp4` |
+| `npm run video:production` | 1920×1080，60 fps | `exports/dual-space-production.mp4` |
+
+两个预设使用相同的 1920×1080 CSS 视口，调试版以 1/3 像素比例栅格化，保留相同构图。逐帧推进 JavaScript 与 CSS 动画时间，PNG 通过管道交给 FFmpeg 编码为 H.264 MP4；不会保留中间帧。正式版 CRF 18，调试版 CRF 22。相同默认输出路径再次运行会替换上次成功导出的视频；失败时保留旧视频并清理未完成文件。
+
+播放脚本在 `scripts/video/timeline.mjs`：第一幕展示全部袋子后点击第二、第三个袋子，展示全部收银台后点击第二、第三个收银台，显示点击圆环；其余通过右方向键推进。普通步骤默认 2.5 秒，袋子公理动画步骤 3 秒（动画约 1 秒，之后停留约 2 秒），结尾两幕各 4 秒。循环漂浮动画在停顿期间继续播放。所有时间单位为秒，帧率切换不改变播放速度。
+
+```bash
+# 先输出短片验证编码与清晰度
+npm run video:production -- --limit-seconds 5 --output exports/production-sample.mp4
+# 检查全部步骤、内部动画阶段、点击结果、公式与画布尺寸；输出采样帧和报告
+npm run video:check
+# 同样检查 360p
+npm run video:debug -- --check
+```
+
+生成文件均在 Git 忽略范围内。检查输出在 `exports/qa-production/` 或 `exports/qa-debug/`。可用 `VIDEO_BROWSER=chromium` 指定已由 Playwright 安装的 Chromium。
+
 第一节分六步揭示袋子与收银台；第二节先定义袋子运算，再逐条验证八条线性空间公理；第三节在一幅画面中展示收银台的加法与数乘，用不同颜色的收银台作用于同一个确定的袋子，展示加法与乘以 0.8 的定义，不显示内部价格。两行用“定义为”符号连接。方向右键依次展示加法左式与定义符号、淡入加法右式、展示数乘左式与定义符号、淡入数乘右式；方向左键逐步返回，数字键 1–4 直接跳转。画面底部不显示按钮。普通模式的场景导航栏可直接跳转任意一幕。方向键或 `PageUp` / `PageDown` 可跨步骤、跨 Scene 导航，数字键跳转当前 Scene 内步骤，`Escape` 退出录制模式。
 
 ## 系列路线

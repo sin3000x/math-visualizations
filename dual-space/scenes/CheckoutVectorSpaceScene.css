@@ -1,0 +1,12 @@
+.axiom-canvas.checkout-vector-space { display: flex; flex-direction: column; padding: 32px 48px 28px; line-height: 1.2; background: #000; }
+.checkout-space-properties { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 1fr); grid-auto-flow: column; column-gap: 42px; margin: 0; }
+.checkout-space-property { padding: 16px 0; border-top: 1px solid #292929; }
+.checkout-space-property h3 { display: flex; align-items: center; gap: 14px; margin: 0 0 10px; font-size: 25px; font-weight: 500; color: #ddd; }
+.checkout-space-property h3 > span { color: #777; font-size: 19px; }
+.checkout-space-diagram { display: flex; align-items: center; justify-content: center; gap: 5px; height: 110px; }
+.overview-counter { flex: 0 0 64px; width: 64px; position: relative; }
+.overview-counter .checkout-icon { display: block; width: 100%; max-width: none; }
+.overview-symbol { flex: 0 0 auto; font-size: 25px; }
+.overview-symbol.equality { margin: 0 6px; color: #b69aef; font-size: 32px; }
+.overview-counter-inverse .checkout-icon * { fill: none !important; stroke: #62d2c3; stroke-width: 5; stroke-dasharray: 10 7; }
+.overview-counter-inverse .checkout-keys, .overview-counter-inverse .checkout-shadow, .overview-counter-inverse .checkout-highlight { display: none; }

@@ -6,12 +6,18 @@ import { DualSpaceIntroScene } from "../scenes/DualSpaceIntroScene";
 
 import { CheckoutOperationsScene } from "../scenes/CheckoutOperationsScene";
 
+import { CheckoutLinearityScene } from "../scenes/CheckoutLinearityScene";
+
+import { CheckoutVectorSpaceScene } from "../scenes/CheckoutVectorSpaceScene";
+
+import { DualSpaceSummaryScene } from "../scenes/DualSpaceSummaryScene";
+
 const conceptScenes = getConceptScenes("dual-space-episode-1");
-const sceneStepCounts = [introSteps.length, bagVectorSpaceStepCount, 4] as const;
+const sceneStepCounts = [introSteps.length, bagVectorSpaceStepCount, 3, 4, 1, 1] as const;
 
 export default function App() {
   const animationRef = useRef<PropertyAnimationHandle>(null);
-  const [recording, setRecording] = useState(false);
+  const [recording, setRecording] = useState(() => new URLSearchParams(window.location.search).get("export") === "1");
   const [sceneIndex, setSceneIndex] = useState(0);
   const [step, setStep] = useState(0);
   const scene = conceptScenes[sceneIndex];
@@ -88,11 +94,10 @@ export default function App() {
   }
 
   return (
-    <main className={recording ? "experience recording-mode" : "experience"} data-scene-id={scene.id}>
+    <main className={recording ? "experience recording-mode" : "experience"} data-scene-id={scene.id} data-step={step}>
       <div className="page-toolbar">
         <div>
           <span>对偶空间 · 第{sceneIndex + 1}节</span>
-          <h1>{scene.title}</h1>
         </div>
         <div className="toolbar-controls">
           <button type="button" onClick={() => navigate(-1)} disabled={sceneIndex === 0 && step === 0}>←</button>
@@ -110,7 +115,7 @@ export default function App() {
         ))}
       </nav>
       <div className="scene-frame">
-        {sceneIndex === 0 ? <DualSpaceIntroScene step={step} /> : sceneIndex === 1 ? <BagVectorSpaceScene step={step} animationRef={animationRef} /> : <CheckoutOperationsScene step={step} />}
+        {sceneIndex === 0 ? <DualSpaceIntroScene step={step} /> : sceneIndex === 1 ? <BagVectorSpaceScene step={step} animationRef={animationRef} /> : sceneIndex === 2 ? <CheckoutLinearityScene key={step} step={step} animationRef={animationRef} /> : sceneIndex === 3 ? <CheckoutOperationsScene step={step} /> : sceneIndex === 4 ? <CheckoutVectorSpaceScene /> : <DualSpaceSummaryScene />}
       </div>
     </main>
   );

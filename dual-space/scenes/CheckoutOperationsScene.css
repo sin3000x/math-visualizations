@@ -1,6 +1,6 @@
 .checkout-operations { background: #000; position: relative; }
-.checkout-equations { display: grid; align-content: center; justify-items: center; gap: 110px; padding: 60px 40px; }
-.checkout-motion-row { position: relative; width: 1320px; height: 190px; }
+.checkout-equations { display: grid; align-content: center; justify-items: center; gap: 38px; padding: 45px 40px; }
+.checkout-motion-row { position: relative; width: 1320px; height: 340px; }
 .checkout-motion-node { position: absolute; top: 50%; transform: translate(-50%, -50%); width: max-content; font-size: 34px; color: #b9bab2; }
 .equation-checkout { width: 124px; }
 .equation-checkout .checkout-icon { display: block; width: 124px; }
@@ -15,3 +15,10 @@
 .checkout-result { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity .55s ease; }
 .checkout-result[data-visible="true"] { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .checkout-result { transition: none; } }
+
+.definition-transaction { width: 180px; height: 306px; display: grid; grid-template-rows: 235px 64px; gap: 7px; justify-items: center; align-items: end; }
+.definition-transaction .definition-receipt { justify-self: start; box-sizing: border-box; min-width: 0; margin-left: calc(10 / 220 * 150px); width: calc(201 / 220 * 150px); }
+.definition-receipt { position: relative; min-width: 130px; height: 64px; padding: 6px 14px; background: #f6efd9; color: #302b24; border-radius: 4px; display: grid; justify-items: center; align-content: center; font-size: 27px; }
+.definition-receipt > span:first-child { color: #777166; font-size: 14px; }
+.definition-receipt::after { content: ""; position: absolute; inset: auto 0 -5px; height: 6px; background: linear-gradient(135deg, transparent 3px, #f6efd9 0) 0 0/6px 6px repeat-x; }
+.total-receipt { color: #7654ab; }
