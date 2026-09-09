@@ -2,7 +2,7 @@ import { SCENE_VIEWPORT, type SceneDefinition } from "./types.ts";
 
 const sceneDefinitions = [
   {
-    id: "bags-and-checkouts",
+    id: "DualSpaceIntroScene",
     conceptId: "dual-space-episode-1",
     order: 10,
     route: "/",
@@ -11,7 +11,7 @@ const sceneDefinitions = [
     viewport: SCENE_VIEWPORT,
   },
   {
-    id: "bags-form-vector-space",
+    id: "BagVectorSpaceScene",
     conceptId: "dual-space-episode-1",
     order: 20,
     route: "/",
@@ -20,7 +20,7 @@ const sceneDefinitions = [
     viewport: SCENE_VIEWPORT,
   },
   {
-    id: "checkout-linearity",
+    id: "CheckoutLinearityScene",
     conceptId: "dual-space-episode-1",
     order: 25,
     route: "/",
@@ -29,7 +29,7 @@ const sceneDefinitions = [
     viewport: SCENE_VIEWPORT,
   },
   {
-    id: "checkout-operations",
+    id: "CheckoutOperationsScene",
     conceptId: "dual-space-episode-1",
     order: 30,
     route: "/",
@@ -38,7 +38,7 @@ const sceneDefinitions = [
     viewport: SCENE_VIEWPORT,
   },
   {
-    id: "checkouts-form-vector-space",
+    id: "CheckoutVectorSpaceScene",
     conceptId: "dual-space-episode-1",
     order: 40,
     route: "/",
@@ -47,7 +47,7 @@ const sceneDefinitions = [
     viewport: SCENE_VIEWPORT,
   },
   {
-    id: "dual-space-summary",
+    id: "DualSpaceSummaryScene",
     conceptId: "dual-space-episode-1",
     order: 50,
     route: "/",
@@ -91,5 +91,5 @@ export function getConceptScenes(conceptId: string): SceneDefinition[] {
     .sort((left, right) => left.order - right.order);
 }
 
-export const bagsAndCheckoutsScene = getScene("bags-and-checkouts");
-export const bagsFormVectorSpaceScene = getScene("bags-form-vector-space");
+export const dualSpaceIntroScene = getScene("DualSpaceIntroScene");
+export const bagVectorSpaceScene = getScene("BagVectorSpaceScene");

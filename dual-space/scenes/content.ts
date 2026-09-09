@@ -4,7 +4,8 @@ export const introSteps = [
   "quote",
   "bag-collection",
   "checkout-collection",
-  "space-names",
+  "linear-space-name",
+  "dual-space-name",
 ] as const;
 
 export type IntroStepId = (typeof introSteps)[number];
@@ -16,7 +17,8 @@ export function getIntroFlags(step: number) {
     showQuote: reached("quote"),
     showBagsWorld: reached("bag-collection"),
     showCheckoutsWorld: reached("checkout-collection"),
-    showSpaceNames: reached("space-names"),
+    showLinearSpaceName: reached("linear-space-name"),
+    showDualSpaceName: reached("dual-space-name"),
   };
 }
 

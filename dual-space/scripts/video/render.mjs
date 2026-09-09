@@ -1,8 +1,9 @@
 import { chromium } from "playwright";
-import ffmpegPath from "ffmpeg-static";
-import { createServer } from "vite";
+import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
+import { build, preview } from "vite";
 import { spawn, spawnSync } from "node:child_process";
-import { mkdir, rename, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rename, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { once } from "node:events";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,7 +12,7 @@ import { presets, createTimeline } from "./timeline.mjs";
 import { installRenderClock } from "./browser-clock.mjs";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
-const { values } = parseArgs({ options: {
+const { values, positionals } = parseArgs({ allowPositionals: true, options: {
   preset: { type: "string", default: "debug" },
   output: { type: "string" },
   "limit-seconds": { type: "string" },
@@ -21,10 +22,22 @@ const preset = presets[values.preset];
 if (!preset) throw new Error("预设必须为 debug 或 production");
 const limit = values["limit-seconds"] === undefined ? Infinity : Number(values["limit-seconds"]);
 if (!(limit > 0)) throw new Error("limit-seconds 必须为正数");
-const output = path.resolve(root, values.output ?? `exports/dual-space-${values.preset}.mp4`);
+const shots = createTimeline();
+const sceneIds = [...new Set(shots.map(shot => shot.scene))];
+if (positionals.length > 1) throw new Error("最多指定一个场景");
+const sceneName = positionals[0]?.replace(/\.tsx?$/, "");
+if (sceneName !== undefined && !sceneIds.includes(sceneName)) {
+  throw new Error(`未知场景：${sceneName}。可选：${sceneIds.join("、")}`);
+}
+const suffix = sceneName ? `-${sceneName}` : "";
+const output = path.resolve(root, values.output ?? `exports/dual-space-${values.preset}${suffix}.mp4`);
+const timeline = sceneName
+  ? shots.filter(shot => shot.scene === sceneName).map((shot, index) =>
+    index === 0 && shot.action === "next" ? { ...shot, action: "start" } : shot)
+  : shots;
 const temporary = output.replace(/\.mp4$/, "") + ".partial.mp4";
-const qaDirectory = path.resolve(root, `exports/qa-${values.preset}`);
-const ffmpeg = process.env.FFMPEG_PATH ?? ffmpegPath;
+const qaDirectory = path.resolve(root, `exports/qa-${values.preset}${suffix}`);
+const ffmpeg = process.env.FFMPEG_PATH ?? ffmpegInstaller.path;
 if (!values.check && (!ffmpeg || spawnSync(ffmpeg, ["-version"]).status !== 0)) throw new Error("FFmpeg 不可用，可通过 FFMPEG_PATH 指定编码器");
 await mkdir(path.dirname(output), { recursive: true });
 if (values.check) await mkdir(qaDirectory, { recursive: true });
@@ -36,11 +49,14 @@ let encoderError;
 let stderr = "";
 const errors = [];
 const report = [];
-const server = await createServer({ root, server: { host: "127.0.0.1", port: 0, open: false } });
+const snapshot = await mkdtemp(path.join(tmpdir(), "dual-space-video-"));
+let server;
 try {
-  await server.listen();
+  // 导出固定的生产构建，避免编辑源码或安装依赖时 HMR 重载中断长视频。
+  await build({ root, logLevel: "error", build: { outDir: snapshot, emptyOutDir: true } });
+  server = await preview({ root, build: { outDir: snapshot }, preview: { host: "127.0.0.1", port: 0, open: false } });
   const address = server.httpServer.address();
-  const url = `http://127.0.0.1:${address.port}/?export=1`;
+  const url = `http://127.0.0.1:${address.port}/?export=1${sceneName ? `&scene=${encodeURIComponent(sceneName)}` : ""}`;
   if (!(await fetch(url)).ok) throw new Error("导出服务不可访问");
   browser = await chromium.launch({ channel: process.env.VIDEO_BROWSER ?? "chrome", headless: true });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 },
@@ -56,7 +72,8 @@ try {
   await page.evaluate(() => {
     const cursor = document.createElement("div");
     cursor.id = "video-cursor";
-    cursor.style.cssText = "position:fixed;z-index:100;pointer-events:none;display:none;width:32px;height:32px;border:3px solid white;border-radius:50%;background:#f4c95d66;box-shadow:0 0 0 5px #0008;transform:translate(-50%,-50%)";
+    cursor.style.cssText = "position:fixed;z-index:100;pointer-events:none;display:none;width:64px;height:84px;filter:drop-shadow(0 3px 4px #000)";
+    cursor.innerHTML = '<svg width="64" height="84" viewBox="0 0 64 84" style="position:relative;overflow:visible"><path d="M 0 0 L 0 62 L 17 47 L 31 77 L 44 71 L 30 42 L 53 42 Z" fill="white" stroke="#171717" stroke-width="4" stroke-linejoin="round"/></svg>';
     document.body.append(cursor);
   });
   const advance = async time => {
@@ -69,7 +86,8 @@ try {
     encoder = spawn(ffmpeg, ["-hide_banner", "-loglevel", "error", "-y",
       "-f", "image2pipe", "-framerate", String(preset.fps), "-vcodec", "png", "-i", "pipe:0",
       "-an", "-c:v", "libx264", "-preset", "fast", "-crf", String(preset.crf),
-      "-pix_fmt", "yuv420p", "-movflags", "+faststart", temporary], { stdio: ["pipe", "ignore", "pipe"] });
+      "-pix_fmt", "yuv420p", "-profile:v", "high", "-level", "4.1", "-bf", "0", "-tag:v", "avc1",
+      "-movflags", "+faststart", temporary], { stdio: ["pipe", "ignore", "pipe"] });
     encoder.stderr.on("data", data => { stderr = (stderr + data).slice(-8000); });
     encoder.stdin.on("error", error => { encoderError = error; });
     encoding = new Promise(resolve => {
@@ -79,23 +97,19 @@ try {
   }
   let frame = 0;
   let time = 0;
-  const timeline = createTimeline();
+  let cursorPoint = { x: 960, y: 900 };
   for (const [shotIndex, shot] of timeline.entries()) {
     if (time >= limit * 1000) break;
     await page.evaluate(() => { document.getElementById("video-cursor").style.display = "none"; });
     if (shot.action === "next") await page.keyboard.press("ArrowRight");
+    let clickTarget;
+    let destination;
+    const origin = cursorPoint;
     if (shot.action === "click") {
-      const target = page.locator(shot.selector).nth(shot.index);
-      const bounds = await target.boundingBox();
+      clickTarget = page.locator(shot.selector).nth(shot.index);
+      const bounds = await clickTarget.boundingBox();
       if (!bounds) throw new Error("点击对象不可见");
-      const point = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
-      await page.evaluate(({ x, y }) => {
-        Object.assign(document.getElementById("video-cursor").style,
-          { display: "block", left: `${x}px`, top: `${y}px` });
-      }, point);
-      await page.mouse.click(point.x, point.y);
-      if (await target.getAttribute("aria-pressed") !== "true") throw new Error("点击没有生效");
-      await page.mouse.move(1900, 1060);
+      destination = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
     }
     await advance(time);
     await page.evaluate(() => document.fonts.ready);
@@ -114,9 +128,29 @@ try {
       throw new Error(`播放状态不符：${JSON.stringify({ shot, state })}`);
     }
     const count = Math.min(Math.round(shot.seconds * preset.fps), Math.ceil(limit * preset.fps) - frame);
-    const sampleFrames = new Set([0, Math.floor(count / 2), count - 1]);
+    const sampleFrames = new Set([0, Math.floor(count / 2), count - 1, Math.round(.75 * preset.fps)]);
+    const movementFrames = Math.round(shot.seconds * preset.fps);
+    const clickFrame = movementFrames - 1;
     for (let i = 0; i < count; i++) {
-      if (i > 0) await advance((frame + i) * 1000 / preset.fps);
+      if (clickTarget) {
+        // 点击段仅包含移动；到达时点击，下一帧直接进入下一个动作。
+        const progress = Math.min(1, i / Math.max(1, movementFrames - 1));
+        const eased = progress * progress * (3 - 2 * progress);
+        cursorPoint = { x: origin.x + (destination.x - origin.x) * eased,
+          y: origin.y + (destination.y - origin.y) * eased };
+        await page.mouse.move(cursorPoint.x, cursorPoint.y);
+        if (i === clickFrame) {
+          await page.mouse.click(destination.x, destination.y);
+          if (await clickTarget.getAttribute("aria-pressed") !== "true") throw new Error("点击没有生效");
+          // 保留选中高亮，释放鼠标点击焦点，避免下一次方向键触发浏览器蓝色焦点框。
+          await clickTarget.evaluate(element => element.blur());
+        }
+        await page.evaluate(({ x, y }) => {
+          const cursor = document.getElementById("video-cursor");
+          Object.assign(cursor.style, { display: "block", left: `${x}px`, top: `${y}px` });
+        }, cursorPoint);
+      }
+      await advance((frame + i) * 1000 / preset.fps);
       if (values.check && !sampleFrames.has(i)) continue;
       const png = await page.screenshot({ type: "png", animations: "allow", scale: "device" });
       if (png.readUInt32BE(16) !== preset.width || png.readUInt32BE(20) !== preset.height) {
@@ -131,6 +165,9 @@ try {
     frame += count;
     time = frame * 1000 / preset.fps;
     await advance(time);
+    if (await page.evaluate(() => document.activeElement?.matches(".object-card"))) {
+      throw new Error("对象仍有鼠标点击焦点，可能在下一步显示蓝框");
+    }
     report.push({ ...shot, endSeconds: time / 1000, state });
     if (errors.length) throw new Error(errors.join("\n"));
     console.log(`[${shotIndex + 1}/${timeline.length}] ${shot.scene} 步骤 ${shot.step + 1} · ${time / 1000}s`);
@@ -151,6 +188,7 @@ try {
 } finally {
   if (encoder && encoder.exitCode === null) encoder.kill();
   await browser?.close();
-  await server.close();
+  if (server) await new Promise((resolve, reject) => server.httpServer.close(error => error ? reject(error) : resolve()));
+  await rm(snapshot, { recursive: true, force: true });
   await rm(temporary, { force: true });
 }

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { bagsAndCheckoutsScene, bagsFormVectorSpaceScene, getConceptScenes, getScene, scenes, validateSceneRegistry } from "../lib/scenes/registry.ts";
+import { readdirSync } from "node:fs";
+import { bagVectorSpaceScene, dualSpaceIntroScene, getConceptScenes, getScene, scenes, validateSceneRegistry } from "../lib/scenes/registry.ts";
 import { bagVectorSpaceStepCount, getIntroFlags, introSteps, vectorSpaceSteps } from "../scenes/content.ts";
 
 test("scene ids and concept orders are unique", () => {
@@ -20,13 +21,21 @@ test("duplicate order in the same concept is rejected", () => {
 });
 
 test("dual-space scenes retain their teaching order", () => {
-  assert.equal(getScene("bags-and-checkouts").id, bagsAndCheckoutsScene.id);
-  assert.equal(bagsAndCheckoutsScene.title, "袋子的世界与收银台的世界");
+  assert.equal(getScene("DualSpaceIntroScene").id, dualSpaceIntroScene.id);
+  assert.equal(dualSpaceIntroScene.title, "袋子的世界与收银台的世界");
   assert.deepEqual(
     getConceptScenes("dual-space-episode-1").map((scene) => scene.id),
-    ["bags-and-checkouts", "bags-form-vector-space", "checkout-linearity", "checkout-operations", "checkouts-form-vector-space", "dual-space-summary"],
+    ["DualSpaceIntroScene", "BagVectorSpaceScene", "CheckoutLinearityScene", "CheckoutOperationsScene", "CheckoutVectorSpaceScene", "DualSpaceSummaryScene"],
   );
-  assert.equal(bagsFormVectorSpaceScene.order, 20);
+  assert.equal(bagVectorSpaceScene.order, 20);
+});
+
+test("scene ids match scenes/*Scene.tsx filenames", () => {
+  const files = readdirSync(new URL("../scenes", import.meta.url))
+    .filter((name) => name.endsWith("Scene.tsx"))
+    .map((name) => name.replace(/\.tsx$/, ""))
+    .sort();
+  assert.deepEqual([...scenes.map((scene) => scene.id)].sort(), files);
 });
 
 test("the bag vector-space scene has exactly eight axioms", () => {
@@ -47,27 +56,38 @@ test("the bag vector-space scene has exactly eight axioms", () => {
   assert.equal(bagVectorSpaceStepCount, 10);
 });
 
-test("intro flags follow the six-step reveal order", () => {
-  assert.equal(introSteps.length, 6);
+test("intro flags follow the seven-step reveal order", () => {
+  assert.equal(introSteps.length, 7);
   assert.deepEqual(getIntroFlags(0), {
     showCheckout: false,
     showQuote: false,
     showBagsWorld: false,
     showCheckoutsWorld: false,
-    showSpaceNames: false,
+    showLinearSpaceName: false,
+    showDualSpaceName: false,
   });
   assert.deepEqual(getIntroFlags(2), {
     showCheckout: true,
     showQuote: true,
     showBagsWorld: false,
     showCheckoutsWorld: false,
-    showSpaceNames: false,
+    showLinearSpaceName: false,
+    showDualSpaceName: false,
   });
   assert.deepEqual(getIntroFlags(5), {
     showCheckout: true,
     showQuote: true,
     showBagsWorld: true,
     showCheckoutsWorld: true,
-    showSpaceNames: true,
+    showLinearSpaceName: true,
+    showDualSpaceName: false,
+  });
+  assert.deepEqual(getIntroFlags(6), {
+    showCheckout: true,
+    showQuote: true,
+    showBagsWorld: true,
+    showCheckoutsWorld: true,
+    showLinearSpaceName: true,
+    showDualSpaceName: true,
   });
 });

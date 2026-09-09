@@ -18,7 +18,10 @@ const sceneStepCounts = [introSteps.length, bagVectorSpaceStepCount, 3, 4, 1, 1]
 export default function App() {
   const animationRef = useRef<PropertyAnimationHandle>(null);
   const [recording, setRecording] = useState(() => new URLSearchParams(window.location.search).get("export") === "1");
-  const [sceneIndex, setSceneIndex] = useState(0);
+  const [sceneIndex, setSceneIndex] = useState(() => {
+    const index = conceptScenes.findIndex(scene => scene.id === new URLSearchParams(window.location.search).get("scene"));
+    return index < 0 ? 0 : index;
+  });
   const [step, setStep] = useState(0);
   const scene = conceptScenes[sceneIndex];
   const stepCount = sceneStepCounts[sceneIndex];

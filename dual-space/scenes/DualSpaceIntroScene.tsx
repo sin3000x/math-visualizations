@@ -37,7 +37,7 @@ export function DualSpaceIntroScene({ step }: { step: number }) {
           ))}
           <div className="more-objects" aria-label="还有更多袋子">…</div>
         </div>
-        <div className={reveal(flags.showSpaceNames, "world-name")} aria-hidden={!flags.showSpaceNames}>线性空间</div>
+        <div className={reveal(flags.showLinearSpaceName, "world-name")} aria-hidden={!flags.showLinearSpaceName}>线性空间</div>
       </div>
       <div className="transaction-stage" aria-live="polite">
         <div className="chosen-object chosen-bag reveal visible">
@@ -70,7 +70,7 @@ export function DualSpaceIntroScene({ step }: { step: number }) {
           ))}
           <div className="more-objects" aria-label="还有更多收银台">…</div>
         </div>
-        <div className={reveal(flags.showSpaceNames, "world-name")} aria-hidden={!flags.showSpaceNames}>对偶空间</div>
+        <div className={reveal(flags.showDualSpaceName, "world-name")} aria-hidden={!flags.showDualSpaceName}>对偶空间</div>
       </div>
     </section>
   );
