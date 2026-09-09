@@ -1,0 +1,30 @@
+.supermarket-scene { position: relative; width: 1440px; height: 810px; background: #000; }
+.sequence-character { position: absolute; left: 35px; top: 245px; width: 350px; height: 350px; object-fit: contain; }
+.sequence-register { position: relative; width: 325px; height: 170px; }
+.sequence-register .checkout-icon { display: block; width: 180px; max-width: none; }
+.sequence-tray { position: absolute; left: 160px; top: 145px; width: 165px; height: 6px; background: #b6b9ad; border-radius: 4px; }
+.sequence-fixed-register { position: absolute; left: 790px; top: 325px; }
+.sequence-column-register { position: absolute; left: 790px; }
+.sequence-fixed-bag { position: absolute; left: 400px; top: 330px; width: 147px; height: 133px; }
+.sequence-fixed-bag > .fruit-bag, .sequence-bag > .fruit-bag { transform: scale(.7); transform-origin: top left; }
+.sequence-inputs { animation: sequence-reveal .45s both; }
+.sequence-bag { position: absolute; left: 0; top: 0; width: 147px; height: 133px; transform: translate(var(--source-x), var(--source-y)); }
+.sequence-bag.is-moving { animation: sequence-measure 1.25s var(--lag) both; }
+.survey-sequence .sequence-bag.is-moving { animation-name: sequence-place; }
+.sequence-price { position: absolute; left: 0; top: 0; z-index: 2; font-size: 49px; white-space: nowrap; animation: sequence-output .65s var(--price-lag) both; }
+@keyframes sequence-reveal { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sequence-measure {
+  0% { transform: translate(var(--source-x), var(--source-y)); opacity: 1; }
+  70%, 85% { transform: translate(var(--target-x), var(--target-y)); opacity: 1; }
+  100% { transform: translate(var(--target-x), var(--target-y)); opacity: 0; }
+}
+@keyframes sequence-output {
+  0% { transform: translate(1080px, var(--result-source-y)); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translate(1190px, var(--result-y)); opacity: 1; }
+}
+
+@keyframes sequence-place {
+  0% { transform: translate(var(--source-x), var(--source-y)); opacity: 1; }
+  70%, 100% { transform: translate(var(--target-x), var(--target-y)); opacity: 1; }
+}
