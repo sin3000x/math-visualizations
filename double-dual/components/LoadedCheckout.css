@@ -1,0 +1,16 @@
+/* Keep loaded geometry independent of the equation scenes and CSS import order.
+   The 150px machine, tray and 63px bag share the same design coordinates. */
+.definition-loaded-checkout { position: relative; width: 180px; height: 210px; }
+.definition-loaded-checkout .loaded-checkout-machine { position: absolute; left: 0; bottom: 0; width: 150px; }
+.definition-loaded-checkout .checkout-icon { display: block; width: 150px; max-width: none; }
+.definition-loaded-checkout .checkout-screen-shell,
+.definition-loaded-checkout .checkout-body { stroke: currentColor; }
+.definition-loaded-checkout .checkout-receipt { display: none; }
+.definition-loaded-checkout .loaded-checkout-bag { position: absolute; left: 114px; bottom: 60px; width: 63px; height: 57px; }
+.definition-loaded-checkout .fruit-bag.compact { position: absolute; left: 50%; top: 50%; margin: 0; transform: translate(-50%, -50%) scale(.3); }
+.definition-tray { position: absolute; left: 110px; bottom: 55px; width: 70px; height: 5px; border-radius: 2px; background: #b6b9ad; }
+
+.definition-loaded-checkout .loaded-checkout-bag { transition: opacity 1s ease, transform 1s ease; }
+.definition-loaded-checkout.is-mystery .loaded-checkout-bag { opacity: 0; transform: scale(.7); }
+.tray-question { position: absolute; left: 114px; bottom: 60px; width: 63px; height: 65px; display: grid; place-items: center; color: #ba91ef; font-size: 66px; line-height: 1; opacity: 0; transform: scale(.7); transition: opacity 1s ease, transform 1s ease; }
+.is-mystery .tray-question { opacity: 1; transform: scale(1); }
