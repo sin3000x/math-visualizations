@@ -49,3 +49,21 @@ git diff --check
 同时检查普通桌面、窄屏、1920×1080 全屏录制下的所有 Scene / 步骤：KaTeX 无错误、控制台无运行时错误、录屏无滚动、内容在画布内、页面底部和画布内无导航、键盘跨 Scene 往返及 Escape 正常。新增交互另按根目录 AGENTS.md 验证数学关系与边界状态。
 
 本子项目保有自己的依赖、锁文件和源码；模板后续改动不会自动修改本项目。根目录 AGENTS.md 是统一工程规范。
+
+## 自动录屏
+
+录屏脚本由项目模板自带，读取 ScenePlayer 从注册表输出的 Scene 顺序与 `stepCount`，自动生成“展示 → 等待 → 按右方向键”的时间线，无鼠标点击或光标。新增 Scene / 步骤后无需重新编写脚本。适用于每按一次右方向键推进一步的 Scene；有内部键盘阶段或鼠标交互时需另行编排。
+
+```sh
+npm run video:debug              # 640×360，30 fps
+npm run video:production         # 1920×1080，60 fps
+npm run video:check              # 全步骤 1080p 抽帧检查，输出截图和 report.json
+npm run video:debug -- --limit-seconds 5
+npm run video:production -- <Scene稳定ID>
+```
+
+默认输出 `exports/<项目名>-<预设>.mp4`，可用 `--output exports/custom.mp4` 指定。`exports/` 不提交 Git。需本机 Chrome；可用 `VIDEO_BROWSER` 指定 Playwright 浏览器通道，`FFMPEG_PATH` 指定编码器。
+
+在 `scripts/video/timeline.mjs` 修改 `timing`：普通步骤 3 秒，每幕末步 4 秒，时间包含动画及动画后的停留；`overrides` 按 Scene ID 配置各步骤的秒数，例如 `{ "my-scene": [3, 5, 4] }`。动画逐帧采集，渲染耗时不改变视频速度。`?export=1` 直接进入无工具栏录屏画面，`&scene=<ID>` 从指定 Scene 开始；Escape 可退出。
+
+新项目仍使用仓库根目录的 `node scripts/create-project.mjs <项目名>` 创建，录屏脚本、命令和依赖随模板一同生成，各项目独立维护。

@@ -1,0 +1,9 @@
+.identification-scene .bag-space,
+.identification-scene .mystery-space { transition: transform 1s ease; }
+.identification-checkout { transition: opacity .6s ease, transform 1s ease; }
+.identification-scene.is-paired .bag-space { transform: translateX(160px); }
+.identification-scene.is-paired .mystery-space { transform: translateX(-160px); }
+.identification-scene.is-paired .identification-checkout { opacity: 0; transform: translateY(100px); }
+.identification-arrow { position: absolute; left: 620px; top: 250px; }
+.identification-result { position: absolute; top: 515px; left: 0; width: 1440px; text-align: center; font-size: 76px; }
+.identification-limit { position: absolute; top: 660px; width: 1440px; text-align: center; font-size: 30px; color: #ba91ef; }

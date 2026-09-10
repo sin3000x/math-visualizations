@@ -6,8 +6,12 @@ button { font: inherit; cursor: pointer; }
 button:focus-visible { outline: 2px solid #62d2c3; outline-offset: 4px; }
 .math-formula { display: inline-block; white-space: nowrap; }
 .experience { width: min(1600px, 100%, calc((100dvh - 80px) * 16 / 9)); margin: auto; }
-.page-toolbar { height: 48px; display: flex; justify-content: flex-end; align-items: start; }
+.page-toolbar { height: 48px; display: flex; gap: 16px; align-items: start; }
 .page-toolbar button { padding: 8px 16px; border: 1px solid #444; border-radius: 8px; color: #ddd; background: #191919; }
+.page-toolbar > button { flex-shrink: 0; white-space: nowrap; }
+.scene-navigation { display: flex; flex: 1; min-width: 0; gap: 8px; overflow-x: auto; }
+.scene-navigation button { flex-shrink: 0; white-space: nowrap; }
+.scene-navigation button[aria-current="step"] { color: #62d2c3; border-color: #62d2c3; background: #162a27; }
 .scene-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; container-type: inline-size; background: #000; }
 .scene-design { --coral: #ed6a5a; --yellow: #f4c95d; position: absolute; width: 1440px; height: 810px; transform: scale(calc(100cqw / 1440px)); transform-origin: top left; color: #f6f2e7; background: #000; }
 .scene-content, .double-dual-scene { width: 1440px; height: 810px; }

@@ -1,0 +1,24 @@
+.reconstruct-scene { position: relative; width: 1440px; height: 810px; }
+.reconstruct-functional { position: absolute; left: 585px; top: 265px; width: 270px; height: 280px; color: #ba91ef; z-index: 2; }
+.reconstruct-functional .space-element { inset: 0; }
+.reconstruct-lane { position: absolute; inset: 0; pointer-events: none; color: var(--probe-color); }
+.reconstruct-probe { position: absolute; left: 90px; top: calc(var(--lane-y) - 103px); width: 340px; text-align: center; animation: reconstruct-input 1s both; }
+.reconstruct-probe-name { font-size: 32px; height: 48px; }
+.reconstruct-probe .checkout-icon { width: 145px; max-width: none; height: 110px; display: block; margin: 0 auto; }
+.reconstruct-prices { display: flex; justify-content: center; gap: 24px; margin-top: 6px; color: #eee; }
+.reconstruct-prices > div { display: flex; align-items: center; gap: 8px; font-size: 23px; white-space: nowrap; }
+.reconstruct-prices .fruit { width: 32px; height: 32px; }
+.reconstruct-arrow { position: absolute; inset: 0; width: 1440px; height: 810px; opacity: .5; animation: reconstruct-path 1s both; }
+.reconstruct-arrow > path { fill: none; stroke: currentColor; stroke-width: 3; stroke-linejoin: round; }
+.reconstruct-reading { position: absolute; left: 1090px; top: calc(var(--lane-y) - 55px); height: 110px; display: flex; align-items: center; width: 300px; font-size: 62px; animation: reconstruct-output .35s .85s both; }
+.reconstruct-traveller { position: absolute; left: 350px; top: calc(var(--lane-y) - 40px); width: 95px; animation: reconstruct-measure 1s both; }
+.reconstruct-traveller .checkout-icon { width: 95px; max-width: none; }
+@keyframes reconstruct-input { from { opacity: 0; transform: translateX(-45px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes reconstruct-path { from { opacity: 0; } to { opacity: .5; } }
+@keyframes reconstruct-output { from { opacity: 0; transform: translateX(-55px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes reconstruct-measure {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: 1; }
+  75% { opacity: 1; transform: translate(280px, var(--travel-y)) scale(.8); }
+  100% { opacity: 0; transform: translate(320px, var(--travel-y)) scale(.25); }
+}

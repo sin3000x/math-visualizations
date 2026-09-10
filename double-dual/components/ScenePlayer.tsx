@@ -3,8 +3,11 @@ import { moveStep } from "../lib/scenes/navigation";
 import type { SceneDefinition } from "../lib/scenes/types";
 
 export function ScenePlayer({ title, scenes }: { title: string; scenes: readonly SceneDefinition[] }) {
-  const [position, setPosition] = useState({ sceneIndex: 0, step: 0 });
-  const [recording, setRecording] = useState(false);
+  const [position, setPosition] = useState(() => {
+    const requested = new URLSearchParams(window.location.search).get("scene");
+    return { sceneIndex: Math.max(0, scenes.findIndex(item => item.id === requested)), step: 0 };
+  });
+  const [recording, setRecording] = useState(() => new URLSearchParams(window.location.search).get("export") === "1");
   const { sceneIndex, step } = position;
   const scene = scenes[sceneIndex];
   const navigate = useCallback((direction: 1 | -1) => {
@@ -56,8 +59,16 @@ export function ScenePlayer({ title, scenes }: { title: string; scenes: readonly
   }
 
   const Scene = scene.component;
-  return <main className={recording ? "experience recording-mode" : "experience"} aria-label={title} data-scene-id={scene.id} data-step={step}>
+  return <main className={recording ? "experience recording-mode" : "experience"} aria-label={title} data-video-scenes={JSON.stringify(scenes.map(({ id, stepCount }) => ({ id, stepCount })))} data-scene-id={scene.id} data-step={step}>
     <div className="page-toolbar">
+      <nav className="scene-navigation" aria-label="场景导航">
+        {scenes.map((item, index) => <button
+          key={item.id}
+          type="button"
+          aria-current={index === sceneIndex ? "step" : undefined}
+          onClick={() => setPosition({ sceneIndex: index, step: 0 })}
+        >{item.title}</button>)}
+      </nav>
       <button type="button" onClick={() => void enterRecording()}>全屏录制</button>
     </div>
     <div className="scene-frame">
