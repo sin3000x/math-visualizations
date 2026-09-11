@@ -1,0 +1,23 @@
+.fruit-bag { position: relative; width: 210px; height: 190px; padding: 48px 24px 22px; border: 4px solid #d8b875; border-top: 0; border-radius: 24px 24px 55px 55px; background: rgba(216,184,117,.1); }
+.fruit-bag.compact { transform: scale(.78); margin: -23px -24px -16px; }
+.bag-handle { position: absolute; width: 88px; height: 42px; left: 50%; top: -19px; transform: translateX(-50%); border: 5px solid #d8b875; border-bottom: 0; border-radius: 60px 60px 0 0; }
+.bag-fruit-list { height: 100%; display: grid; align-content: center; justify-content: center; gap: 8px; }
+.fruit-measure { display: grid; grid-template-columns: 58px 88px; align-items: center; column-gap: 9px; color: #f4efe1; font-size: 27px; font-weight: 700; }
+.fruit-measure .math-formula { justify-self: start; text-align: left; }
+.fruit { width: 50px; height: 50px; justify-self: center; filter: drop-shadow(0 3px 2px rgba(0,0,0,.25)); }
+.fruit svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.apple .fruit-body { fill: var(--coral); stroke: #a93e35; stroke-width: 2; }
+.apple .fruit-leaf { fill: #78b779; stroke: #416e43; stroke-width: 2; }
+.apple .fruit-stem { fill: none; stroke: #8b6338; stroke-width: 4; stroke-linecap: round; }
+.banana { width: 56px; transform: rotate(4deg); }
+.banana .fruit-body { fill: var(--yellow); stroke: #c48d2f; stroke-width: 2; }
+.banana .banana-inner { fill: #f7de83; opacity: .72; }
+.banana .banana-tip, .banana .banana-end { fill: #8c6530; }
+.fruit-shine { fill: none; stroke: rgba(255,255,255,.62); stroke-width: 3; stroke-linecap: round; }
+
+
+/* 符号属于水果分量；袋子轮廓始终一致。 */
+.negative-fruit.apple { color: var(--coral); }
+.negative-fruit.banana { color: var(--yellow); }
+.fruit.negative-fruit svg * { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-dasharray: 5 4; }
+.negative-fruit .fruit-shine, .negative-fruit .banana-inner { display: none; }

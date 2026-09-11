@@ -1,0 +1,19 @@
+.basis-scene { position:relative; width:1440px; height:810px; }
+.bag-universe { position:absolute; inset:85px 65px 75px; border:2px solid #d8b87575; border-radius:48%; }
+.universe-symbol { position:absolute; top:-44px; left:calc(50% - 40px); padding:0 20px; background:#000; color:#d8b875; font-size:60px; }
+.space-examples { transition:opacity 1s; }
+.space-sample { position:absolute; }
+.sample-0 { left:250px; top:205px; }.sample-1 { left:610px; top:205px; }.sample-2 { left:970px; top:205px; }
+.sample-3 { left:410px; top:470px; }.sample-4 { left:820px; top:470px; }
+.space-dots { position:absolute; left:1120px; top:490px; font-size:60px; }
+.stage-1 .space-examples { opacity:.16; }
+.stage-1 .basis-term { background:#000; }
+.basis-term { position:absolute; top:340px; }
+.term-0 { left:440px; }.term-1 { left:800px; }
+.basis-label { position:absolute; width:210px; text-align:center; top:-90px; color:#f4c95d; font-size:54px; }
+.basis-pair { animation:basis-reveal 1s both; }
+
+.combination-equation { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:65px; }
+.combination-formula { font-size:68px; }
+.general-domain { position:absolute; top:590px; width:100%; text-align:center; font-size:43px; }
+@keyframes basis-reveal { from { opacity:0; } to { opacity:1; } }

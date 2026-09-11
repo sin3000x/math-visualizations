@@ -25,6 +25,8 @@ math-visualizations/
 ├── scripts/create-project.mjs
 ├── templates/scene-project/  # 新项目的可运行起点
 ├── dual-space/               # 当前教学与视觉参考
+├── double-dual/              # 第二集：双对偶
+├── basis-coordinates/        # 第三集：基、坐标、行向量
 └── kkt-conditions/           # 历史项目，不跟随新架构维护
 ```
 
