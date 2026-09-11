@@ -110,8 +110,11 @@ try {
       state.katexErrors || !state.noScroll || state.width !== 1920 || state.height !== 1080) {
       throw new Error(`播放状态不符：${JSON.stringify({ shot, state })}`);
     }
-    const count = Math.min(Math.round(shot.seconds * preset.fps), Math.ceil(limit * preset.fps) - frame);
-    const sampleFrames = new Set([0, Math.floor(count / 2), count - 1, Math.round(.75 * preset.fps)]);
+    const animationMs = await page.evaluate(() => window.__videoClock.remainingAnimationMs());
+    const animationFrames = Math.ceil(animationMs * preset.fps / 1000);
+    const holdFrames = Math.ceil(shot.seconds * preset.fps);
+    const count = Math.min(animationFrames + holdFrames, Math.ceil(limit * preset.fps) - frame);
+    const sampleFrames = new Set([0, Math.floor(count / 2), count - 1, Math.round(.75 * preset.fps), animationFrames]);
     for (let i = 0; i < count; i++) {
       await advance((frame + i) * 1000 / preset.fps);
       if (values.check && !sampleFrames.has(i)) continue;
@@ -128,7 +131,7 @@ try {
     frame += count;
     time = frame * 1000 / preset.fps;
     await advance(time);
-    report.push({ ...shot, endSeconds: time / 1000, state });
+    report.push({ ...shot, animationSeconds: animationMs / 1000, holdSeconds: shot.seconds, endSeconds: time / 1000, state });
     if (errors.length) throw new Error(errors.join("\n"));
     console.log(`[${shotIndex + 1}/${timeline.length}] ${shot.scene} 步骤 ${shot.step + 1} · ${time / 1000}s`);
   }

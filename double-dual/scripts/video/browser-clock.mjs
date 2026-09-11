@@ -17,6 +17,13 @@ export function installRenderClock() {
       callbacks.clear();
       for (const callback of pending) callback(time);
     },
+    remainingAnimationMs() {
+      return Math.max(0, ...document.getAnimations().map(animation => {
+        const end = animation.effect?.getComputedTiming().endTime;
+        // 无限循环的装饰动画继续播放，但不阻止教学步骤推进。
+        return Number.isFinite(end) ? Math.max(0, end - Number(animation.currentTime ?? 0)) : 0;
+      }));
+    },
     sync() {
       for (const animation of document.getAnimations()) {
         if (!starts.has(animation)) {

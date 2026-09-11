@@ -3,7 +3,7 @@ export const presets = {
   production: { width: 1920, height: 1080, fps: 60, crf: 18 },
 };
 
-// 秒数包含动画和停留时间。以稳定 Scene ID 为键，数组下标对应从零开始的步骤。
+// 秒数仅表示动画全部结束后的停留时间，动画时长由浏览器自动测量。以稳定 Scene ID 为键，数组下标对应从零开始的步骤。
 // 例如："my-scene": [3, 5, 4]；新增 Scene 或步骤无需修改脚本。
 export const timing = { stepSeconds: 3, sceneEndSeconds: 4, overrides: {} };
 
