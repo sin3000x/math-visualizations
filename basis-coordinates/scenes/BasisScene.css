@@ -10,10 +10,10 @@
 .stage-1 .basis-term { background:#000; }
 .basis-term { position:absolute; top:340px; }
 .term-0 { left:440px; }.term-1 { left:800px; }
-.basis-label { position:absolute; width:210px; text-align:center; top:-90px; color:#f4c95d; font-size:54px; }
+.basis-label { position:absolute; width:210px; text-align:center; top:-105px; color:#f4c95d; font-size:54px; }
 .basis-pair { animation:basis-reveal 1s both; }
 
-.combination-equation { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:65px; }
-.combination-formula { font-size:68px; }
+.combination-equation { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:48px; font-size:68px; }
+.combination-term { display:flex; align-items:center; gap:24px; }
 .general-domain { position:absolute; top:590px; width:100%; text-align:center; font-size:43px; }
 @keyframes basis-reveal { from { opacity:0; } to { opacity:1; } }
