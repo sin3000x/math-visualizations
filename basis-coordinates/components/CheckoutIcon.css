@@ -1,0 +1,7 @@
+.checkout-icon { display: block; width: 100%; overflow: visible; filter: drop-shadow(0 10px 8px rgba(0,0,0,.24)); }
+.checkout-icon .checkout-shadow { fill: rgba(0,0,0,.35); }
+.checkout-icon .checkout-screen-shell, .checkout-icon .checkout-body { fill: #686c65; stroke: #9a9e95; stroke-width: 3; }
+.checkout-icon .checkout-neck { fill: #4b4f49; }
+.checkout-icon .checkout-drawer { fill: #343833; stroke: #82877e; stroke-width: 2; }
+.checkout-icon .checkout-keys rect { fill: #c5c7bf; }
+.checkout-icon .checkout-highlight { fill: none; stroke: rgba(255,255,255,.55); stroke-width: 5; stroke-linecap: round; }

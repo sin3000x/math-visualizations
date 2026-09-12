@@ -1,0 +1,19 @@
+.checkout-basis { position:relative; width:1440px; height:810px; color:#f0f0ed; }
+.probe-machine { position:absolute; left:400px; top:240px; width:460px; }
+.probe-prices { position:absolute; left:75px; top:64px; width:216px; display:grid; justify-content:center; gap:10px; color:#18211e; animation:probe-appear .6s both; }
+.probe-price { display:flex; align-items:center; gap:12px; font-size:30px; }
+.probe-prices .fruit { width:36px; height:36px; }
+/* 大小收银台共用同一套托盘与袋底坐标，缩放不改变接触关系。 */
+.probe-tray { position:absolute; left:383px; top:250px; width:224px; height:8px; background:#b6b9ad; border-radius:4px; }
+.probe-tray-bag { position:absolute; left:390px; top:60px; }
+.probe-basis-bag { animation:probe-load 1.1s ease-in-out both; }
+.probe-receipts { position:absolute; left:1070px; top:370px; font-size:44px; }
+.probe-receipts > div { animation:probe-appear .6s both; }
+.probe-output-equation { position:absolute; width:100%; display:flex; align-items:center; justify-content:center; gap:42px; font-size:55px; }
+.probe-transaction { position:relative; width:310px; height:345px; }
+.probe-mini-assembly { position:absolute; width:460px; left:0; top:80px; transform:scale(.5); transform-origin:top left; }
+.probe-small-result { position:absolute; top:290px; width:310px; text-align:center; font-size:40px; }
+.probe-output-equation.addition-row { top:30px; }
+.probe-output-equation.scaling-row { top:420px; }
+@keyframes probe-load { from { transform:translate(260px,-110px); } to { transform:translate(0,0); } }
+@keyframes probe-appear { from { opacity:0; } to { opacity:1; } }

@@ -17,3 +17,8 @@
 .combination-term { display:flex; align-items:center; gap:24px; }
 .general-domain { position:absolute; top:590px; width:100%; text-align:center; font-size:43px; }
 @keyframes basis-reveal { from { opacity:0; } to { opacity:1; } }
+
+.matrix-bracket { position:absolute; top:405px; transform:translate(-50%, -50%); font-size:68px; pointer-events:none; opacity:0; transition:opacity .4s; }
+.row-bracket { left:785px; }
+.column-bracket { left:1195px; }
+.matrix-form .matrix-bracket { opacity:1; transition-delay:.85s; }
