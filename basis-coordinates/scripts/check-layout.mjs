@@ -94,6 +94,21 @@ try {
         }
         assert.equal(await page.locator('[data-role="price-result"]').count(), [4, 7].includes(state.step) ? 1 : 0, '填入单价后移除结果标签');
       }
+      if (state.scene === 'checkout-general-bag') {
+        assert.equal(await page.locator('[data-role="general-price"]').count(), state.step >= 1 ? 1 : 0);
+        assert.equal(await page.locator('[data-role="general-bag"] .fruit-bag').getAttribute('aria-label'), '水果袋：a 斤苹果，b 斤香蕉');
+        const contact = await page.locator('.probe-machine').evaluate(machine => {
+          const tray = machine.querySelector('.probe-tray').getBoundingClientRect();
+          const bag = machine.querySelector('.fruit-bag').getBoundingClientRect();
+          return Math.abs(bag.bottom - tray.top) < 1 && bag.left >= tray.left && bag.right <= tray.right;
+        });
+        assert(contact, '任意袋的袋底必须落在同一托盘上');
+        assert.equal(await page.locator('[data-role="coordinate-copy"]').count(), state.step >= 3 ? 1 : 0);
+        assert.equal(await page.locator('[data-role="result-copy"]').count(), state.step >= 4 ? 1 : 0);
+        assert.equal(await page.locator('[data-role="checkout-copy"]').count(), state.step >= 5 ? 1 : 0);
+
+        if (state.step >= 1) assert.equal(await page.locator('[data-role="general-price"] annotation').textContent(), '5a+3b\\,\\text{元}');
+      }
       await page.screenshot({ path: path.join(output, `${name}-${state.scene}-${state.step}.png`) });
     }
     await page.keyboard.press('ArrowRight');

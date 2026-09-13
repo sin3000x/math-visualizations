@@ -2,6 +2,7 @@ import { createSceneRegistry } from "../lib/scenes/registry";
 import { SCENE_VIEWPORT } from "../lib/scenes/types";
 import { BasisScene } from "./BasisScene";
 import { CheckoutBasisScene } from "./CheckoutBasisScene";
+import { CheckoutGeneralBagScene } from "./CheckoutGeneralBagScene";
 export const project = { title: "基、坐标、行向量", conceptId: "basis-coordinates" };
 export const registry = createSceneRegistry([{
   id: "fruit-bag-basis", conceptId: project.conceptId, order: 10, route: "/",
@@ -11,4 +12,8 @@ export const registry = createSceneRegistry([{
   id: "checkout-basis-prices", conceptId: project.conceptId, order: 20, route: "/",
   title: "用基袋测出单价", summary: "先展示收银台的加法与数乘性质，再用两个单位袋测出隐藏的苹果和香蕉单价。",
   viewport: SCENE_VIEWPORT, stepCount: 9, component: CheckoutBasisScene,
+}, {
+  id: "checkout-general-bag", conceptId: project.conceptId, order: 30, route: "/",
+  title: "计算任意袋子的价格", summary: "把 a 斤苹果、b 斤香蕉放上托盘，用已经测出的单价得到 5a+3b，再复制成单价行向量与坐标列向量的乘法。",
+  viewport: SCENE_VIEWPORT, stepCount: 6, component: CheckoutGeneralBagScene,
 }]);
