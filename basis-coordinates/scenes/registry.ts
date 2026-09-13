@@ -4,6 +4,7 @@ import { BasisScene } from "./BasisScene";
 import { CheckoutBasisScene } from "./CheckoutBasisScene";
 import { CheckoutGeneralBagScene } from "./CheckoutGeneralBagScene";
 import { ChangeBasisScene } from "./ChangeBasisScene";
+import { GeneralBasisScene } from "./GeneralBasisScene";
 export const project = { title: "基、坐标、行向量", conceptId: "basis-coordinates" };
 export const registry = createSceneRegistry([{
   id: "fruit-bag-basis", conceptId: project.conceptId, order: 10, route: "/",
@@ -21,4 +22,8 @@ export const registry = createSceneRegistry([{
   id: "change-basis-same-price", conceptId: project.conceptId, order: 40, route: "/",
   title: "换基，价格不变", summary: "先并列展示同一袋水果在原基和新基下的展开，再测出新基袋报价 8、3，两套行列乘积均得到 19。",
   viewport: SCENE_VIEWPORT, stepCount: 8, component: ChangeBasisScene,
+}, {
+  id: "general-basis-checkout-row", conceptId: project.conceptId, order: 50, route: "/",
+  title: "行向量来自基袋结账", summary: "对任意一组有序基，先展开 v=a v1+b v2，再用线性性计算价格，逐个把基袋结账结果填入行向量，最后配上坐标列。",
+  viewport: SCENE_VIEWPORT, stepCount: 6, component: GeneralBasisScene,
 }]);

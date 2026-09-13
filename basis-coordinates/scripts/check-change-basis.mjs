@@ -9,7 +9,7 @@ try {
   await mkdir('exports/qa-change-basis', { recursive: true });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   await page.goto(`http://127.0.0.1:${server.httpServer.address().port}`);
-  await page.locator('.scene-navigation button').last().click();
+  await page.getByRole('button', { name: '换基，价格不变', exact: true }).click();
   await page.evaluate(() => document.fonts.ready);
   for (let step = 0; step < 8; step++) {
     if (step) await page.keyboard.press('ArrowRight');

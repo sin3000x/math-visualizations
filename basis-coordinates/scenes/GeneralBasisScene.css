@@ -1,0 +1,21 @@
+.general-basis-scene { position: relative; width: 1440px; height: 810px; color: #f0f0ed; background: #000; }
+.general-basis-scene .symbolic-bag { display: flex; align-items: center; justify-content: center; padding: 20px; font-size: 54px; }
+.general-basis-scene .symbolic-basis { border-color: #ab91e3; background: rgba(171,145,227,.1); color: #ab91e3; }
+.general-basis-scene .symbolic-basis .bag-handle { border-color: #ab91e3; }
+.general-basis-scene .general-basis-machine { left: 510px; top: 60px; transform: scale(.68); transform-origin: top left; }
+.general-basis-screen { position: absolute; left: 75px; top: 65px; width: 216px; text-align: center; color: #18211e; font-size: 64px; }
+.general-basis-probe { transform-origin: top left; }
+.general-basis-quote { position: absolute; left: 1010px; top: 165px; display: flex; align-items: baseline; font-size: 46px; opacity: 0; }
+.general-basis-expansion { position: absolute; left: 50%; top: 385px; transform: translateX(-50%); display: flex; align-items: center; gap: 28px; width: max-content; font-size: 50px; }
+.general-basis-result-bag, .general-basis-bag { width: 168px; height: 152px; }
+.general-basis-expansion .symbolic-bag { transform: scale(.8); transform-origin: top left; }
+.general-basis-term { display: flex; align-items: center; gap: 25px; }
+.general-basis-only .general-basis-result-bag, .general-basis-only .general-basis-equals, .general-basis-only .general-basis-term > span { display: none; }
+.general-basis-coordinate, .general-basis-column { color: #ab91e3; }
+.general-basis-coordinate { display: inline-block; }
+.general-basis-equation { position: absolute; top: 620px; left: 50%; transform: translateX(-50%); display: flex; align-items: baseline; gap: 12px; width: max-content; white-space: nowrap; font-size: 40px; }
+.general-basis-linearity, .general-basis-product { display: flex; align-items: baseline; gap: 10px; }
+.general-basis-product-pending { position: absolute; visibility: hidden; }
+.general-basis-price-row { position: relative; }
+.general-basis-product [data-role="general-row-entry"], .general-basis-product [data-role="general-column-entry"] { display: inline-block; }
+.general-basis-hidden { visibility: hidden; }
