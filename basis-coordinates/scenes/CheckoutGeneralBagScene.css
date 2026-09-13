@@ -1,0 +1,23 @@
+.general-bag-scene { left:-150px; }
+.general-original { position:absolute; inset:0; transition:transform 1.1s ease-in-out; }
+.general-raised .general-original { transform:translateY(-180px); }
+.coordinate-copy, .checkout-copy { position:absolute; inset:0; pointer-events:none; }
+.bag-copy-ghost { position:absolute; left:790px; top:120px; animation:general-bag-copy 1.5s ease-in-out both; }
+.coordinate-value { position:absolute; left:895px; top:640px; transform:translate(-50%,-50%); font-size:58px; animation:general-vector-reveal 1.5s both; }
+.general-result-copy { position:absolute; left:1070px; top:610px; font-size:52px; animation:general-result-drop 1.1s ease-in-out both; }
+.matrix-equals { position:absolute; left:1005px; top:610px; font-size:52px; animation:general-vector-reveal 1.1s both; }
+.machine-copy-ghost { position:absolute; left:400px; top:60px; width:460px; transform-origin:center center; animation:general-machine-copy 1.6s ease-in-out both; }
+.machine-copy-ghost .probe-prices { animation:none; }
+.row-value { position:absolute; left:595px; top:640px; transform:translate(-50%,-50%); font-size:58px; animation:general-vector-reveal 1.6s both; }
+@keyframes general-bag-copy {
+  0% { transform:translateY(0); opacity:1; }
+  65% { transform:translateY(425px); opacity:1; }
+  100% { transform:translateY(425px); opacity:0; }
+}
+@keyframes general-machine-copy {
+  0% { transform:translate(0,0) scale(1); opacity:1; }
+  65% { transform:translate(-35px,382px) scale(.65); opacity:1; }
+  100% { transform:translate(-35px,382px) scale(.65); opacity:0; }
+}
+@keyframes general-vector-reveal { 0%,65% { opacity:0; } 100% { opacity:1; } }
+@keyframes general-result-drop { from { transform:translateY(-420px); } to { transform:translateY(0); } }
