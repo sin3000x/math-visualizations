@@ -1,8 +1,5 @@
 .checkout-basis { position:relative; width:1440px; height:810px; color:#f0f0ed; }
 .probe-machine { position:absolute; left:400px; top:240px; width:460px; }
-.probe-prices { position:absolute; left:75px; top:64px; width:216px; display:grid; justify-content:center; gap:10px; color:#18211e; animation:probe-appear .6s both; }
-.probe-price { display:flex; align-items:center; gap:12px; font-size:30px; }
-.probe-prices .fruit { width:36px; height:36px; }
 /* 大小收银台共用同一套托盘与袋底坐标，缩放不改变接触关系。 */
 .probe-tray { position:absolute; left:383px; top:250px; width:224px; height:8px; background:#b6b9ad; border-radius:4px; }
 .probe-tray-bag { position:absolute; left:390px; top:60px; }

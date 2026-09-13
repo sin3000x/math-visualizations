@@ -1,0 +1,21 @@
+/* 封面只负责构图，图形外观由现有 Scene 组件提供。 */
+.cover-preview { position:fixed; inset:0; display:grid; place-items:center; background:#000; }
+.cover-frame { position:relative; width:min(100vw, calc(100vh * 16 / 9)); aspect-ratio:16 / 9; container-type:inline-size; }
+.video-cover { --coral:#ed6a5a; --yellow:#ffff00; position:absolute; width:1920px; height:1080px; background:#000; color:#f4efe1; transform:scale(calc(100cqw / 1920px)); transform-origin:top left; }
+.video-cover *, .video-cover *::before, .video-cover *::after { animation:none !important; transition:none !important; }
+.video-cover .cover-space { position:absolute; border:10px solid; border-radius:50%; }
+.video-cover .cover-space-label { position:absolute; left:50%; top:-118px; transform:translateX(-50%); padding:0 30px; background:#000; font-size:150px; }
+.video-cover .cover-bags { color:#ffff00; border-color:#ffff00; }
+.video-cover .cover-checkouts { color:#62d2c3; border-color:#62d2c3; }
+.video-cover .cover-object { position:absolute; display:grid; place-items:center; }
+.video-cover .checkout-icon { width:100%; max-width:none; }
+.dual-space-cover .cover-space { top:175px; width:820px; height:820px; }
+.dual-space-cover .cover-bag { width:320px; height:285px; }
+.dual-space-cover .cover-bag > .fruit-bag { transform:scale(1.4); }
+.dual-space-cover .cover-checkout { width:325px; height:285px; }
+
+/* 320px 缩略图下仍保留清晰轮廓；仅增强封面，不改 Scene。 */
+.video-cover .cover-space-label .katex { -webkit-text-stroke:1.5px currentColor; }
+.video-cover .fruit-bag { border-width:6px; border-top:0; }
+.video-cover .bag-handle { border-width:6px; border-bottom:0; }
+.video-cover .checkout-screen-shell, .video-cover .checkout-body { stroke-width:4px; }

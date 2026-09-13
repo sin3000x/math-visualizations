@@ -69,3 +69,9 @@ npm run video:production -- <Scene稳定ID>
 在 `scripts/video/timeline.mjs` 修改 `timing`：动画全部播放完后，普通步骤再停留 3 秒，每幕末步再停留 4 秒；无动画则直接停留；`overrides` 按 Scene ID 配置各步骤的秒数，例如 `{ "my-scene": [3, 5, 4] }`。脚本自动读取浏览器中有限 CSS / Web Animations 动画的剩余时间（包括延迟和重复次数），等待最晚结束的动画后才开始计停留时间；无限循环的装饰动画不阻塞推进。动画逐帧采集，渲染耗时不改变视频速度。`?export=1` 直接进入无工具栏录屏画面，`&scene=<ID>` 从指定 Scene 开始；Escape 可退出。
 
 新项目仍使用仓库根目录的 `node scripts/create-project.mjs <项目名>` 创建，录屏脚本、命令和依赖随模板一同生成，各项目独立维护。
+
+## PNG 视频封面
+
+在本目录运行 `npm run cover:export`，输出 `public/double-dual-video-cover.png`。
+开发服务网址加 `?cover=1` 可预览；修改 `cover/Cover.tsx` 和 `cover/cover.css`，图形直接复用现有组件。
+完整用法见[视频封面说明](../docs/video-covers.md)。

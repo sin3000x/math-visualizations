@@ -1,0 +1,23 @@
+/* 封面只负责构图，图形外观由现有 Scene 组件提供。 */
+.cover-preview { position:fixed; inset:0; display:grid; place-items:center; background:#000; }
+.cover-frame { position:relative; width:min(100vw, calc(100vh * 16 / 9)); aspect-ratio:16 / 9; container-type:inline-size; }
+.video-cover { --coral:#ed6a5a; --yellow:#ffff00; position:absolute; width:1920px; height:1080px; background:#000; color:#f4efe1; transform:scale(calc(100cqw / 1920px)); transform-origin:top left; }
+.video-cover *, .video-cover *::before, .video-cover *::after { animation:none !important; transition:none !important; }
+.video-cover .cover-space { position:absolute; border:3px solid; border-radius:50%; }
+.video-cover .cover-space-label { position:absolute; left:50%; top:-65px; transform:translateX(-50%); padding:0 24px; background:#000; font-size:82px; }
+.video-cover .cover-bags { color:#ffff00; border-color:#ffff00a6; }
+.video-cover .cover-checkouts { color:#62d2c3; border-color:#62d2c3a6; }
+.video-cover .cover-object { position:absolute; display:grid; place-items:center; }
+.video-cover .checkout-icon { width:100%; max-width:none; }
+.row-vector-cover .cover-machine { position:absolute; left:55px; top:175px; width:900px; }
+.row-vector-cover .probe-prices { left:146.7px; top:125.2px; width:422.6px; gap:22px; color:#080d0b; }
+.row-vector-cover .probe-price { gap:22px; font-size:62px; }
+.row-vector-cover .probe-prices .fruit { width:72px; height:72px; }
+/* 只覆盖屏幕内的文字字体，右侧行向量仍使用 KaTeX 数学字体。 */
+.row-vector-cover .probe-price .katex .textbf { font-family:"PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; font-weight:700; }
+.row-vector-cover .cover-correspondence { position:absolute; left:970px; top:425px; font-size:128px; color:#ffff00; }
+.row-vector-cover .cover-row { position:absolute; left:1310px; top:405px; font-size:168px; color:#62d2c3; }
+
+.row-vector-cover .cover-correspondence .katex { -webkit-text-stroke:3px currentColor; }
+.row-vector-cover .cover-row .katex { -webkit-text-stroke:2px currentColor; }
+.row-vector-cover .checkout-screen-shell, .row-vector-cover .checkout-body { stroke-width:4px; }

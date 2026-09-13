@@ -47,3 +47,9 @@ npm run video:debug -- --check
 4. 对偶基：为什么读出坐标本身也是函数
 5. 转置：线性映射如何反向作用在测量规则上
 6. 协变与逆变：向量换基时，对偶坐标为什么反着变
+
+## PNG 视频封面
+
+在本目录运行 `npm run cover:export`，输出 `public/dual-space-video-cover.png`。
+开发服务网址加 `?cover=1` 可预览；修改 `cover/Cover.tsx` 和 `cover/cover.css`，图形直接复用现有组件。
+完整用法见[视频封面说明](../docs/video-covers.md)。

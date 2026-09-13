@@ -1,12 +1,12 @@
 import { CheckoutIcon } from "../components/CheckoutIcon";
 import { FruitBag } from "../components/FruitBag";
-import { FruitIcon } from "../components/FruitIcon";
+import { UnitPrices } from "../components/UnitPrices";
+import { basisPrices as prices } from "../lib/math/prices";
 import { MathFormula } from "../components/MathFormula";
 import { basis, type Bag } from "../lib/math/bags";
 import type { SceneProps } from "../lib/scenes/types";
 import "./CheckoutBasisScene.css";
 
-const prices = { apples: 5, bananas: 3 };
 const quote = (bag: Bag) => bag.apples * prices.apples + bag.bananas * prices.bananas;
 const u = { apples: 2, bananas: 1 }, v = { apples: 1, bananas: 2 };
 function Transaction({ bag }: { bag: Bag }) {
@@ -34,12 +34,7 @@ export function CheckoutBasisScene({ step }: SceneProps) {
       </div>
     </div> : <>
       <div className="probe-machine"><CheckoutIcon accent="#62d2c3" largeScreen />
-        {step >= 2 && <div className="probe-prices" data-role="internal-prices">
-          {(["apple", "banana"] as const).map((kind, index) => <div className="probe-price" key={kind} data-role={`unit-price-${kind}`}>
-            <span className={`fruit ${kind}`}><FruitIcon kind={kind} /></span>
-            <MathFormula latex={`${step >= (index === 0 ? 5 : 8) ? Object.values(prices)[index] : "?"}\\,\\text{元/斤}`} />
-          </div>)}
-        </div>}
+        {step >= 2 && <UnitPrices apples={step >= 5 ? prices.apples : null} bananas={step >= 8 ? prices.bananas : null} />}
         {step >= 3 && <>
         <div className="probe-tray" data-role="checkout-tray" />
         <div className="probe-tray-bag probe-basis-bag" key={second ? "second" : "first"} data-role="probe-bag" data-basis={second ? "2" : "1"}>

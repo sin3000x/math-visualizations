@@ -87,3 +87,9 @@ npm run video:check
 ```
 
 `--output exports/custom.mp4` 可指定文件名。视频旁的 `.mp4.json` 记录各步开始时间、动画时长、停留开始时间与结束时间，便于对照配音。`--limit-seconds` 仅用于截取调试，会截断动画或停留；完整导出不要使用。编码成功后才生成最终文件名，`.partial.mp4` 是未完成的临时文件。视频与验收产物均不提交到 Git。
+
+## PNG 视频封面
+
+在本目录运行 `npm run cover:export`，输出 `public/basis-coordinates-video-cover.png`。
+开发服务网址加 `?cover=1` 可预览；修改 `cover/Cover.tsx` 和 `cover/cover.css`，图形直接复用现有组件。
+完整用法见[视频封面说明](../docs/video-covers.md)。

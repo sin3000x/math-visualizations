@@ -17,5 +17,5 @@
     "allowImportingTsExtensions": true,
     "jsx": "react-jsx"
   },
-  "include": ["app", "components", "lib", "scenes"]
+  "include": ["app", "components", "lib", "scenes", "cover"]
 }

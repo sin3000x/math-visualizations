@@ -13,7 +13,8 @@
     "test": "node --test tests/*.test.ts",
     "video:debug": "node scripts/video/render.mjs --preset debug",
     "video:production": "node scripts/video/render.mjs --preset production",
-    "video:check": "node scripts/video/render.mjs --preset production --check"
+    "video:check": "node scripts/video/render.mjs --preset production --check",
+    "cover:export": "node ../scripts/export-cover.mjs double-dual"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.0.2",
