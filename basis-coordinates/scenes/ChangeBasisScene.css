@@ -1,0 +1,29 @@
+.change-basis { position: relative; width: 1440px; height: 810px; background: #000; color: #f0f0ed; }
+.change-basis .change-machine { left: 360px; top: 25px; transform: scale(.72); transform-origin: top left; }
+.change-basis .probe-prices { animation: none; width: 224px; left: 70px; }
+.change-basis .probe-price { gap: 8px; }
+.change-probe-bag { transform-origin: top left; }
+.change-new-colors .fruit-bag { border-color: #ab91e3; background: rgba(171,145,227,.1); }
+.change-new-colors .bag-handle { border-color: #ab91e3; }
+.change-quotes { position: absolute; left: 940px; top: 95px; display: flex; align-items: baseline; font-size: 40px; opacity: 0; }
+.change-row { position: absolute; left: 55px; right: 35px; height: 175px; font-size: 42px; }
+.change-old-row { top: 355px; }
+.change-new-row { top: 595px; }
+.change-small-bag { width: 147px; height: 133px; }
+.change-small-bag .fruit-bag { transform: scale(.7); transform-origin: top left; }
+.change-original { position: absolute; top: 10px; left: 0; }
+.change-equals { position: absolute; top: 45px; left: 167px; }
+.change-term { position: absolute; top: 10px; display: flex; align-items: center; gap: 20px; }
+.change-term-0 { left: 230px; }
+.change-term-1 { left: 435px; }
+.change-coefficient { display: inline-block; width: 28px; text-align: center; }
+.change-plus { display: inline-block; width: 38px; }
+.change-labeled-bag { position: relative; }
+.change-labeled-bag > .math-formula { position: absolute; top: 144px; width: 147px; text-align: center; font-size: 30px; }
+.change-hidden { visibility: hidden; }
+/* 与上一幕相同：原生矩阵、同字号、同基线，未显示项仍保留位置。 */
+.change-product { position: absolute; left: 790px; top: 76px; transform: translateY(-50%); display: flex; align-items: baseline; gap: 12px; width: max-content; font-size: 40px; white-space: nowrap; }
+.change-product [data-flight-source] { display: inline-block; }
+.change-old-row { --coordinate-color: #d8b875; }
+.change-new-row { --coordinate-color: #ab91e3; }
+.change-coefficient, .change-coordinate-vector { color: var(--coordinate-color); }
