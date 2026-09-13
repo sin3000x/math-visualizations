@@ -8,7 +8,7 @@ import { once } from "node:events";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { presets, createTimeline } from "./timeline.mjs";
+import { presets, createTimeline, timing } from "./timeline.mjs";
 import { installRenderClock } from "./browser-clock.mjs";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
@@ -16,12 +16,22 @@ const { values, positionals } = parseArgs({ allowPositionals: true, options: {
   preset: { type: "string", default: "debug" },
   output: { type: "string" },
   "limit-seconds": { type: "string" },
+  "hold-seconds": { type: "string" },
+  "scene-end-seconds": { type: "string" },
   check: { type: "boolean", default: false },
 } });
 const preset = presets[values.preset];
 if (!preset) throw new Error("预设必须为 debug 或 production");
 const limit = values["limit-seconds"] === undefined ? Infinity : Number(values["limit-seconds"]);
 if (!(limit > 0)) throw new Error("limit-seconds 必须为正数");
+const config = { ...timing };
+for (const [option, key] of [["hold-seconds", "stepSeconds"], ["scene-end-seconds", "sceneEndSeconds"]]) {
+  if (values[option] !== undefined) {
+    const seconds = Number(values[option]);
+    if (!Number.isFinite(seconds) || seconds <= 0) throw new Error(`${option} 必须为有限正数`);
+    config[key] = seconds;
+  }
+}
 const projectName = JSON.parse(await readFile(path.join(root, "package.json"), "utf8")).name;
 if (positionals.length > 1) throw new Error("最多指定一个场景 ID");
 const sceneName = positionals[0];
@@ -61,7 +71,7 @@ try {
   await page.evaluate(() => document.fonts.ready);
   await page.locator(".recording-mode").waitFor();
   const scenes = await page.evaluate(() => JSON.parse(document.querySelector("main").dataset.videoScenes));
-  const shots = createTimeline(scenes);
+  const shots = createTimeline(scenes, config);
   const sceneIds = [...new Set(shots.map(shot => shot.scene))];
   if (sceneName !== undefined && !sceneIds.includes(sceneName)) {
     throw new Error(`未知场景：${sceneName}。可选：${sceneIds.join("、")}`);
@@ -110,6 +120,7 @@ try {
       state.katexErrors || !state.noScroll || state.width !== 1920 || state.height !== 1080) {
       throw new Error(`播放状态不符：${JSON.stringify({ shot, state })}`);
     }
+    const startSeconds = time / 1000;
     const animationMs = await page.evaluate(() => window.__videoClock.remainingAnimationMs());
     const animationFrames = Math.ceil(animationMs * preset.fps / 1000);
     const holdFrames = Math.ceil(shot.seconds * preset.fps);
@@ -117,6 +128,10 @@ try {
     const sampleFrames = new Set([0, Math.floor(count / 2), count - 1, Math.round(.75 * preset.fps), animationFrames]);
     for (let i = 0; i < count; i++) {
       await advance((frame + i) * 1000 / preset.fps);
+      if (i === animationFrames) {
+        const remaining = await page.evaluate(() => window.__videoClock.remainingAnimationMs());
+        if (remaining > 1) throw new Error(`停留开始时动画尚未结束：${shot.scene}/${shot.step}，剩余 ${remaining}ms`);
+      }
       if (values.check && !sampleFrames.has(i)) continue;
       const png = await page.screenshot({ type: "png", animations: "allow", scale: "device" });
       if (png.readUInt32BE(16) !== preset.width || png.readUInt32BE(20) !== preset.height) {
@@ -131,9 +146,13 @@ try {
     frame += count;
     time = frame * 1000 / preset.fps;
     await advance(time);
-    report.push({ ...shot, animationSeconds: animationMs / 1000, holdSeconds: shot.seconds, endSeconds: time / 1000, state });
+    const remainingAnimationMs = await page.evaluate(() => window.__videoClock.remainingAnimationMs());
+    const truncated = count < animationFrames + holdFrames;
+    if (!truncated && remainingAnimationMs > 1) throw new Error(`动画未完整播放：${shot.scene}/${shot.step}，剩余 ${remainingAnimationMs}ms`);
+    report.push({ ...shot, startSeconds, holdStartSeconds: startSeconds + animationFrames / preset.fps,
+      remainingAnimationMs, truncated, animationSeconds: animationMs / 1000, holdSeconds: shot.seconds, endSeconds: time / 1000, state });
     if (errors.length) throw new Error(errors.join("\n"));
-    console.log(`[${shotIndex + 1}/${timeline.length}] ${shot.scene} 步骤 ${shot.step + 1} · ${time / 1000}s`);
+    console.log(`[${shotIndex + 1}/${timeline.length}] ${shot.scene} 步骤 ${shot.step + 1} · 动画 ${animationMs / 1000}s + 停留 ${shot.seconds}s · 累计 ${time / 1000}s${truncated ? "（限时截断）" : ""}`);
   }
   if (values.check) {
     // 同一页面确认方向键可返回、Escape 能退出导出画面。
@@ -149,6 +168,7 @@ try {
     encoder.stdin.end();
     if (await encoding !== 0 || encoderError) throw encoderError ?? new Error(stderr);
     await rename(temporary, output);
+    await writeFile(`${output}.json`, JSON.stringify({ preset, report, errors }, null, 2));
     console.log(`已导出 ${preset.width}×${preset.height} ${preset.fps}fps：${output}`);
   }
 } finally {

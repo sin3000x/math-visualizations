@@ -1,6 +1,6 @@
 # 基、坐标、行向量
 
-独立第三集。目前实现四幕，沿用第一集水果袋的造型与实数净重量语义。
+独立第三集。目前实现五幕，沿用第一集水果袋的造型与实数净重量语义。
 
 运行：`npm ci`、`npm run dev`。检查：`npm run lint`、`npm test`、`npm run build`、`npm run video:check`。
 
@@ -61,3 +61,29 @@
 这一行依赖所选基及其顺序；行中的每一项是整个基袋的报价，不一定是某一种水果的每斤单价。此处的元是同一计价单位；线性空间允许实数坐标，包括负数。
 
 构建后运行 `node scripts/check-general-basis.mjs`，检查不同基与线性报价的数值恒等式、六步显隐顺序、基袋接触托盘、报价逐项入行及坐标入列的实际动画起点。
+
+
+## 导出录制视频
+
+在本子工程目录运行（需已安装 Google Chrome）：
+
+```bash
+npm run video:production
+```
+
+输出 `exports/basis-coordinates-production.mp4`，1920×1080、60fps、H.264，无音轨。自动播放注册表中的五幕共 33 步，不显示鼠标或导航。逐帧推进浏览器动画时钟，机器渲染慢不会造成丢帧或加速。
+
+每一步先完整播放 CSS / Web Animations 动画（包含延迟），再停留 3 秒；每幕最后一步停留 4 秒，然后按右方向键继续。无限循环装饰动画不阻止推进。当前场景使用的动画均由此时钟覆盖。
+
+```bash
+# 调整动画结束后的停留时间；适合后期配音
+npm run video:production -- --hold-seconds 5 --scene-end-seconds 7
+# 单独导出最后一幕
+npm run video:production -- general-basis-checkout-row
+# 快速导出全部内容：640×360、30fps
+npm run video:debug
+# 1080p 检查所有步骤、动画结束状态并保存抽样截图
+npm run video:check
+```
+
+`--output exports/custom.mp4` 可指定文件名。视频旁的 `.mp4.json` 记录各步开始时间、动画时长、停留开始时间与结束时间，便于对照配音。`--limit-seconds` 仅用于截取调试，会截断动画或停留；完整导出不要使用。编码成功后才生成最终文件名，`.partial.mp4` 是未完成的临时文件。视频与验收产物均不提交到 Git。
