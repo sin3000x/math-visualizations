@@ -13,3 +13,8 @@
 *.flv
 *.mpeg
 *.mpg
+
+# Workspace dependencies and per-project build caches
+node_modules/
+dist/
+*.tsbuildinfo

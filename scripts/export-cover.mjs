@@ -19,7 +19,7 @@ if (values.output && path.extname(values.output).toLowerCase() !== ".png") throw
 
 for (const project of positionals.length ? positionals : projects) {
   const root = path.join(repository, project);
-  // 使用各项目已有依赖，不在仓库根目录另装一套浏览器和 Vite。
+  // 从项目声明解析依赖，兼容 workspace 提升到根目录的安装布局。
   const require = createRequire(path.join(root, "package.json"));
   const { build, preview } = await import(pathToFileURL(require.resolve("vite")).href);
   const { chromium } = require("playwright");

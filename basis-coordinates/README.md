@@ -2,7 +2,7 @@
 
 独立第三集。目前实现五幕，沿用第一集水果袋的造型与实数净重量语义。
 
-运行：`npm ci`、`npm run dev`。检查：`npm run lint`、`npm test`、`npm run build`、`npm run video:check`。
+安装：在仓库根目录运行 `npm ci`。进入本项目后运行 `npm run dev`；检查命令为 `npm run lint`、`npm test`、`npm run build`、`npm run video:check`。
 
 ## 第一幕：两个袋子生成整个空间
 

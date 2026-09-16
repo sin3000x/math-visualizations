@@ -10,18 +10,20 @@
 
 ```sh
 node scripts/create-project.mjs linear-map
-cd linear-map
 npm ci
-npm run dev
+npm run dev -w linear-map
 ```
 
-创建命令复制 [工程模板](./templates/scene-project)，设置包名，并拒绝覆盖已有目录。不会安装依赖、启动服务或修改现有项目。
+创建命令复制 [工程模板](./templates/scene-project)，设置包名，并拒绝覆盖已有目录。自动登记到根目录 npm workspaces 并更新统一锁文件（此步需要 npm registry 或本地缓存可用），不安装依赖或启动服务。随后在根目录运行 `npm ci`。
 
 ## 统一架构
 
 ```text
 math-visualizations/
 ├── AGENTS.md                 # 全仓库工程与验收规范
+├── package.json              # workspaces 与批量检查入口
+├── package-lock.json         # 三个主题与模板共用的锁文件
+├── node_modules/             # 兼容依赖统一安装（不提交）
 ├── scripts/create-project.mjs
 ├── templates/scene-project/  # 新项目的可运行起点
 ├── dual-space/               # 当前教学与视觉参考
@@ -42,7 +44,22 @@ math-visualizations/
 
 画布沿用 dual-space 的纯黑、固定 16:9 结构：在 1440×810 设计坐标中排版，统一等比缩放，按 1920×1080 验收。普通模式和录屏模式保持相同内部构图；后续构建默认通过键盘渐进触发动画，不显示导航栏；普通模式保留画布外的全屏录制入口。
 
-采用**模板复制**复用架构，各项目独立维护源码、依赖和锁文件。后续模板更新只影响新项目，现有项目按需同步，不依赖 dual-space 的文件，也不引入仓库级运行时包。
+采用 **npm workspaces + 模板复制**：各项目独立维护源码、依赖声明和运行命令，根目录统一安装并维护一份锁文件。兼容版本的依赖共享安装，冲突版本由 npm 按需隔离；不要手工链接 `node_modules`。模板更新只影响新项目，现有项目按需同步。
+
+`kkt-conditions/` 暂不加入 workspaces，继续使用自己的锁文件和安装命令。各项目 `dist/` 与 Vite 缓存保持独立，构建产物不提交 Git。
+
+## 安装与检查
+
+使用 Node.js >= 22.13；`.nvmrc` 选择 Node 22，使用 nvm 时可执行 `nvm install`、`nvm use`。以下命令均在仓库根目录运行：
+
+```sh
+npm ci                              # 安装全部 workspace 依赖
+npm run dev -w dual-space            # 启动指定主题
+npm run build -w basis-coordinates   # 只构建一个主题
+npm run check                       # 全部 workspace 的 lint、测试、构建
+```
+
+进入子项目后仍可执行 `npm run dev`、`npm test` 等命令。新增依赖用 `npm install <包名> -w <项目名>`，将项目声明和根锁文件一起提交。不要为 workspace 单独生成锁文件。首次从旧结构迁移时，可先删除三个主题及模板内旧的 `node_modules`，再在根目录执行 `npm ci`；无需处理 KKT 的依赖。
 
 完整约定见 [AGENTS.md](./AGENTS.md)，添加 Scene 与验收说明见 [模板说明](./templates/scene-project/README.md)。
 

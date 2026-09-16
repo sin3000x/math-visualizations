@@ -1,0 +1,22 @@
+{
+  "name": "math-visualizations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "workspaces": [
+    "dual-space",
+    "double-dual",
+    "basis-coordinates",
+    "templates/scene-project"
+  ],
+  "scripts": {
+    "create:project": "node scripts/create-project.mjs",
+    "lint": "npm run lint --workspaces",
+    "test": "node --test tests/*.test.mjs && npm run test --workspaces",
+    "build": "npm run build --workspaces",
+    "check": "npm run lint && npm test && npm run build"
+  }
+}

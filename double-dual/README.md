@@ -3,7 +3,7 @@
 独立的第二集开场原型。水果袋、收银台及样式复制自 dual-space，在本项目内维护，不跨项目导入源码。
 
 ```sh
-npm ci
+npm ci --prefix ..
 npm run dev -- --port 4174
 ```
 
