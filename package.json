@@ -9,6 +9,7 @@
   "workspaces": [
     "packages/config",
     "packages/scene-kit",
+    "packages/video-tools",
     "dual-space",
     "double-dual",
     "basis-coordinates",

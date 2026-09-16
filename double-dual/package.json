@@ -10,7 +10,6 @@
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.app.json && vite build",
     "lint": "eslint .",
-    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "video:debug": "node scripts/video/render.mjs --preset debug",
     "video:production": "node scripts/video/render.mjs --preset production",
     "video:check": "node scripts/video/render.mjs --preset production --check",
@@ -31,7 +30,7 @@
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.4",
     "playwright": "^1.63.0",
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "@math-visualizations/config": "0.1.0"
+    "@math-visualizations/config": "0.1.0",
+    "@math-visualizations/video-tools": "0.1.0"
   }
 }

@@ -25,6 +25,7 @@ math-visualizations/
 ├── package-lock.json         # 主题、模板和公共包共用的锁文件
 ├── node_modules/             # 兼容依赖统一安装（不提交）
 ├── packages/scene-kit/       # 公式、播放器、Scene 类型与导航
+├── packages/video-tools/     # 共享录屏、动画时钟和编码
 ├── packages/config/          # ESLint 与 TypeScript 基础配置
 ├── scripts/create-project.mjs
 ├── templates/scene-project/  # 新项目的可运行起点
@@ -53,6 +54,7 @@ math-visualizations/
 ## 公共代码边界
 
 - `packages/scene-kit/`：共享 `MathFormula`、`SvgFormula`、`ScenePlayer`、Scene 类型、注册表校验和步骤导航。通过包的明确子路径导入，例如 `@math-visualizations/scene-kit/MathFormula`。
+- `packages/video-tools/`：统一录屏引擎、动画时钟、FFmpeg 编码和验收；项目仅保留入口与时间线配置。第一集保留点击及固定时长编排，其他主题使用“动画完成后再停留”。
 - `packages/config/`：统一 ESLint 和 TypeScript 基础选项；项目保留自己的 `include` 和必要扩展。
 - 双对偶、基坐标及模板使用共享播放器；第一集保留独有的多阶段播放器和注册表，只共享公式与配置。
 - 教学内容、数学计算、水果袋等主题图形、CSS 和录屏编排仍由各项目维护。公共组件沿用原有 className，由项目样式控制呈现。
@@ -70,7 +72,7 @@ npm run build -w basis-coordinates   # 只构建一个主题
 npm run check                       # 全部 workspace 的 lint、测试、构建
 ```
 
-进入子项目后仍可执行 `npm run dev`、`npm test` 等命令。新增依赖用 `npm install <包名> -w <项目名>`，将项目声明和根锁文件一起提交。不要为 workspace 单独生成锁文件。首次从旧结构迁移时，可先删除三个主题及模板内旧的 `node_modules`，再在根目录执行 `npm ci`；无需处理 KKT 的依赖。
+进入子项目后仍可执行 `npm run dev` 等命令。通用 Scene 契约测试位于 `packages/scene-kit/tests/`，录屏测试位于 `packages/video-tools/tests/`；根目录 `npm test` 统一运行这些测试与各主题的数学测试。无主题专属测试的项目不重复声明 `test` 脚本。新增依赖用 `npm install <包名> -w <项目名>`，将项目声明和根锁文件一起提交。不要为 workspace 单独生成锁文件。首次从旧结构迁移时，可先删除三个主题及模板内旧的 `node_modules`，再在根目录执行 `npm ci`；无需处理 KKT 的依赖。
 
 完整约定见 [AGENTS.md](./AGENTS.md)，添加 Scene 与验收说明见 [模板说明](./templates/scene-project/README.md)。
 

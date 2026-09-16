@@ -41,7 +41,7 @@ Scene 内容可用区域为 1440×810（留白由 Scene 自己安排），不为
 ```sh
 npm run lint
 npm run build
-npm test
+npm run test -w @math-visualizations/scene-kit
 git diff --check
 ```
 
@@ -51,7 +51,7 @@ git diff --check
 
 ## 自动录屏
 
-录屏脚本由项目模板自带，读取 ScenePlayer 从注册表输出的 Scene 顺序与 `stepCount`，自动生成“展示 → 等待 → 按右方向键”的时间线，无鼠标点击或光标。新增 Scene / 步骤后无需重新编写脚本。适用于每按一次右方向键推进一步的 Scene；有内部键盘阶段或鼠标交互时需另行编排。
+录屏由共享包 `@math-visualizations/video-tools` 执行，项目仅保留入口和 `timeline.mjs` 配置。引擎读取 ScenePlayer 从注册表输出的 Scene 顺序与 `stepCount`，自动生成“展示 → 等待 → 按右方向键”的时间线，无鼠标点击或光标。新增 Scene / 步骤后无需重新编写脚本。适用于每按一次右方向键推进一步的 Scene；有内部键盘阶段或鼠标交互时需另行编排。
 
 ```sh
 npm run video:debug              # 640×360，30 fps
@@ -65,6 +65,6 @@ npm run video:production -- <Scene稳定ID>
 
 在 `scripts/video/timeline.mjs` 修改 `timing`：动画全部播放完后，普通步骤再停留 3 秒，每幕末步再停留 4 秒；无动画则直接停留；`overrides` 按 Scene ID 配置各步骤的秒数，例如 `{ "my-scene": [3, 5, 4] }`。脚本自动读取浏览器中有限 CSS / Web Animations 动画的剩余时间（包括延迟和重复次数），等待最晚结束的动画后才开始计停留时间；无限循环的装饰动画不阻塞推进。动画逐帧采集，渲染耗时不改变视频速度。`?export=1` 直接进入无工具栏录屏画面，`&scene=<ID>` 从指定 Scene 开始；Escape 可退出。
 
-新项目仍使用仓库根目录的 `node scripts/create-project.mjs <项目名>` 创建，录屏脚本、命令和依赖随模板一同生成，各项目独立维护。
+新项目仍使用仓库根目录的 `node scripts/create-project.mjs <项目名>` 创建，入口和配置随模板生成，录屏引擎修复统一应用到各项目。
 
 `npm run check:layout` 检查普通桌面、窄屏和 1080p 的全部步骤、对象边界与键盘导航，截图输出至 `exports/qa-layout/`。

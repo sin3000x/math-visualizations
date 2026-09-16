@@ -1,9 +1,4 @@
-export const presets = {
-  debug: { width: 640, height: 360, fps: 30, crf: 22 },
-  production: { width: 1920, height: 1080, fps: 60, crf: 18 },
-};
-
-// 秒数是播放时间，不是机器渲染所需的时间。两种预设共用这份脚本。
+// 第一集保留点击、内部阶段及固定时长编排。
 export function createTimeline() {
   const shots = [];
   const add = (scene, step, action = "next", seconds = 2.5, extra = {}) =>
