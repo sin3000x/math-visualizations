@@ -1,4 +1,4 @@
-import { MathFormula } from "./MathFormula";
+import { MathFormula } from "./MathFormula.tsx";
 
 export function SvgFormula({ x, y, width = 240, height = 80, latex }: {
   x: number; y: number; width?: number; height?: number; latex: string;

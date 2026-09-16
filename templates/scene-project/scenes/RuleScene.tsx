@@ -1,4 +1,4 @@
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 
 export function RuleScene() {
   return <section className="example-scene" aria-label="长度加倍的数学表达">

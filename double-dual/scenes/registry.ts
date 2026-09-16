@@ -1,5 +1,5 @@
-import { createSceneRegistry } from "../lib/scenes/registry";
-import { SCENE_VIEWPORT } from "../lib/scenes/types";
+import { createSceneRegistry } from "@math-visualizations/scene-kit/registry";
+import { SCENE_VIEWPORT } from "@math-visualizations/scene-kit/types";
 import { DoubleDualScene } from "./DoubleDualScene";
 import { SupermarketScene } from "./SupermarketScene";
 import { NaturalIdentificationScene } from "./NaturalIdentificationScene";

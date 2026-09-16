@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { LoadedCheckout } from "../components/LoadedCheckout";
 import { CheckoutIcon } from "../components/CheckoutIcon";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { checkouts, getQuote } from "../lib/model/market";
 import { FruitBag } from "./FruitBag";
 import "./CheckoutOperationsScene.css";

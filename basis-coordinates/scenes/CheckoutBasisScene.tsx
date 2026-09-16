@@ -2,9 +2,9 @@ import { CheckoutIcon } from "../components/CheckoutIcon";
 import { FruitBag } from "../components/FruitBag";
 import { UnitPrices } from "../components/UnitPrices";
 import { basisPrices as prices } from "../lib/math/prices";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { basis, type Bag } from "../lib/math/bags";
-import type { SceneProps } from "../lib/scenes/types";
+import type { SceneProps } from "@math-visualizations/scene-kit/types";
 import "./CheckoutBasisScene.css";
 
 const quote = (bag: Bag) => bag.apples * prices.apples + bag.bananas * prices.bananas;

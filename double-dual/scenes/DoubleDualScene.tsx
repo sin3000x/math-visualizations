@@ -1,8 +1,8 @@
 import { LoadedCheckout } from "../components/LoadedCheckout";
 import { FruitBag } from "../components/FruitBag";
 import { CheckoutIcon } from "../components/CheckoutIcon";
-import { MathFormula } from "../components/MathFormula";
-import type { SceneProps } from "../lib/scenes/types";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
+import type { SceneProps } from "@math-visualizations/scene-kit/types";
 
 const bag = { apples: 2, bananas: 1 };
 const prices = { apples: 5, bananas: 6 };

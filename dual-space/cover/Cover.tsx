@@ -1,6 +1,6 @@
 import { FruitBag } from "../scenes/FruitBag";
 import { CheckoutIcon } from "../components/CheckoutIcon";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import "./cover.css";
 
 // 位置采用 1920×1080 设计坐标；组件自身的大小与配色来自教学页面。

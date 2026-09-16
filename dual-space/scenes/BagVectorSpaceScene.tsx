@@ -1,6 +1,6 @@
 import { useEffect, useImperativeHandle, useState, type Ref, type CSSProperties, type ReactNode } from "react";
 import "./BagVectorSpaceAnimation.css";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { HorizontalArrangement } from "../components/HorizontalArrangement";
 import type { BagVector } from "../lib/model/bagSpace";
 import { FruitBag } from "./FruitBag";

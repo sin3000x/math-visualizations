@@ -1,5 +1,5 @@
-import { SvgFormula } from "../components/SvgFormula";
-import type { SceneProps } from "../lib/scenes/types";
+import { SvgFormula } from "@math-visualizations/scene-kit/SvgFormula";
+import type { SceneProps } from "@math-visualizations/scene-kit/types";
 
 export function ObservationScene({ step }: SceneProps) {
   return <section className="example-scene" aria-label="长度加倍的直观关系">

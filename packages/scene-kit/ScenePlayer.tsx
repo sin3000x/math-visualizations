@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { moveStep } from "../lib/scenes/navigation";
-import type { SceneDefinition } from "../lib/scenes/types";
+import { moveStep } from "./navigation.ts";
+import type { SceneDefinition } from "./types.ts";
 
 export function ScenePlayer({ title, scenes }: { title: string; scenes: readonly SceneDefinition[] }) {
   const [position, setPosition] = useState(() => {

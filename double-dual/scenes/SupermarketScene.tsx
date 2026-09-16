@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'react';
 import { CheckoutIcon } from '../components/CheckoutIcon';
 import { FruitBag } from '../components/FruitBag';
-import { MathFormula } from '../components/MathFormula';
-import type { SceneProps } from '../lib/scenes/types';
+import { MathFormula } from '@math-visualizations/scene-kit/MathFormula';
+import type { SceneProps } from '@math-visualizations/scene-kit/types';
 import './SupermarketScene.css';
 
 const bags = [{ apples: 1, bananas: 1 }, { apples: 2, bananas: 1 }, { apples: 1, bananas: 2 }];

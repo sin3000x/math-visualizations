@@ -43,9 +43,10 @@
 - 每个数学主题是独立子工程，例如 `dual-space/`。新项目采用 `templates/scene-project/` 模板，在仓库根目录执行 `node scripts/create-project.mjs <project-name>` 创建。
 - `dual-space/` 是交互与视觉参考；`kkt-conditions/` 保留为历史项目，不要求迁移或跟随新架构维护。
 - 子工程独立维护 `package.json`、源码、测试和运行命令，不要把多个主题耦合成一个应用。
-- 可复用的交互、公式或 Scene 基础设施应抽成子工程内的通用模块；经过至少两个主题验证后，再考虑提升为仓库级公共包。
+- 公式、通用播放器、Scene 类型、注册表校验和导航统一使用 `packages/scene-kit/`；ESLint、TypeScript 基础配置统一使用 `packages/config/`。公共包直接导出源码，由应用编译，不生成共享 `dist`。
+- 新的复用逻辑先在子工程内验证，至少两个主题需要时再提升为公共包；教学内容与样式保持主题内维护。修改公共包后必须检查全部使用方。
 - 不要提交构建产物、录屏文件或临时运行文件。所有 `*.mp4` 必须被 Git 忽略。
-- 三个现有主题、模板及新主题采用 npm workspaces，根目录统一安装并维护 `package-lock.json`；各项目保留自己的依赖声明，不再生成子项目锁文件。KKT 历史项目保持独立。
+- 公共包、三个现有主题、模板及新主题采用 npm workspaces，根目录统一安装并维护 `package-lock.json`；各项目保留自己的依赖声明，不再生成子项目锁文件。KKT 历史项目保持独立。
 - 使用现有 npm 包管理器；安装在仓库根目录运行 `npm ci`，添加依赖使用 `npm install <包名> -w <项目名>`。各项目 `dist/` 与 Vite 缓存必须隔离，不共享同一个输出目录。
 
 新项目默认采用以下结构（数学和几何目录按需创建）：
@@ -53,10 +54,9 @@
 ```text
 <project>/
 ├── app/                  # 入口、播放器装配与全局样式
-├── components/           # ScenePlayer、MathFormula、SvgFormula
+├── components/           # 主题专属图形；通用组件从 scene-kit 导入
 ├── scenes/               # 教学组件与项目 Scene 注册表
 ├── lib/
-│   ├── scenes/           # Scene 类型、注册表、排序
 │   ├── math/             # 纯数学计算与约束判断
 │   └── geometry/         # 坐标变换、投影、命中测试
 ├── public/

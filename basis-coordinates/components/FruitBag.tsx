@@ -1,5 +1,5 @@
 import { FruitIcon } from "./FruitIcon";
-import { MathFormula } from "./MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { formatQuantity } from "../lib/math/bags";
 import "./FruitBag.css";
 type Quantity = number | "a" | "b";

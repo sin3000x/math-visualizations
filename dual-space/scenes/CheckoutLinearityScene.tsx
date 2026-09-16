@@ -1,7 +1,7 @@
 import { useImperativeHandle, useState, type CSSProperties, type Ref } from "react";
 import { LoadedCheckout } from "../components/LoadedCheckout";
 import { CheckoutIcon } from "../components/CheckoutIcon";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { addBags, scaleBag, type BagVector } from "../lib/model/bagSpace";
 import { checkouts, getQuote } from "../lib/model/market";
 import { FruitBag } from "./FruitBag";

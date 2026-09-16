@@ -1,5 +1,5 @@
 import { FruitIcon } from "./FruitIcon";
-import { MathFormula } from "./MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import "./UnitPrices.css";
 
 // Scene 和封面共用显示结构；未知单价通过 null 表示。

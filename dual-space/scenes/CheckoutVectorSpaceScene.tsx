@@ -1,5 +1,5 @@
 import { CheckoutIcon } from "../components/CheckoutIcon";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import "./CheckoutVectorSpaceScene.css";
 
 const counters = {

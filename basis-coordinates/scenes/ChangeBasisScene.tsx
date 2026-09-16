@@ -2,10 +2,10 @@ import { useLayoutEffect, useRef } from "react";
 import { CheckoutIcon } from "../components/CheckoutIcon";
 import { FruitBag } from "../components/FruitBag";
 import { FruitIcon } from "../components/FruitIcon";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { basis } from "../lib/math/bags";
 import { changedBasis, changedRow } from "../lib/math/changeBasis";
-import type { SceneProps } from "../lib/scenes/types";
+import type { SceneProps } from "@math-visualizations/scene-kit/types";
 import "./CheckoutBasisScene.css";
 import "./ChangeBasisScene.css";
 

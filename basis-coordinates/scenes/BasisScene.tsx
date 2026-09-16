@@ -1,8 +1,8 @@
 import { useLayoutEffect, useRef } from "react";
 import { FruitBag } from "../components/FruitBag";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { basis } from "../lib/math/bags";
-import type { SceneProps } from "../lib/scenes/types";
+import type { SceneProps } from "@math-visualizations/scene-kit/types";
 import "./BasisScene.css";
 
 const examples = [{ apples: 2, bananas: 1 }, { apples: 1, bananas: 2 }, { apples: .5, bananas: 1.5 }, { apples: -1, bananas: 1 }, { apples: 0, bananas: 0 }];

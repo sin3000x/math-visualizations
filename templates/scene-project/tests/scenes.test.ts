@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createSceneRegistry } from '../lib/scenes/registry.ts';
-import { moveStep } from '../lib/scenes/navigation.ts';
-import { SCENE_VIEWPORT, type SceneDefinition } from '../lib/scenes/types.ts';
+import { createSceneRegistry } from '@math-visualizations/scene-kit/registry';
+import { moveStep } from '@math-visualizations/scene-kit/navigation';
+import { SCENE_VIEWPORT, type SceneDefinition } from '@math-visualizations/scene-kit/types';
 
 const example: SceneDefinition = {
   id: 'one', conceptId: 'example', order: 10, route: '/', title: '示例', summary: '观察关系',

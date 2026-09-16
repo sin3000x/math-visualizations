@@ -1,5 +1,5 @@
 import { CheckoutIcon } from "../components/CheckoutIcon";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { checkouts } from "../lib/model/market";
 import { quote } from "../lib/model/checkoutSpace";
 import { FruitBag } from "./FruitBag";

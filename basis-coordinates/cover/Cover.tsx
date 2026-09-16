@@ -1,6 +1,6 @@
 import { CheckoutIcon } from "../components/CheckoutIcon";
 import { UnitPrices } from "../components/UnitPrices";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { basisPrices } from "../lib/math/prices";
 import "../components/FruitBag.css";
 import "./cover.css";

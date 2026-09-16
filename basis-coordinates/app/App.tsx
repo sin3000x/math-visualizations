@@ -1,4 +1,4 @@
-import { ScenePlayer } from "../components/ScenePlayer";
+import { ScenePlayer } from "@math-visualizations/scene-kit/ScenePlayer";
 import { project, registry } from "../scenes/registry";
 
 const scenes = registry.getConceptScenes(project.conceptId);

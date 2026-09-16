@@ -1,5 +1,5 @@
 import { FruitIcon } from "../components/FruitIcon";
-import { MathFormula } from "../components/MathFormula";
+import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 
 export function FruitBag({ apples, bananas, compact = false }: { apples: number; bananas: number; compact?: boolean }) {
   const hasReturn = apples < 0 || bananas < 0;
