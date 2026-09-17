@@ -43,20 +43,24 @@ app/globals.css                      # 全局视觉及各 Scene 样式区
 
 ## Run locally
 
-需要 Node.js `>=22.13.0`。
+需要 Node.js `>=22.13.0`。依赖由根目录 npm workspaces 与统一锁文件管理；保留本项目的 vinext/Cloudflare 配置。子目录可能仍有 npm 自动隔离的版本冲突依赖，不再维护独立锁文件或 `.pnpm` 安装。
 
 ```bash
-npm install
-npm run dev
+# 仓库根目录
+npm ci
+npm run dev -w kkt-conditions
 ```
 
 打开终端中显示的本地地址。
 
 ## Validate
 
+以下命令在 `kkt-conditions/` 内运行；也可在根目录使用 `-w kkt-conditions`。
+
 ```bash
 npm run lint
 npm run build
+npm test
 git diff --check
 ```
 

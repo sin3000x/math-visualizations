@@ -49,7 +49,7 @@ math-visualizations/
 
 采用 **npm workspaces + 模板复制**：各项目独立维护源码、依赖声明和运行命令，根目录统一安装并维护一份锁文件。兼容版本的依赖共享安装，冲突版本由 npm 按需隔离；不要手工链接 `node_modules`。模板中的教学示例更新只影响新项目；公共包的修复会应用到所有使用它的项目。
 
-`kkt-conditions/` 暂不加入 workspaces，继续使用自己的锁文件和安装命令。各项目 `dist/` 与 Vite 缓存保持独立，构建产物不提交 Git。
+`kkt-conditions/` 也由 workspaces 统一安装。它保留 vinext/Cloudflare 构建方式及原有精确版本约束；兼容依赖复用根目录安装，有版本冲突的依赖由 npm 自动放在子目录。各项目 `dist/` 与 Vite 缓存保持独立，构建产物不提交 Git。
 
 ## 公共代码边界
 
@@ -68,11 +68,12 @@ math-visualizations/
 ```sh
 npm ci                              # 安装全部 workspace 依赖
 npm run dev -w dual-space            # 启动指定主题
+npm run dev -w kkt-conditions        # 启动 KKT（保留 vinext）
 npm run build -w basis-coordinates   # 只构建一个主题
 npm run check                       # 全部 workspace 的 lint、测试、构建
 ```
 
-进入子项目后仍可执行 `npm run dev` 等命令。通用 Scene 契约测试位于 `packages/scene-kit/tests/`，录屏测试位于 `packages/video-tools/tests/`；根目录 `npm test` 统一运行这些测试与各主题的数学测试。无主题专属测试的项目不重复声明 `test` 脚本。新增依赖用 `npm install <包名> -w <项目名>`，将项目声明和根锁文件一起提交。不要为 workspace 单独生成锁文件。首次从旧结构迁移时，可先删除三个主题及模板内旧的 `node_modules`，再在根目录执行 `npm ci`；无需处理 KKT 的依赖。
+进入子项目后仍可执行 `npm run dev` 等命令。通用 Scene 契约测试位于 `packages/scene-kit/tests/`，录屏测试位于 `packages/video-tools/tests/`；根目录 `npm test` 统一运行这些测试与各主题的数学测试。无主题专属测试的项目不重复声明 `test` 脚本。新增依赖用 `npm install <包名> -w <项目名>`，将项目声明和根锁文件一起提交。不要为 workspace 单独生成锁文件。首次从旧结构迁移时，可先删除三个主题及模板内旧的 `node_modules`，再在根目录执行 `npm ci`。KKT 迁移时也由根目录 `npm ci` 重建依赖，不保留旧的 `.pnpm` 安装目录。
 
 完整约定见 [AGENTS.md](./AGENTS.md)，添加 Scene 与验收说明见 [模板说明](./templates/scene-project/README.md)。
 
@@ -81,4 +82,4 @@ npm run check                       # 全部 workspace 的 lint、测试、构�
 - [对偶的对偶](./double-dual)：独立第二集，从测量水果袋回顾到“谁来测量收银台”的悬念。
 
 - [对偶空间](./dual-space)：从水果袋与收银台理解线性空间、线性映射及对偶空间。
-- [KKT 条件](./kkt-conditions)：历史可视化，保留原有运行方式。
+- [KKT 条件](./kkt-conditions)：历史可视化，共享依赖安装，保留原有构建方式。

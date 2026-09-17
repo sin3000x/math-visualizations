@@ -1,4 +1,4 @@
-import { MAX, MIN } from "@/lib/geometry/plot";
+import { MAX, MIN } from "./plot.ts";
 
 export type ProjectedPoint = { x: number; y: number };
 
@@ -20,7 +20,7 @@ export function surfacePath(fixed: number, alongX: boolean) {
     const x = alongX ? sample : fixed;
     const y = alongX ? fixed : sample;
     const projected = project3d(x, y, x * x + y * y);
-    return `${index === 0 ? "M" : "L"} ${projected.x} ${projected.y}`;
+    return `${index === 0 ? "M" : "L"} ${projected.x.toFixed(6)} ${projected.y.toFixed(6)}`;
   }).join(" ");
 }
 
@@ -30,6 +30,7 @@ export function contourSectionPath(radius: number) {
     const x = radius * Math.cos(angle);
     const y = radius * Math.sin(angle);
     const projected = project3d(x, y, radius * radius);
-    return `${index === 0 ? "M" : "L"} ${projected.x} ${projected.y}`;
+    // 只统一 SVG 序列化精度，避免服务端和浏览器三角函数的尾数差异影响 hydration。
+    return `${index === 0 ? "M" : "L"} ${projected.x.toFixed(6)} ${projected.y.toFixed(6)}`;
   }).join(" ");
 }

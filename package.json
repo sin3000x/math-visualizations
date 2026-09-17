@@ -13,7 +13,8 @@
     "dual-space",
     "double-dual",
     "basis-coordinates",
-    "templates/scene-project"
+    "templates/scene-project",
+    "kkt-conditions"
   ],
   "scripts": {
     "create:project": "node scripts/create-project.mjs",

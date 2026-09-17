@@ -50,6 +50,10 @@ Scene 的稳定 ID、标题和顺序只在 `lib/scenes/registry.ts` 修改。
 
 普通布局使用第一组值，`.recording-mode.conditions-scene` 只覆盖录屏值。调整这些变量时，不要同时改 JSX。
 
+## 依赖安装
+
+依赖与锁文件由仓库根 npm workspaces 统一管理：在根目录运行 `npm ci`，启动使用 `npm run dev -w kkt-conditions`。保留本项目 vinext/Cloudflare 配置；不要恢复独立锁文件或 `.pnpm` 目录。子目录中 npm 自动隔离的版本冲突依赖是正常的。
+
 ## 小改动工作流
 
 1. 用上面的路由表只打开目标文件和相关 CSS 区段。
