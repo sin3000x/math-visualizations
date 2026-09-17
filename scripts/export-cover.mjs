@@ -6,7 +6,7 @@ import path from "node:path";
 import { parseArgs } from "node:util";
 
 const repository = fileURLToPath(new URL("../", import.meta.url));
-const projects = ["dual-space", "double-dual", "basis-coordinates"];
+const projects = ["dual-space", "double-dual", "basis-coordinates", "kkt-conditions"];
 const { values, positionals } = parseArgs({ allowPositionals: true, options: {
   output: { type: "string" },
   browser: { type: "string", default: process.env.VIDEO_BROWSER ?? "chrome" },
@@ -19,6 +19,7 @@ if (values.output && path.extname(values.output).toLowerCase() !== ".png") throw
 
 for (const project of positionals.length ? positionals : projects) {
   const root = path.join(repository, project);
+  const coverConfig = project === "kkt-conditions" ? { configFile: path.join(root, "cover/vite.config.ts"), root: path.join(root, "cover") } : { root };
   // 从项目声明解析依赖，兼容 workspace 提升到根目录的安装布局。
   const require = createRequire(path.join(root, "package.json"));
   const { build, preview } = await import(pathToFileURL(require.resolve("vite")).href);
@@ -29,8 +30,8 @@ for (const project of positionals.length ? positionals : projects) {
   let server;
   let browser;
   try {
-    await build({ root, logLevel: "error", build: { outDir: snapshot, emptyOutDir: true } });
-    server = await preview({ root, build: { outDir: snapshot }, preview: { host: "127.0.0.1", port: 0, open: false } });
+    await build({ ...coverConfig, logLevel: "error", build: { outDir: snapshot, emptyOutDir: true } });
+    server = await preview({ ...coverConfig, build: { outDir: snapshot }, preview: { host: "127.0.0.1", port: 0, open: false } });
     const address = server.httpServer.address();
     if (!address || typeof address === "string") throw new Error("无法取得封面预览端口");
     const url = `http://127.0.0.1:${address.port}/?cover=1`;

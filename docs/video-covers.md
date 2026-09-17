@@ -4,7 +4,7 @@
 
 ## 导出
 
-在仓库根目录一次生成三张：
+在仓库根目录一次生成四张：
 
 ```sh
 node scripts/export-cover.mjs
@@ -71,3 +71,9 @@ node scripts/export-cover.mjs basis-coordinates --output /tmp/row-vector.png
 脚本先建立临时生产构建并启动本地预览，等待页面和字体加载完成，检查 KaTeX、控制台、网络失败、对象边界和页面滚动，再截图并验证 PNG 尺寸。只有检查通过才替换成品，失败会保留上一次的 PNG。临时构建、浏览器和服务在结束后清理。
 
 调整构图后仍应打开 PNG 检查一次：自动检查能发现越界，却不能代替对重叠、对齐、文字醒目程度的目视判断。
+
+## KKT 封面
+
+`kkt-conditions/cover/` 复用教学页的 `Arrow`、数学坐标变换和 KaTeX 组件，用边界上的等长反向箭头表示力平衡。为适配该项目的 vinext 服务端架构，封面采用独立 Vite 入口：`npm run cover:dev -w kkt-conditions`，导出运行 `npm run cover:export -w kkt-conditions`。成品为 `kkt-conditions/public/kkt-conditions-video-cover.png`；旧 SVG/JPG 保留为历史版本。
+
+图中使用目标函数 `f=((x-1.4)^2+(y-1.4)^2)/2`、约束 `g=x+y≤0`，在原点取乘子 `λ=1.4`。两支箭头分别是下降方向与约束反力，其和为零；目标等高线与约束边界在最优点相切。

@@ -1,0 +1,16 @@
+.cover-preview { position:fixed; inset:0; display:grid; place-items:center; background:#000; }
+.cover-frame { position:relative; width:min(100vw, calc(100vh * 16 / 9)); aspect-ratio:16 / 9; container-type:inline-size; }
+.kkt-cover { position:absolute; width:1920px; height:1080px; background:#000; color:#ffff00; transform:scale(calc(100cqw / 1920px)); transform-origin:top left; overflow:hidden; }
+.kkt-cover .cover-geometry { position:absolute; inset:0; width:1920px; height:1080px; }
+.kkt-cover .cover-contour { fill:none; stroke:#f1d477; stroke-width:3; opacity:.32; }
+.kkt-cover .cover-feasible { fill:#62d2c3; fill-opacity:.18; }
+.kkt-cover .cover-boundary { stroke:#62d2c3; stroke-width:7; }
+.kkt-cover .vector line { stroke-width:9; stroke-linecap:butt; }
+.kkt-cover .vector-red line { stroke:#ff7569; }
+.kkt-cover .vector-blue line { stroke:#78b7ff; }
+.kkt-cover .math-formula { display:inline-block; white-space:nowrap; }
+.kkt-cover .katex { font-size:1em; -webkit-text-stroke:3px currentColor; }
+.kkt-cover .cover-label { position:absolute; font-size:168px; text-shadow:0 0 8px #000, 0 0 14px #000; font-weight: 900;}
+.kkt-cover .cover-descent { left:1125px; top:401px; color:#ff7569; }
+.kkt-cover .cover-reaction { left:230px; top:751px; color:#78b7ff; }
+.kkt-cover .cover-title { position:absolute; left:0; right:0; top:70px; text-align:center; font-size:224px; font-family:"PingFang SC", "Microsoft YaHei", sans-serif; font-weight:900; -webkit-text-stroke:4px currentColor; line-height:1.1; text-shadow:0 0 12px #000, 0 0 24px #000; }
