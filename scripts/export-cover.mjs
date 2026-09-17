@@ -18,7 +18,7 @@ if (values.output && !positionals[0]) throw new Error("指定 --output 时必须
 if (values.output && path.extname(values.output).toLowerCase() !== ".png") throw new Error("输出文件必须是 PNG");
 
 for (const project of positionals.length ? positionals : projects) {
-  const root = path.join(repository, project);
+  const root = path.join(repository, "projects", project);
   const coverConfig = project === "kkt-conditions" ? { configFile: path.join(root, "cover/vite.config.ts"), root: path.join(root, "cover") } : { root };
   // 从项目声明解析依赖，兼容 workspace 提升到根目录的安装布局。
   const require = createRequire(path.join(root, "package.json"));

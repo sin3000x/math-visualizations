@@ -15,7 +15,7 @@
     "video:production": "node scripts/video/render.mjs --preset production",
     "video:check": "node scripts/video/render.mjs --preset production --check",
     "check:layout": "npm run build && node scripts/check-layout.mjs",
-    "cover:export": "node ../scripts/export-cover.mjs basis-coordinates"
+    "cover:export": "node ../../scripts/export-cover.mjs basis-coordinates"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.0.2",

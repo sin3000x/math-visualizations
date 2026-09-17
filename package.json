@@ -10,11 +10,11 @@
     "packages/config",
     "packages/scene-kit",
     "packages/video-tools",
-    "dual-space",
-    "double-dual",
-    "basis-coordinates",
+    "projects/dual-space",
+    "projects/double-dual",
+    "projects/basis-coordinates",
     "templates/scene-project",
-    "kkt-conditions"
+    "projects/kkt-conditions"
   ],
   "scripts": {
     "create:project": "node scripts/create-project.mjs",

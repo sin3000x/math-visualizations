@@ -14,7 +14,7 @@ npm ci
 npm run dev -w linear-map
 ```
 
-创建命令复制 [工程模板](./templates/scene-project)，设置包名，并拒绝覆盖已有目录。自动登记到根目录 npm workspaces 并更新统一锁文件（此步需要 npm registry 或本地缓存可用），不安装依赖或启动服务。随后在根目录运行 `npm ci`。
+创建命令在 `projects/<项目名>/` 下复制 [工程模板](./templates/scene-project)，设置包名，并拒绝覆盖已有目录。自动登记到根目录 npm workspaces 并更新统一锁文件（此步需要 npm registry 或本地缓存可用），不安装依赖或启动服务。随后在根目录运行 `npm ci`。
 
 ## 统一架构
 
@@ -29,10 +29,11 @@ math-visualizations/
 ├── packages/config/          # ESLint 与 TypeScript 基础配置
 ├── scripts/create-project.mjs
 ├── templates/scene-project/  # 新项目的可运行起点
-├── dual-space/               # 当前教学与视觉参考
-├── double-dual/              # 第二集：双对偶
-├── basis-coordinates/        # 第三集：基、坐标、行向量
-└── kkt-conditions/           # 历史项目，不跟随新架构维护
+└── projects/                # 独立教学子工程
+    ├── dual-space/          # 当前教学与视觉参考
+    ├── double-dual/         # 第二集：双对偶
+    ├── basis-coordinates/   # 第三集：基、坐标、行向量
+    └── kkt-conditions/      # 保留 vinext/Cloudflare 构建方式
 ```
 
 每个新项目内部按三层组织：
@@ -49,7 +50,7 @@ math-visualizations/
 
 采用 **npm workspaces + 模板复制**：各项目独立维护源码、依赖声明和运行命令，根目录统一安装并维护一份锁文件。兼容版本的依赖共享安装，冲突版本由 npm 按需隔离；不要手工链接 `node_modules`。模板中的教学示例更新只影响新项目；公共包的修复会应用到所有使用它的项目。
 
-`kkt-conditions/` 也由 workspaces 统一安装。它保留 vinext/Cloudflare 构建方式及原有精确版本约束；兼容依赖复用根目录安装，有版本冲突的依赖由 npm 自动放在子目录。各项目 `dist/` 与 Vite 缓存保持独立，构建产物不提交 Git。
+`projects/kkt-conditions/` 也由 workspaces 统一安装。它保留 vinext/Cloudflare 构建方式及原有精确版本约束；兼容依赖复用根目录安装，有版本冲突的依赖由 npm 自动放在子目录。各项目 `dist/` 与 Vite 缓存保持独立，构建产物不提交 Git。
 
 ## 公共代码边界
 
@@ -79,7 +80,7 @@ npm run check                       # 全部 workspace 的 lint、测试、构�
 
 ## 现有项目
 
-- [对偶的对偶](./double-dual)：独立第二集，从测量水果袋回顾到“谁来测量收银台”的悬念。
-
-- [对偶空间](./dual-space)：从水果袋与收银台理解线性空间、线性映射及对偶空间。
-- [KKT 条件](./kkt-conditions)：历史可视化，共享依赖安装，保留原有构建方式。
+- [对偶空间](./projects/dual-space)：从水果袋与收银台理解线性空间、线性映射及对偶空间。
+- [对偶的对偶](./projects/double-dual)：独立第二集，从测量水果袋回顾到“谁来测量收银台”的悬念。
+- [基、坐标、行向量](./projects/basis-coordinates)：独立第三集，展示基、坐标和换基的关系。
+- [KKT 条件](./projects/kkt-conditions)：历史可视化，共享依赖安装，保留原有构建方式。

@@ -74,4 +74,4 @@ npm run video:production -- <Scene稳定ID>
 
 在本目录运行 `npm run cover:export`，输出 `public/double-dual-video-cover.png`。
 开发服务网址加 `?cover=1` 可预览；修改 `cover/Cover.tsx` 和 `cover/cover.css`，图形直接复用现有组件。
-完整用法见[视频封面说明](../docs/video-covers.md)。
+完整用法见[视频封面说明](../../docs/video-covers.md)。

@@ -13,7 +13,7 @@ node scripts/export-cover.mjs
 只生成一个项目（仓库根目录）：
 
 ```sh
-npm --prefix basis-coordinates run cover:export
+npm --prefix projects/basis-coordinates run cover:export
 ```
 
 在任一支持封面的子工程中：
@@ -41,8 +41,8 @@ node scripts/export-cover.mjs basis-coordinates --output /tmp/row-vector.png
 | 封面对象、数量、示例值 | 各项目 `cover/Cover.tsx` |
 | 封面位置、大小、颜色、屏幕字体 | 各项目 `cover/cover.css` |
 | 水果袋、收银台自身的造型 | 原有组件及样式，Scene 与封面一起生效 |
-| 行向量示例的苹果、香蕉单价 | `basis-coordinates/lib/math/prices.ts` |
-| 单价屏幕的共用结构 | `basis-coordinates/components/UnitPrices.tsx` |
+| 行向量示例的苹果、香蕉单价 | `projects/basis-coordinates/lib/math/prices.ts` |
+| 单价屏幕的共用结构 | `projects/basis-coordinates/components/UnitPrices.tsx` |
 | PNG 导出流程 | `scripts/export-cover.mjs` |
 
 `UnitPrices` 接收两种水果的单价，`null` 显示问号；Scene 用它逐步揭示单价，封面直接展示两项读数。封面的黑体加粗只在 `.row-vector-cover` 下生效。
@@ -74,6 +74,6 @@ node scripts/export-cover.mjs basis-coordinates --output /tmp/row-vector.png
 
 ## KKT 封面
 
-`kkt-conditions/cover/` 复用教学页的 `Arrow`、数学坐标变换和 KaTeX 组件，用边界上的等长反向箭头表示力平衡。为适配该项目的 vinext 服务端架构，封面采用独立 Vite 入口：`npm run cover:dev -w kkt-conditions`，导出运行 `npm run cover:export -w kkt-conditions`。成品为 `kkt-conditions/public/kkt-conditions-video-cover.png`；旧 SVG/JPG 保留为历史版本。
+`projects/kkt-conditions/cover/` 复用教学页的 `Arrow`、数学坐标变换和 KaTeX 组件，用边界上的等长反向箭头表示力平衡。为适配该项目的 vinext 服务端架构，封面采用独立 Vite 入口：`npm run cover:dev -w kkt-conditions`，导出运行 `npm run cover:export -w kkt-conditions`。成品为 `projects/kkt-conditions/public/kkt-conditions-video-cover.png`；旧 SVG/JPG 保留为历史版本。
 
 图中使用目标函数 `f=((x-1.4)^2+(y-1.4)^2)/2`、约束 `g=x+y≤0`，在原点取乘子 `λ=1.4`。两支箭头分别是下降方向与约束反力，其和为零；目标等高线与约束边界在最优点相切。

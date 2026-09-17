@@ -55,7 +55,7 @@ npm run dev -w kkt-conditions
 
 ## Validate
 
-以下命令在 `kkt-conditions/` 内运行；也可在根目录使用 `-w kkt-conditions`。
+以下命令在 `projects/kkt-conditions/` 内运行；也可在根目录使用 `-w kkt-conditions`。
 
 ```bash
 npm run lint

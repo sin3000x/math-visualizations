@@ -10,7 +10,8 @@ if (process.argv.length !== 3 || !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(name ??
   process.exit(1);
 }
 const root = fileURLToPath(new URL('../', import.meta.url));
-const target = path.join(root, name);
+const workspace = `projects/${name}`;
+const target = path.join(root, workspace);
 const manifestPath = path.join(root, 'package.json');
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const packageNames = await Promise.all(manifest.workspaces.map(async workspace =>
@@ -21,6 +22,7 @@ if ([manifest.name, ...packageNames].includes(name)) {
 }
 try {
   // 不覆盖已有目录，包括已有子项目。
+  await mkdir(path.join(root, 'projects'), { recursive: true });
   await mkdir(target);
 } catch (error) {
   console.error(error.code === 'EEXIST' ? `目录已存在，未覆盖：${target}` : error.message);
@@ -35,9 +37,7 @@ try {
   const data = JSON.parse(await readFile(filename, 'utf8'));
   data.name = name;
   await writeFile(filename, `${JSON.stringify(data, null, 2)}\n`);
-  const readmePath = path.join(target, 'README.md');
-  await writeFile(readmePath, (await readFile(readmePath, 'utf8')).replaceAll('../../AGENTS.md', '../AGENTS.md'));
-  manifest.workspaces.push(name);
+  manifest.workspaces.push(workspace);
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   const result = spawnSync('npm', ['install', '--package-lock-only', '--ignore-scripts', '--no-audit', '--no-fund'], { cwd: root, stdio: 'inherit' });
   if (result.error || result.status !== 0) {

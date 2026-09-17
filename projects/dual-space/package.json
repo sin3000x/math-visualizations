@@ -1,5 +1,5 @@
 {
-  "name": "double-dual",
+  "name": "dual-space",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,10 +10,11 @@
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.app.json && vite build",
     "lint": "eslint .",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "video:debug": "node scripts/video/render.mjs --preset debug",
     "video:production": "node scripts/video/render.mjs --preset production",
     "video:check": "node scripts/video/render.mjs --preset production --check",
-    "cover:export": "node ../scripts/export-cover.mjs double-dual"
+    "cover:export": "node ../../scripts/export-cover.mjs dual-space"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.0.2",
@@ -25,10 +26,12 @@
     "@math-visualizations/scene-kit": "0.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "9.39.4",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.4",
+    "globals": "16.4.0",
     "playwright": "^1.63.0",
     "@math-visualizations/config": "0.1.0",
     "@math-visualizations/video-tools": "0.1.0"

@@ -40,8 +40,8 @@
 
 ## 2. 仓库与子工程边界
 
-- 每个数学主题是独立子工程，例如 `dual-space/`。新项目采用 `templates/scene-project/` 模板，在仓库根目录执行 `node scripts/create-project.mjs <project-name>` 创建。
-- `dual-space/` 是交互与视觉参考；`kkt-conditions/` 保留历史教学架构与 vinext/Cloudflare 构建方式，但依赖安装和锁文件纳入根 workspace。
+- 每个数学主题是独立子工程，统一放在 `projects/` 下，例如 `projects/dual-space/`。新项目采用 `templates/scene-project/` 模板，在仓库根目录执行 `node scripts/create-project.mjs <project-name>` 创建。
+- `projects/dual-space/` 是交互与视觉参考；`projects/kkt-conditions/` 保留历史教学架构与 vinext/Cloudflare 构建方式，但依赖安装和锁文件纳入根 workspace。
 - 子工程独立维护 `package.json`、源码、测试和运行命令，不要把多个主题耦合成一个应用。
 - 公式、通用播放器、Scene 类型、注册表校验和导航统一使用 `packages/scene-kit/`；录屏引擎统一使用 `packages/video-tools/`，项目只维护入口和时间线；ESLint、TypeScript 基础配置统一使用 `packages/config/`。公共包直接导出源码，由应用编译，不生成共享 `dist`。
 - 新的复用逻辑先在子工程内验证，至少两个主题需要时再提升为公共包；教学内容与样式保持主题内维护。修改公共包后必须检查全部使用方。
@@ -52,7 +52,7 @@
 新项目默认采用以下结构（数学和几何目录按需创建）：
 
 ```text
-<project>/
+projects/<project>/
 ├── app/                  # 入口、播放器装配与全局样式
 ├── components/           # 主题专属图形；通用组件从 scene-kit 导入
 ├── scenes/               # 教学组件与项目 Scene 注册表
