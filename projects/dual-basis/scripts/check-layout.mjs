@@ -48,8 +48,17 @@ try {
         assert.equal(await page.locator('[data-role=unit-price-apple]').count(), probeCount);
         assert.equal(await page.locator('[data-role=unit-price-banana]').count(), probeCount);
       }
-      assert.equal(await page.locator('[data-role=pairing]').count(), Math.max(0, state.step - 1));
-      if (state.step >= 2) {
+      if (state.scene === 'dual-basis-coordinate-reading') {
+        assert.deepEqual(await page.locator('[data-role=reading]').evaluateAll(nodes => nodes.map(node => node.dataset.value)), ['3', '2'].slice(0, state.step));
+        const contact = await page.locator('[data-role=tray-bag]').evaluateAll(bags => bags.map(bag => {
+          const tray = bag.parentElement.querySelector('[data-role=checkout-tray]').getBoundingClientRect();
+          return Math.abs(bag.getBoundingClientRect().bottom - tray.top) < 1;
+        }));
+        assert(contact.every(Boolean), '水果袋底部必须落在托盘上');
+      } else {
+        assert.equal(await page.locator('[data-role=pairing]').count(), Math.max(0, state.step - 1));
+      }
+      if (state.scene === 'dual-basis-pairing' && state.step >= 2) {
         assert.equal(await page.locator('.probe.active').getAttribute('data-probe'), state.step < 4 ? '1' : '2');
         assert.equal(await page.locator('[data-role=reading]').getAttribute('data-value'), ['1', '0', '0', '1'][state.step - 2]);
       }

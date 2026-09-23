@@ -1,0 +1,17 @@
+.coordinate-reading-scene .fruit-bag { --bag-color: #d8b875; }
+.coordinate-reading-scene .general-source {
+  left: 155px;
+  top: 230px;
+  transform: scale(1.45);
+  transform-origin: top left;
+}
+.coordinate-reading-scene .probe {
+  left: 700px;
+  width: 345px;
+  height: 298px;
+}
+.coordinate-reading-scene .probe[data-probe="1"] { top: 45px; }
+.coordinate-reading-scene .probe[data-probe="2"] { top: 365px; }
+.coordinate-reading-scene .priced-machine { transform: scale(.75); }
+.coordinate-reading-scene .probe-name { right: calc(100% + 32px); font-size: 48px; }
+.coordinate-reading-scene .checkout-reading { left: 500px; top: 78px; font-size: 64px; }
