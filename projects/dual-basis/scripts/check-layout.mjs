@@ -43,7 +43,7 @@ try {
           const prices = machine.querySelector('[data-role=internal-prices]').getBoundingClientRect();
           return prices.left >= screen.left && prices.right <= screen.right && prices.top >= screen.top && prices.bottom <= screen.bottom;
         }));
-        const probeCount = state.step < 4 ? 1 : 2;
+        const probeCount = 2;
         assert.deepEqual(screens, Array(probeCount).fill(true), '单价必须完整位于收银台屏幕内');
         assert.equal(await page.locator('[data-role=unit-price-apple]').count(), probeCount);
         assert.equal(await page.locator('[data-role=unit-price-banana]').count(), probeCount);
@@ -68,6 +68,7 @@ try {
           inside: frame.left >= 0 && frame.top >= 0 && frame.right <= innerWidth + 1 && frame.bottom <= innerHeight + 1,
           ratio: frame.width / frame.height,
           clipped: [...document.querySelectorAll('.scene-content .math-formula, .scene-content .fruit-bag')].filter(visible).filter(element => !within(element.getBoundingClientRect())).length,
+          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing]')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
           controls: document.querySelector('.scene-frame').querySelectorAll('nav, button').length,
         };
       });
@@ -75,6 +76,7 @@ try {
       assert(Math.abs(bounds.ratio - 16 / 9) < .01);
       assert.equal(bounds.clipped, 0, `${name}: 对象或公式超出画布`);
       assert.equal(bounds.controls, 0);
+      assert(bounds.subtitleSafe, `${name}: 教学内容进入底部字幕安全区`);
       assert.equal(await page.locator('.page-toolbar').isVisible(), !recording);
       await page.screenshot({ path: path.join(output, `${name}-${state.scene}-${state.step}.png`) });
     }

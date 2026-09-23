@@ -13,7 +13,7 @@ npm run dev
 ## 添加自己的内容
 
 1. 在 `scenes/` 编写组件，接收 `SceneProps` 的 `step`，从零开始逐层展示内容。
-2. 在 `scenes/registry.ts` 设置项目名称、概念 ID，并登记每个 Scene 的稳定 ID、顺序、名称、目标、组件及 `stepCount`。导航自动生成，不在 App 中增加分支或步骤数组。
+2. 在 `scenes/registry.ts` 设置项目名称、概念 ID，并登记每个 Scene 的稳定 ID、顺序、名称、目标、组件及 `stepCount`。导航自动生成，不在 App 中增加分支或步骤数组。`title` 与 Scene 源文件名一致且不含扩展名，例如 `ObservationScene.tsx` 显示为 `ObservationScene`；中文教学目标放在 `summary` 中。
 3. 替换 `index.html` 的网页标题及描述，删除两个示例组件及对应注册项。
 4. 数学计算放在 `lib/math/`，坐标变换放在 `lib/geometry/`，按需要创建目录。
 
