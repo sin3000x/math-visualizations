@@ -43,12 +43,14 @@ try {
           const prices = machine.querySelector('[data-role=internal-prices]').getBoundingClientRect();
           return prices.left >= screen.left && prices.right <= screen.right && prices.top >= screen.top && prices.bottom <= screen.bottom;
         }));
-        assert.deepEqual(screens, [true, true], '单价必须完整位于收银台屏幕内');
-        assert.equal(await page.locator('[data-role=unit-price-apple]').count(), 2);
-        assert.equal(await page.locator('[data-role=unit-price-banana]').count(), 2);
+        const probeCount = state.step < 4 ? 1 : 2;
+        assert.deepEqual(screens, Array(probeCount).fill(true), '单价必须完整位于收银台屏幕内');
+        assert.equal(await page.locator('[data-role=unit-price-apple]').count(), probeCount);
+        assert.equal(await page.locator('[data-role=unit-price-banana]').count(), probeCount);
       }
       assert.equal(await page.locator('[data-role=pairing]').count(), Math.max(0, state.step - 1));
       if (state.step >= 2) {
+        assert.equal(await page.locator('.probe.active').getAttribute('data-probe'), state.step < 4 ? '1' : '2');
         assert.equal(await page.locator('[data-role=reading]').getAttribute('data-value'), ['1', '0', '0', '1'][state.step - 2]);
       }
       const bounds = await page.evaluate(() => {

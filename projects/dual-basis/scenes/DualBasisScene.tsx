@@ -14,10 +14,11 @@ export function DualBasisScene({ step }: SceneProps) {
     <div className="bag-space space-outline"><MathFormula latex="V" /></div>
     {basis.map((bag, index) => <div className="basis-bag" data-basis={index + 1} key={index} style={{ top: 205 + index * 260 }}>
       <div className="bag-name"><MathFormula latex={`e_${index + 1}`} /></div>
-      <div><FruitBag {...bag} /></div>
+      <div><FruitBag {...bag} tone={index === 0 ? "apple" : "banana"} /></div>
     </div>)}
     {step >= 1 && <div className="dual-space space-outline"><MathFormula latex={"V^*"} /></div>}
     {step >= 1 && probes.map((probe, index) => {
+      if (index === 1 && step < 4) return null;
       const measured = active?.probe === index;
       return <div key={index} className={`probe ${measured ? "active" : ""}`} style={{ top: 170 + index * 260, "--probe-color": probe.color } as CSSProperties} data-role="checkout" data-probe={index + 1}>
         <div className="probe-name"><MathFormula latex={`f_${index + 1}`} /></div>
@@ -26,7 +27,7 @@ export function DualBasisScene({ step }: SceneProps) {
           <UnitPrices apples={probe.applePrice} bananas={probe.bananaPrice} />
           <div className="checkout-tray" data-role="checkout-tray" />
           {measured && <CheckoutPlacement key={`bag-${step}`} className="checkout-tray-bag" source={`[data-basis="${active.bag + 1}"] .fruit-bag`} data-role="tray-bag">
-            <FruitBag {...basis[active.bag]} />
+            <FruitBag {...basis[active.bag]} tone={active.bag === 0 ? "apple" : "banana"} />
           </CheckoutPlacement>}
         </div>
         {measured && <div key={step} className="checkout-reading" data-role="reading" data-value={evaluate(probe, basis[active.bag])}><MathFormula latex={String(evaluate(probe, basis[active.bag]))} /></div>}
