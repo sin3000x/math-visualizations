@@ -1,7 +1,8 @@
+import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacement";
 import { useLayoutEffect, useRef } from "react";
 import { CheckoutIcon } from "../components/CheckoutIcon";
 import { FruitBag } from "../components/FruitBag";
-import { FruitIcon } from "../components/FruitIcon";
+import { UnitPrices } from "@math-visualizations/scene-kit/UnitPrices";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import type { SceneProps } from "@math-visualizations/scene-kit/types";
 import "./CheckoutBasisScene.css";
@@ -41,16 +42,11 @@ export function CheckoutGeneralBagScene({ step }: SceneProps) {
     <div className="general-original">
       <div className="probe-machine">
         <CheckoutIcon accent="#62d2c3" largeScreen />
-        <div className="probe-prices" data-role="internal-prices">
-          {(["apple", "banana"] as const).map((kind, index) => <div className="probe-price" key={kind}>
-            <span className={`fruit ${kind}`}><FruitIcon kind={kind} /></span>
-            <MathFormula latex={`${index === 0 ? 5 : 3}\\,\\text{元/斤}`} />
-          </div>)}
-        </div>
+        <UnitPrices apples={5} bananas={3} />
         <div className="probe-tray" data-role="checkout-tray" />
-        <div className="probe-tray-bag probe-basis-bag" data-role="general-bag">
+        <CheckoutPlacement className="probe-tray-bag probe-basis-bag" data-role="general-bag">
           <FruitBag apples="a" bananas="b" />
-        </div>
+        </CheckoutPlacement>
       </div>
       {step >= 1 && <div className="probe-receipts">
         <div data-role="general-price"><MathFormula latex={"5a+3b\\,\\text{元}"} /></div>
@@ -62,12 +58,7 @@ export function CheckoutGeneralBagScene({ step }: SceneProps) {
     {step >= 5 && <div className="checkout-copy" data-role="checkout-copy">
       <div className="machine-copy-ghost" aria-hidden="true">
         <CheckoutIcon accent="#62d2c3" largeScreen />
-        <div className="probe-prices">
-          {(["apple", "banana"] as const).map((kind, index) => <div className="probe-price" key={kind}>
-            <span className={`fruit ${kind}`}><FruitIcon kind={kind} /></span>
-            <MathFormula latex={`${index === 0 ? 5 : 3}\\,\\text{元/斤}`} />
-          </div>)}
-        </div>
+        <UnitPrices apples={5} bananas={3} />
       </div>
     </div>}
     <div className="general-equation" aria-label="单价行向量乘以坐标列向量得到价格">

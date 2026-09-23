@@ -219,6 +219,8 @@ const PLOT_X = (VIEW_W - PLOT_W) / 2;
 - 复杂数学计算优先写成无副作用纯函数，并可用数值测试验证。
 - SVG `viewBox` 是数学绘图坐标；CSS 负责屏幕适配。不要在多个层级重复引入互相冲突的缩放。
 - 新功能优先复用现有 `MathFormula`、`SvgFormula`、`Arrow`、Scene registry 和录屏布局。
+- 收银台屏幕单价统一使用 `@math-visualizations/scene-kit/UnitPrices`，搭配公共 `CheckoutIcon` 的 `largeScreen`；不要在收银台旁另画单价表。未知单价用 `null`，数值 `0` 必须正常显示。
+- 水果袋放到收银台托盘的动画统一使用 `@math-visualizations/scene-kit/CheckoutPlacement`，不得在主题中另写放袋 keyframes 或动画逻辑。Scene 提供袋子内容、源对象和托盘布局；袋底必须落在托盘上。用法见 `packages/scene-kit/checkout-placement.md`。
 - 不要引入重量级 3D 库来完成简单函数曲面；简单教学曲面优先用确定性的 SVG 投影。确实需要旋转、遮挡和复杂曲面时再评估 WebGL。
 - 修改现有页面时，保留用户未要求更改的交互、数学状态和视觉语义。
 

@@ -25,10 +25,9 @@ function Transaction({ bag, x, children, phase, combine = false }: { bag: BagVec
   const bagVisible = !combine || phase >= 1;
   return <div className={`linearity-transaction ${combine ? "linearity-combined" : "linearity-separate"}`} style={{ "--transaction-x": `${x}px` } as CSSProperties}>
     {combine && <div className="linearity-input" style={{ opacity: phase === 0 ? 1 : 0, visibility: phase === 0 ? "visible" : "hidden" }}>{children}</div>}
-    <div className="linearity-machine"><LoadedCheckout bag={bag} bagStyle={{
+    <div className="linearity-machine"><LoadedCheckout bag={bag} placement={{ active: loaded, from: "translate(-55.5px, -315.5px) scale(2.833333)" }} bagStyle={{
       opacity: bagVisible ? 1 : 0,
-      transform: loaded ? "translate(0, 0) scale(1)" : "translate(-55.5px, -315.5px) scale(2.833333)",
-      transition: "transform .9s ease-in-out, opacity .25s ease",
+      transition: "opacity .25s ease",
     }} /></div>
     <div style={{ opacity: phase >= (combine ? 3 : 5) ? 1 : 0 }} className="linearity-receipt-reveal"><Receipt amount={quote(bag)} /></div>
   </div>;

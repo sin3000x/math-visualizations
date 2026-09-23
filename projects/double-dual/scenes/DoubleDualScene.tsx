@@ -27,7 +27,7 @@ export function DoubleDualScene({ step }: SceneProps) {
       </div>
     </div>
     {step >= 1 && <div className={`measurement ${step === 1 ? "loading" : ""}`} data-role="measurement-example" aria-label={step === 2 ? "这个收银台通过什么得到什么价格？" : "把这袋水果放到收银台托盘上，得到价格16"}>
-      <div className="loaded-example"><LoadedCheckout bag={bag} mystery={step === 2} /></div>
+      <div className="loaded-example"><LoadedCheckout bag={bag} animate={step === 1} mystery={step === 2} /></div>
       <div className="equals"><MathFormula latex="=" /></div>
       <div className={`reading ${step === 2 ? "unknown-reading" : ""}`} data-role="measurement-reading" aria-label={step === 2 ? "未知价格" : "价格16"}>
         <span className="price-value" aria-hidden={step === 2}><MathFormula latex={String(reading)} /></span>

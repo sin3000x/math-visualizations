@@ -1,7 +1,8 @@
+import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacement";
 import { useLayoutEffect, useRef } from "react";
 import { CheckoutIcon } from "../components/CheckoutIcon";
 import { FruitBag } from "../components/FruitBag";
-import { FruitIcon } from "../components/FruitIcon";
+import { UnitPrices } from "@math-visualizations/scene-kit/UnitPrices";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { basis } from "../lib/math/bags";
 import { changedBasis, changedRow } from "../lib/math/changeBasis";
@@ -65,14 +66,6 @@ export function ChangeBasisScene({ step }: SceneProps) {
         { opacity: 1, offset: .64 }, { opacity: 1, offset: .86 },
         { opacity: 0, offset: 1 },
       ], { duration: 2200 }));
-      const source = scene.querySelector(`[data-new-basis="${active}"] .fruit-bag`)!;
-      const target = scene.querySelector<HTMLElement>('.change-probe-bag')!;
-      const from = source.getBoundingClientRect(), to = target.getBoundingClientRect();
-      const machineScale = scale * .72;
-      animations.push(target.animate([
-        { transform: `translate(${(from.x - to.x) / machineScale}px, ${(from.y - to.y) / machineScale}px) scale(${from.width / to.width})` },
-        { transform: 'none' },
-      ], { duration: 1100, easing: 'ease-in-out' }));
     }
     return () => animations.forEach(animation => animation.cancel());
   }, [step, active]);
@@ -80,15 +73,9 @@ export function ChangeBasisScene({ step }: SceneProps) {
   return <section ref={root} className="change-basis" data-role="change-basis" aria-label="先选基袋，再展示坐标与报价的来源">
     <div className="probe-machine change-machine">
       <CheckoutIcon accent="#62d2c3" largeScreen />
-      <div className="probe-prices">
-        {(["apple", "banana"] as const).map((kind, i) => <div className="probe-price" key={kind}>
-          <span className={`fruit ${kind}`}><FruitIcon kind={kind} /></span>
-          <span data-source={`price-${i}`}><MathFormula latex={`${i === 0 ? 5 : 3}`} /></span>
-          <MathFormula latex={"\\text{元/斤}"} />
-        </div>)}
-      </div>
+      <UnitPrices apples={5} bananas={3} valueSourcePrefix="price" />
       <div className="probe-tray" data-role="checkout-tray" />
-      {step >= 5 && <div className="probe-tray-bag change-probe-bag change-new-colors" key={active}><FruitBag {...changedBasis[active]} /></div>}
+      {step >= 5 && <CheckoutPlacement className="probe-tray-bag change-probe-bag change-new-colors" key={active} source={`[data-new-basis="${active}"] .fruit-bag`}><FruitBag {...changedBasis[active]} /></CheckoutPlacement>}
     </div>
     {(step === 5 || step === 6) && <div className="change-quotes" key={active}>
       <span data-source={`quote-${active}`}><MathFormula latex={`${changedRow[active]}`} /></span><MathFormula latex={"\\,\\text{元}"} />

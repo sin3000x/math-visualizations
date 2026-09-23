@@ -1,3 +1,4 @@
+import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacement";
 import { CheckoutIcon } from "../components/CheckoutIcon";
 import { FruitBag } from "../components/FruitBag";
 import { UnitPrices } from "../components/UnitPrices";
@@ -37,9 +38,9 @@ export function CheckoutBasisScene({ step }: SceneProps) {
         {step >= 2 && <UnitPrices apples={step >= 5 ? prices.apples : null} bananas={step >= 8 ? prices.bananas : null} />}
         {step >= 3 && <>
         <div className="probe-tray" data-role="checkout-tray" />
-        <div className="probe-tray-bag probe-basis-bag" key={second ? "second" : "first"} data-role="probe-bag" data-basis={second ? "2" : "1"}>
+        <CheckoutPlacement className="probe-tray-bag probe-basis-bag" key={second ? "second" : "first"} data-role="probe-bag" data-basis={second ? "2" : "1"}>
           <FruitBag {...basis[second ? 1 : 0]} />
-        </div>
+        </CheckoutPlacement>
       </>}
       </div>
       {(step === 4 || step === 7) && <div className="probe-receipts">

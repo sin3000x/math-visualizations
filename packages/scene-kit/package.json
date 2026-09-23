@@ -9,7 +9,11 @@
     "./ScenePlayer": "./ScenePlayer.tsx",
     "./types": "./types.ts",
     "./registry": "./registry.ts",
-    "./navigation": "./navigation.ts"
+    "./navigation": "./navigation.ts",
+    "./CheckoutPlacement": "./CheckoutPlacement.tsx",
+    "./UnitPrices": "./UnitPrices.tsx",
+    "./CheckoutIcon": "./CheckoutIcon.tsx",
+    "./FruitIcon": "./FruitIcon.tsx"
   },
   "scripts": {
     "lint": "eslint .",

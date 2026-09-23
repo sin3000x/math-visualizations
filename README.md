@@ -33,6 +33,7 @@ math-visualizations/
     ├── dual-space/          # 当前教学与视觉参考
     ├── double-dual/         # 第二集：双对偶
     ├── basis-coordinates/   # 第三集：基、坐标、行向量
+    ├── dual-basis/          # 第四集：对偶基
     └── kkt-conditions/      # 保留 vinext/Cloudflare 构建方式
 ```
 
@@ -83,4 +84,5 @@ npm run check                       # 全部 workspace 的 lint、测试、构�
 - [对偶空间](./projects/dual-space)：从水果袋与收银台理解线性空间、线性映射及对偶空间。
 - [对偶的对偶](./projects/double-dual)：独立第二集，从测量水果袋回顾到“谁来测量收银台”的悬念。
 - [基、坐标、行向量](./projects/basis-coordinates)：独立第三集，展示基、坐标和换基的关系。
+- [对偶基](./projects/dual-basis)：独立第四集，用两袋水果和两个收银台展示四个对偶基配对关系。
 - [KKT 条件](./projects/kkt-conditions)：历史可视化，共享依赖安装，保留原有构建方式。

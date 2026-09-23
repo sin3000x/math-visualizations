@@ -1,3 +1,4 @@
+import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacement";
 import type { CSSProperties } from 'react';
 import { CheckoutIcon } from '../components/CheckoutIcon';
 import { FruitBag } from '../components/FruitBag';
@@ -29,14 +30,12 @@ export function SupermarketScene({ step }: SceneProps) {
         const destinationY = official ? row + 12 : 337;
         const delay = index * (official ? 0.4 : 1.35);
         const motion = {
-          '--source-x': `${official ? 400 : 440}px`, '--source-y': `${official ? 330 : row}px`,
-          '--target-x': '970px', '--target-y': `${destinationY}px`,
           '--result-source-y': `${official ? row + 90 : 385}px`, '--result-y': `${row + 45}px`,
-          '--lag': `${delay}s`, '--price-lag': `${0.95 + delay}s`,
+          '--price-lag': `${0.95 + delay}s`,
         } as CSSProperties;
         return <div key={index} style={motion} data-role="measurement-lane">
           {official && <div className="sequence-column-register" style={{ top: row }}><Register color={checkout.color} /></div>}
-          {(!official || running) && <div key={`${official}-${phase}`} className={`sequence-bag ${running ? 'is-moving' : ''}`} data-role="measurement-travelling-bag"><FruitBag {...measuredBag} /></div>}
+          {(!official || running) && <CheckoutPlacement key={`${official}-${phase}`} className="sequence-bag" active={running} from={`translate(${official ? 400 : 440}px, ${official ? 330 : row}px)`} to={`translate(970px, ${destinationY}px)`} duration={1250} delay={delay * 1000} exit={!official} data-role="measurement-travelling-bag"><FruitBag {...measuredBag} /></CheckoutPlacement>}
           {running && <div className="sequence-price" style={{ color: official ? checkout.color : '#f6f2e7' }} data-role="market-result"><MathFormula latex={`${measuredBag.apples * checkout.apples + measuredBag.bananas * checkout.bananas}\\,\\text{元}`} /></div>}
         </div>;
       })}

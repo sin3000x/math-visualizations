@@ -1,0 +1,9 @@
+{
+  "extends": "@math-visualizations/config/tsconfig",
+  "include": [
+    "app",
+    "components",
+    "lib",
+    "scenes"
+  ]
+}

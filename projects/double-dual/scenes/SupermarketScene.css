@@ -8,23 +8,12 @@
 .sequence-fixed-bag { position: absolute; left: 400px; top: 330px; width: 147px; height: 133px; }
 .sequence-fixed-bag > .fruit-bag, .sequence-bag > .fruit-bag { transform: scale(.7); transform-origin: top left; }
 .sequence-inputs { animation: sequence-reveal .45s both; }
-.sequence-bag { position: absolute; left: 0; top: 0; width: 147px; height: 133px; transform: translate(var(--source-x), var(--source-y)); }
-.sequence-bag.is-moving { animation: sequence-measure 1.25s var(--lag) both; }
-.survey-sequence .sequence-bag.is-moving { animation-name: sequence-place; }
+.sequence-bag { position: absolute; left: 0; top: 0; width: 147px; height: 133px; }
 .sequence-price { position: absolute; left: 0; top: 0; z-index: 2; font-size: 49px; white-space: nowrap; animation: sequence-output .65s var(--price-lag) both; }
 @keyframes sequence-reveal { from { opacity: 0; } to { opacity: 1; } }
-@keyframes sequence-measure {
-  0% { transform: translate(var(--source-x), var(--source-y)); opacity: 1; }
-  70%, 85% { transform: translate(var(--target-x), var(--target-y)); opacity: 1; }
-  100% { transform: translate(var(--target-x), var(--target-y)); opacity: 0; }
-}
+
 @keyframes sequence-output {
   0% { transform: translate(1080px, var(--result-source-y)); opacity: 0; }
   25% { opacity: 1; }
   100% { transform: translate(1190px, var(--result-y)); opacity: 1; }
-}
-
-@keyframes sequence-place {
-  0% { transform: translate(var(--source-x), var(--source-y)); opacity: 1; }
-  70%, 100% { transform: translate(var(--target-x), var(--target-y)); opacity: 1; }
 }

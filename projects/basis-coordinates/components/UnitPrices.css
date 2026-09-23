@@ -1,3 +1,0 @@
-.probe-prices { position:absolute; left:75px; top:64px; width:216px; display:grid; justify-content:center; gap:10px; color:#18211e; animation:probe-appear .6s both; }
-.probe-price { display:flex; align-items:center; gap:12px; font-size:30px; }
-.probe-prices .fruit { width:36px; height:36px; }
