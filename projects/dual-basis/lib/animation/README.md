@@ -26,3 +26,9 @@ MORPH_PYTHON=/path/to/venv/bin/python npm run morph:export -w dual-basis
 方法暂放主题内；等第二个主题实际需要后，再提升到公共包。
 
 思路参考 [Manim Transform](https://github.com/ManimCommunity/manim/blob/main/manim/animation/transform.py) 的轮廓对齐后逐点插值；这里使用浏览器原生 SVG/WAAPI，未引入 Manim 运行时。
+
+## 线性无关的整项变形
+
+`independence-shapes.json` 由 `scripts/export-independence-shapes.mjs` 从实际画面提取。每次代入各有三组完整结算项和两个运算符，共十组；源包含系数、收银台、托盘水果袋与标签。使用同一个 `animateContourTransform` 连续变形成下方结果，并保留上方等式。
+
+重新生成：先构建，再执行 `MORPH_PYTHON=/path/to/venv/bin/python node projects/dual-basis/scripts/export-independence-shapes.mjs`。截图和 manifest 保存在忽略的 `exports/independence-morph-source/`。

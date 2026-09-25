@@ -1,7 +1,6 @@
 import { Fragment, useLayoutEffect, useRef, type CSSProperties } from "react";
 import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacement";
-import { CheckoutIcon } from "@math-visualizations/scene-kit/CheckoutIcon";
-import { UnitPrices } from "@math-visualizations/scene-kit/UnitPrices";
+import { PricedCheckout } from "../components/PricedCheckout";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import type { SceneProps } from "@math-visualizations/scene-kit/types";
 import { FruitBag } from "../components/FruitBag";
@@ -23,14 +22,11 @@ export function CoordinateReadingScene({ step }: SceneProps) {
       const value = evaluate(probe, bag);
       return <Fragment key={index}><div className={`probe ${step === index + 1 ? "active" : ""}`} style={{ "--probe-color": probe.color } as CSSProperties} data-role="checkout" data-probe={index + 1}>
         <div className="probe-name"><MathFormula latex={`f_${index + 1}`} /></div>
-        <div className="priced-machine">
-          <CheckoutIcon accent="#eceee8" largeScreen />
-          <UnitPrices apples={probe.applePrice} bananas={probe.bananaPrice} />
-          <div className="checkout-tray" data-role="checkout-tray" />
+        <PricedCheckout apples={probe.applePrice} bananas={probe.bananaPrice} color={probe.color} scale={.75}>
           {measured && <CheckoutPlacement className="checkout-tray-bag" source=".general-source .fruit-bag" data-role="tray-bag">
             <FruitBag {...bag} />
           </CheckoutPlacement>}
-        </div>
+        </PricedCheckout>
       </div>
         {measured && <div className="checkout-reading" data-role="reading" data-probe={index + 1} data-value={value}><MathFormula latex={String(value)} /></div>}
       </Fragment>;

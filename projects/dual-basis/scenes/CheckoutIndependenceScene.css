@@ -1,0 +1,24 @@
+.independence-scene { position: relative; width: 1440px; height: 810px; background: #000; }
+.independence-scene h1 { position: absolute; top: 44px; left: 0; width: 100%; margin: 0; text-align: center; font-size: 44px; font-weight: 500; }
+.independence-scene .math-formula { display: inline-block; white-space: nowrap; }
+.independence-equation { position: absolute; left: 135px; top: 190px; display: flex; gap: 100px; }
+.independence-term { position: relative; width: 320px; height: 235px; }
+.independence-operator { position: absolute; left: -85px; top: 87px; color: #f6f2e7; font-size: 52px; }
+.independence-coefficient { position: absolute; left: 0; top: 87px; font-size: 52px; color: #f6f2e7; }
+.independence-counter { position: relative; width: 280px; margin-left: 58px; }
+.independence-counter-label { position: absolute; top: 190px; left: 110.905px; transform: translateX(-50%); font-size: 34px; }
+.independence-conclusions { position: absolute; left: 0; width: 100%; justify-content: center; top: 610px; display: flex; align-items: center; gap: 65px; font-size: 45px; }
+.independence-conclusions > * { animation: independence-result .6s both; }
+@keyframes independence-result { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+
+.independence-tray-bag { animation: independence-bag-appear .45s both; }
+.independence-evaluation { position: absolute; left: 370px; top: 470px; display: flex; gap: 120px; font-size: 60px; }
+.independence-result-term { position: relative; width: 150px; text-align: center; }
+.independence-number { display: inline-block; transform-origin: center; }
+.independence-result-operator { position: absolute; left: -80px; display: inline-block; transform-origin: center; }
+@keyframes independence-bag-appear { from { opacity: 0; } to { opacity: 1; } }
+
+.independence-machine-expression { position: absolute; left: -30px; top: 0; width: 350px; height: 245px; }
+
+.independence-morph-layer { position: absolute; left: -370px; top: -470px; width: 1440px; height: 810px; pointer-events: none; }
+.independence-term[data-term="2"] > .independence-operator { left: -65px; }

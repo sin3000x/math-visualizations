@@ -1,0 +1,10 @@
+.priced-machine { position: absolute; width: 460px; height: 397.27px; transform: scale(.6); transform-origin: top left; }
+.priced-machine .checkout-icon { width: 460px; max-width: none; }
+.priced-checkout .checkout-screen-shell,
+.priced-checkout .checkout-body { fill: color-mix(in srgb, var(--probe-color) 32%, #181818); stroke: var(--probe-color); }
+.priced-checkout .checkout-neck { fill: color-mix(in srgb, var(--probe-color) 22%, #181818); }
+.priced-checkout .checkout-drawer { fill: color-mix(in srgb, var(--probe-color) 12%, #181818); stroke: color-mix(in srgb, var(--probe-color) 65%, #181818); }
+.priced-checkout .checkout-keys rect { fill: var(--probe-color); }
+.priced-checkout .checkout-knob { fill: var(--probe-color) !important; }
+.checkout-tray { position: absolute; left: 383px; top: 250px; width: 224px; height: 8px; background: #b6b9ad; border-radius: 4px; }
+.checkout-tray-bag { position: absolute; left: 390px; top: 60px; width: 210px; height: 190px; }

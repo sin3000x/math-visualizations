@@ -11,7 +11,6 @@
 }
 .coordinate-reading-scene .probe[data-probe="1"] { top: 45px; }
 .coordinate-reading-scene .probe[data-probe="2"] { top: 365px; }
-.coordinate-reading-scene .priced-machine { transform: scale(.75); }
 .coordinate-reading-scene .probe-name { right: calc(100% + 32px); font-size: 48px; }
 .coordinate-reading-scene .checkout-reading {
   left: 1200px;

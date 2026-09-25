@@ -76,6 +76,29 @@ try {
         }
         await page.evaluate(() => document.querySelector('.symbolic-expansion').getAnimations({ subtree: true }).forEach(animation => { animation.currentTime = 500; animation.play(); }));
       }
+      if (state.scene === 'dual-basis-independence' && [3, 6].includes(state.step)) {
+        const morph = await page.locator('.independence-evaluation').evaluate(layer => {
+          const animations = layer.getAnimations({ subtree: true });
+          animations.forEach(a => { a.pause(); a.currentTime = 0; });
+          const paths = [...layer.querySelectorAll('[data-contour-transform] path')];
+          const start = paths.map(p => getComputedStyle(p).d);
+          animations.forEach(a => { a.currentTime = 550; });
+          const middle = paths.map(p => getComputedStyle(p).d);
+          animations.forEach(a => { a.currentTime = 1099; });
+          const end = paths.map(p => getComputedStyle(p).d);
+          animations.forEach(a => { a.currentTime = 550; });
+          return {
+            groups: layer.querySelectorAll('[data-contour-transform]').length,
+            moving: paths.every((_, i) => start[i] !== middle[i] && middle[i] !== end[i]),
+            sources: [...layer.querySelectorAll('.independence-number')].map(e => e.dataset.from),
+          };
+        });
+        assert.equal(morph.groups, 5);
+        assert(morph.moving, '三个整项及运算符必须连续变形');
+        assert(morph.sources.every(s => s.endsWith('.independence-machine-expression')), '源必须是完整结算项');
+        await page.screenshot({ path: path.join(output, `${name}-independence-morph-${state.step}-midpoint.png`) });
+        await page.locator('.independence-evaluation').evaluate(layer => layer.getAnimations({ subtree: true }).forEach(a => a.play()));
+      }
       await page.waitForFunction(() => document.getAnimations().every(animation => animation.playState === 'finished' || animation.playState === 'idle'));
       assert.equal(await page.locator('.katex-error').count(), 0);
       if (state.scene === 'dual-basis-coordinate-reading' && state.step >= 4) {
@@ -85,7 +108,7 @@ try {
       if (state.scene === 'dual-basis-coordinate-reading' && state.step === 2) {
         await page.locator('[data-role=reading]').evaluateAll(nodes => nodes.forEach(node => { node.dataset.continuity = 'checkout-result'; }));
       }
-      if (state.step >= 1 && !(state.scene === 'dual-basis-coordinate-reading' && state.step >= 3)) {
+      if (state.scene !== 'dual-basis-independence' && state.step >= 1 && !(state.scene === 'dual-basis-coordinate-reading' && state.step >= 3)) {
         const screens = await page.evaluate(() => [...document.querySelectorAll('.priced-machine')].map(machine => {
           const screen = machine.querySelector('.checkout-screen').getBoundingClientRect();
           const prices = machine.querySelector('[data-role=internal-prices]').getBoundingClientRect();
@@ -104,12 +127,29 @@ try {
           return Math.abs(bag.getBoundingClientRect().bottom - tray.top) < 1;
         }));
         assert(contact.every(Boolean), '水果袋底部必须落在托盘上');
-      } else {
+      } else if (state.scene === 'dual-basis-pairing') {
         assert.equal(await page.locator('[data-role=pairing]').count(), Math.max(0, state.step - 1));
       }
       if (state.scene === 'dual-basis-pairing' && state.step >= 2) {
         assert.equal(await page.locator('.probe.active').getAttribute('data-probe'), state.step < 4 ? '1' : '2');
         assert.equal(await page.locator('[data-role=reading]').getAttribute('data-value'), ['1', '0', '0', '1'][state.step - 2]);
+      }
+      if (state.scene === 'dual-basis-independence') {
+        const expected = state.step === 3 || state.step === 4 ? ['x', '0', '0'] : state.step >= 6 ? ['0', 'y', '0'] : [];
+        assert.deepEqual(await page.locator('.independence-number annotation').allTextContents(), expected);
+        assert.equal(await page.locator('.independence-tray-bag').count(), state.step >= 2 ? 3 : 0);
+        assert.equal(await page.locator('.independence-source').count(), 0);
+        const alignment = await page.locator('.independence-counter').evaluateAll(counters => counters.map(counter => {
+          const body = counter.querySelector('.checkout-body').getBoundingClientRect();
+          const label = counter.querySelector('.independence-counter-label').getBoundingClientRect();
+          return Math.abs((body.left + body.right - label.left - label.right) / 2) < 1 && label.top >= body.bottom;
+        }));
+        assert(alignment.every(Boolean), '标签必须位于收银台底边下方并居中');
+        const contact = await page.locator('.independence-tray-bag').evaluateAll(bags => bags.map(bag => {
+          const tray = bag.parentElement.querySelector('.checkout-tray').getBoundingClientRect();
+          return Math.abs(bag.getBoundingClientRect().bottom - tray.top) < 1;
+        }));
+        assert(contact.every(Boolean), '基袋必须落在三个托盘上');
       }
       const bounds = await page.evaluate(() => {
         const frame = document.querySelector('.scene-frame').getBoundingClientRect();
@@ -126,7 +166,7 @@ try {
           inside: frame.left >= 0 && frame.top >= 0 && frame.right <= innerWidth + 1 && frame.bottom <= innerHeight + 1,
           ratio: frame.width / frame.height,
           clipped: [...document.querySelectorAll('.scene-content .math-formula, .scene-content .fruit-bag')].filter(visible).filter(element => !within(element.getBoundingClientRect())).length,
-          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing]')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
+          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing], .independence-evaluation, .independence-conclusions, .independence-term')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
           controls: document.querySelector('.scene-frame').querySelectorAll('nav, button').length,
         };
       });

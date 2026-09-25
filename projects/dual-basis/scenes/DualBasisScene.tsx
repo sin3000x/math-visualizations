@@ -3,8 +3,7 @@ import type { CSSProperties } from "react";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import type { SceneProps } from "@math-visualizations/scene-kit/types";
 import { FruitBag } from "../components/FruitBag";
-import { UnitPrices } from "@math-visualizations/scene-kit/UnitPrices";
-import { CheckoutIcon } from "@math-visualizations/scene-kit/CheckoutIcon";
+import { PricedCheckout } from "../components/PricedCheckout";
 import { basis, probes, pairings, evaluate } from "../lib/math/bags";
 import "./DualBasisScene.css";
 
@@ -21,14 +20,11 @@ export function DualBasisScene({ step }: SceneProps) {
       const measured = active?.probe === index;
       return <div key={index} className={`probe ${measured ? "active" : ""}`} style={{ top: 100 + index * 235, "--probe-color": probe.color } as CSSProperties} data-role="checkout" data-probe={index + 1}>
         <div className="probe-name"><MathFormula latex={`f_${index + 1}`} /></div>
-        <div className="priced-machine">
-          <CheckoutIcon accent="#eceee8" largeScreen />
-          <UnitPrices apples={probe.applePrice} bananas={probe.bananaPrice} />
-          <div className="checkout-tray" data-role="checkout-tray" />
+        <PricedCheckout apples={probe.applePrice} bananas={probe.bananaPrice} color={probe.color}>
           {measured && <CheckoutPlacement key={`bag-${step}`} className="checkout-tray-bag" source={`[data-basis="${active.bag + 1}"] .fruit-bag`} data-role="tray-bag">
             <FruitBag {...basis[active.bag]} tone={active.bag === 0 ? "apple" : "banana"} />
           </CheckoutPlacement>}
-        </div>
+        </PricedCheckout>
         {measured && <div key={step} className="checkout-reading" data-role="reading" data-value={evaluate(probe, basis[active.bag])}><MathFormula latex={String(evaluate(probe, basis[active.bag]))} /></div>}
       </div>;
     })}

@@ -1,5 +1,6 @@
 """从真实 React/KaTeX 的 2x 截图提取有色轮廓；不参与运行时渲染。依赖 numpy、opencv-python-headless。"""
 import json
+import os
 import sys
 from pathlib import Path
 import cv2
@@ -8,6 +9,7 @@ import numpy as np
 source, destination = map(Path, sys.argv[1:])
 # 项目语义色，以及水果叶、茎；暗底不参与轮廓变形。
 colors = ['#62d2c3', '#ed6a5a', '#f4c95d', '#f6f2e7', '#78b779', '#8b6338']
+colors += json.loads(os.environ.get('MORPH_EXTRA_COLORS', '[]'))
 palette = np.array([[int(c[i:i+2], 16) for i in (1, 3, 5)] for c in colors])
 
 def trace(item):
