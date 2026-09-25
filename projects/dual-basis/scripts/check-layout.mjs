@@ -49,35 +49,39 @@ try {
           assert.deepEqual(transfer.transitions.find(item => item.property === 'top')?.values, [index === 0 ? '123px' : '443px', '290px']);
         });
       }
-      if (state.scene === 'dual-basis-coordinate-reading' && state.step === 4) {
+      if (state.scene === 'dual-basis-coordinate-reading' && state.step >= 4) {
         const morph = await page.evaluate(() => {
           const layer = document.querySelector('.symbolic-expansion');
           const animations = layer.getAnimations({ subtree: true });
           animations.forEach(animation => { animation.pause(); animation.currentTime = 0; });
           const paths = [...layer.querySelectorAll('[data-contour-transform] path')];
           const start = paths.map(path => getComputedStyle(path).d);
-          animations.forEach(animation => { animation.currentTime = 1100; });
+          animations.forEach(animation => { animation.currentTime = 500; });
           const middle = paths.map(path => getComputedStyle(path).d);
-          animations.forEach(animation => { animation.currentTime = 2199; });
+          animations.forEach(animation => { animation.currentTime = 999; });
           const end = paths.map(path => getComputedStyle(path).d);
-          animations.forEach(animation => { animation.currentTime = 550; });
+          animations.forEach(animation => { animation.currentTime = 250; });
           return {
             groups: layer.querySelectorAll('[data-contour-transform]').length,
             moving: paths.every((_, i) => start[i] !== middle[i] && middle[i] !== end[i]),
             noOpacitySwitch: animations.every(animation => animation.effect.getKeyframes().every(frame => !('opacity' in frame) && !('visibility' in frame))),
           };
         });
-        assert.equal(morph.groups, 7, '七个元素均应使用轮廓补间');
+        assert.equal(morph.groups, state.step === 4 ? 7 : 2, '第二步只能变换两个系数');
         assert(morph.moving, '中间帧必须是变化中的轮廓，不能替换起止图形');
         assert(morph.noOpacitySwitch, '轮廓补间不应以淡入淡出或可见性切换替代');
-        for (const [namePart, time] of [['quarter', 550], ['midpoint', 1100], ['three-quarter', 1650], ['near-end', 2199]]) {
+        for (const [namePart, time] of [['quarter', 250], ['midpoint', 500], ['three-quarter', 750], ['near-end', 999]]) {
           await page.evaluate(time => document.querySelector('.symbolic-expansion').getAnimations({ subtree: true }).forEach(animation => { animation.currentTime = time; }), time);
-          await page.screenshot({ path: path.join(output, `${name}-symbol-transform-${namePart}.png`) });
+          await page.screenshot({ path: path.join(output, `${name}-symbol-transform-${state.step}-${namePart}.png`) });
         }
-        await page.evaluate(() => document.querySelector('.symbolic-expansion').getAnimations({ subtree: true }).forEach(animation => { animation.currentTime = 1100; animation.play(); }));
+        await page.evaluate(() => document.querySelector('.symbolic-expansion').getAnimations({ subtree: true }).forEach(animation => { animation.currentTime = 500; animation.play(); }));
       }
       await page.waitForFunction(() => document.getAnimations().every(animation => animation.playState === 'finished' || animation.playState === 'idle'));
       assert.equal(await page.locator('.katex-error').count(), 0);
+      if (state.scene === 'dual-basis-coordinate-reading' && state.step >= 4) {
+        assert.equal(await page.locator('[data-role=symbolic-functional]').count(), state.step === 5 ? 2 : 0);
+        for (const number of await page.locator('[data-role=symbolic-number]').all()) assert.equal(await number.isVisible(), state.step === 4);
+      }
       if (state.scene === 'dual-basis-coordinate-reading' && state.step === 2) {
         await page.locator('[data-role=reading]').evaluateAll(nodes => nodes.forEach(node => { node.dataset.continuity = 'checkout-result'; }));
       }

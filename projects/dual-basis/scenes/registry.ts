@@ -10,5 +10,5 @@ export const registry = createSceneRegistry([{
 }, {
   id: "dual-basis-coordinate-reading", conceptId: project.conceptId, order: 20, route: "/",
   title: "CoordinateReadingScene", summary: "同一袋水果分别经过两个对偶基收银台，读出苹果和香蕉的斤数，再将两个读数移动为基袋线性组合的系数。",
-  viewport: SCENE_VIEWPORT, stepCount: 5, component: CoordinateReadingScene,
+  viewport: SCENE_VIEWPORT, stepCount: 6, component: CoordinateReadingScene,
 }]);

@@ -70,7 +70,7 @@ export function pairedContours(from: Outline, to: Outline) {
 }
 
 const SVG = 'http://www.w3.org/2000/svg';
-export function animateContourTransform({ layer, source, target, outlines, duration = 2200 }: {
+export function animateContourTransform({ layer, source, target, outlines, duration = 1000 }: {
   layer: HTMLElement; source: HTMLElement; target: HTMLElement; outlines: OutlinePair; duration?: number;
 }) {
   const scene = layer.closest('section')!;

@@ -48,3 +48,5 @@
 .symbolic-expansion .vector-color { color: var(--vector-color); }
 
 .symbolic-expansion .parenthesis-color { color: #fff; }
+
+.coefficients-expanded .symbolic-number { visibility: hidden; }

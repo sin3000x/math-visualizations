@@ -15,7 +15,7 @@ try {
   await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/?export=1`);
   await page.evaluate(() => document.fonts.ready);
   for (let i = 0; i < 6; i++) await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('5');
+  await page.keyboard.press('6');
   await page.waitForFunction(() => document.getAnimations().every(a => a.playState === 'finished' || a.playState === 'idle'));
   const targets = await page.locator('[data-symbol-source]').all();
   const items = [];

@@ -40,32 +40,55 @@ export function CoordinateReadingScene({ step }: SceneProps) {
       <div className="expansion-plus"><MathFormula latex="+" /></div>
       {basis.map((unit, index) => <div key={index} className={`expansion-unit unit-${index}`}><FruitBag {...unit} tone={index === 0 ? "apple" : "banana"} /></div>)}
     </div>}
-    {step >= 4 && <SymbolicExpansion />}
+    {step >= 4 && <SymbolicExpansion expanded={step >= 5} />}
   </section>;
 }
 
 
-function SymbolicExpansion() {
+function SymbolicExpansion({ expanded }: { expanded: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const layer = root.current!;
     const scene = layer.closest("section")!;
     const outlines = coordinateShapes as unknown as Record<string, OutlinePair>;
-    const cleanups = [...layer.querySelectorAll<HTMLElement>("[data-symbol-source]")].map(target => {
+    const cleanups = [...layer.querySelectorAll<HTMLElement>(".symbolic-base[data-symbol-source]")].map(target => {
       const selector = target.dataset.symbolSource!;
       return animateContourTransform({ layer, source: scene.querySelector<HTMLElement>(selector)!, target, outlines: outlines[selector] });
     });
     return () => cleanups.forEach(cleanup => cleanup());
   }, []);
-  return <div ref={root} className="symbolic-expansion" data-role="symbolic-expansion" aria-label="v 等于 f1(v) e1 加 f2(v) e2">
-      <div className="symbolic-vector" data-symbol-source=".general-source .fruit-bag"><MathFormula latex="v" /></div>
-      <div className="symbolic-equals" data-symbol-source=".expansion-equals"><MathFormula latex="=" /></div>
-      <div className="symbolic-plus" data-symbol-source=".expansion-plus"><MathFormula latex="+" /></div>
+  return <div ref={root} className={`symbolic-expansion ${expanded ? "coefficients-expanded" : ""}`} data-role="symbolic-expansion" aria-label={expanded ? "v 等于 f1(v) e1 加 f2(v) e2" : "v 等于 3e1 加 2e2"}>
+      <div className="symbolic-vector symbolic-base" data-symbol-source=".general-source .fruit-bag"><MathFormula latex="v" /></div>
+      <div className="symbolic-equals symbolic-base" data-symbol-source=".expansion-equals"><MathFormula latex="=" /></div>
+      <div className="symbolic-plus symbolic-base" data-symbol-source=".expansion-plus"><MathFormula latex="+" /></div>
       {[1, 2].map(index => <Fragment key={index}>
-        <div className={`symbolic-coefficient symbolic-color-${index}`} data-symbol-source={`.checkout-reading[data-probe="${index}"]`}>
-          <MathFormula latex={`f_${index}`} /><span className="parenthesis-color"><MathFormula latex="(" /></span><span className="vector-color"><MathFormula latex="v" /></span><span className="parenthesis-color"><MathFormula latex=")" /></span>
-        </div>
-        <div className={`symbolic-basis symbolic-color-${index}`} data-symbol-source={`.expansion-unit.unit-${index - 1} .fruit-bag`}><MathFormula latex={`e_${index}`} /></div>
+        <SymbolicCoefficient index={index} expanded={expanded} />
+        <div className={`symbolic-basis symbolic-base symbolic-color-${index}`} data-symbol-source={`.expansion-unit.unit-${index - 1} .fruit-bag`}><MathFormula latex={`e_${index}`} /></div>
       </Fragment>)}
   </div>;
+}
+
+
+function SymbolicCoefficient({ index, expanded }: { index: number; expanded: boolean }) {
+  const number = useRef<HTMLDivElement>(null);
+  const formula = useRef<HTMLDivElement>(null);
+  const selector = `.checkout-reading[data-probe="${index}"]`;
+  useLayoutEffect(() => {
+    const layer = number.current!.closest<HTMLElement>('.symbolic-expansion')!;
+    const pair = (coordinateShapes as unknown as Record<string, OutlinePair>)[selector];
+    return animateContourTransform({
+      layer,
+      source: expanded ? number.current! : layer.closest('section')!.querySelector<HTMLElement>(selector)!,
+      target: expanded ? formula.current! : number.current!,
+      outlines: expanded ? pair : { from: pair.from, to: pair.from },
+    });
+  }, [expanded, selector]);
+  return <>
+    <div ref={number} className={`symbolic-coefficient symbolic-number symbolic-color-${index}`} data-role="symbolic-number">
+      <MathFormula latex={String(index === 1 ? bag.apples : bag.bananas)} />
+    </div>
+    {expanded && <div ref={formula} className={`symbolic-coefficient symbolic-color-${index}`} data-symbol-source={selector} data-role="symbolic-functional">
+      <MathFormula latex={`f_${index}`} /><span className="parenthesis-color"><MathFormula latex="(" /></span><span className="vector-color"><MathFormula latex="v" /></span><span className="parenthesis-color"><MathFormula latex=")" /></span>
+    </div>}
+  </>;
 }
