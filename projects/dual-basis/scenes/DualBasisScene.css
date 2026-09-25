@@ -8,7 +8,7 @@
 .bag-name { font-size: 42px; }
 .basis-bag[data-basis="1"] .bag-name { color: var(--coral); }
 .basis-bag[data-basis="2"] .bag-name { color: var(--yellow); }
-.probe { position: absolute; left: 865px; width: 276px; height: 240px; color: var(--probe-color); animation: appear .6s both; }
+.probe { --probe-color: var(--functional-color); position: absolute; left: 865px; width: 276px; height: 240px; color: var(--probe-color); animation: appear .6s both; }
 .probe-name { font-size: 38px; }
 .checkout-reading { position: absolute; left: 390px; top: 84px; font-size: 48px; color: var(--probe-color); animation: show-reading .25s 1.1s both; }
 .pairing-results { position: absolute; left: 70px; right: 70px; top: 620px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; font-size: 34px; text-align: center; }

@@ -35,9 +35,53 @@ try {
       if (index) await page.keyboard.press('ArrowRight');
       const state = states[index];
       await checkPosition(state);
+      if (state.scene === 'dual-basis-coordinate-reading' && state.step === 3) {
+        const transfers = await page.locator('[data-role=reading]').evaluateAll(nodes => nodes.map(node => ({
+          retained: node.dataset.continuity === 'checkout-result',
+          transitions: node.getAnimations().filter(animation => animation instanceof CSSTransition).map(animation => ({
+            property: animation.transitionProperty,
+            values: animation.effect.getKeyframes().map(frame => frame[animation.transitionProperty]),
+          })),
+        })));
+        transfers.forEach((transfer, index) => {
+          assert(transfer.retained, '展开系数必须复用上一步的读数元素');
+          assert.deepEqual(transfer.transitions.find(item => item.property === 'left')?.values, ['1200px', index === 0 ? '470px' : '960px']);
+          assert.deepEqual(transfer.transitions.find(item => item.property === 'top')?.values, [index === 0 ? '123px' : '443px', '290px']);
+        });
+      }
+      if (state.scene === 'dual-basis-coordinate-reading' && state.step === 4) {
+        const morph = await page.evaluate(() => {
+          const layer = document.querySelector('.symbolic-expansion');
+          const animations = layer.getAnimations({ subtree: true });
+          animations.forEach(animation => { animation.pause(); animation.currentTime = 0; });
+          const paths = [...layer.querySelectorAll('[data-contour-transform] path')];
+          const start = paths.map(path => getComputedStyle(path).d);
+          animations.forEach(animation => { animation.currentTime = 1100; });
+          const middle = paths.map(path => getComputedStyle(path).d);
+          animations.forEach(animation => { animation.currentTime = 2199; });
+          const end = paths.map(path => getComputedStyle(path).d);
+          animations.forEach(animation => { animation.currentTime = 550; });
+          return {
+            groups: layer.querySelectorAll('[data-contour-transform]').length,
+            moving: paths.every((_, i) => start[i] !== middle[i] && middle[i] !== end[i]),
+            noOpacitySwitch: animations.every(animation => animation.effect.getKeyframes().every(frame => !('opacity' in frame) && !('visibility' in frame))),
+          };
+        });
+        assert.equal(morph.groups, 7, '七个元素均应使用轮廓补间');
+        assert(morph.moving, '中间帧必须是变化中的轮廓，不能替换起止图形');
+        assert(morph.noOpacitySwitch, '轮廓补间不应以淡入淡出或可见性切换替代');
+        for (const [namePart, time] of [['quarter', 550], ['midpoint', 1100], ['three-quarter', 1650], ['near-end', 2199]]) {
+          await page.evaluate(time => document.querySelector('.symbolic-expansion').getAnimations({ subtree: true }).forEach(animation => { animation.currentTime = time; }), time);
+          await page.screenshot({ path: path.join(output, `${name}-symbol-transform-${namePart}.png`) });
+        }
+        await page.evaluate(() => document.querySelector('.symbolic-expansion').getAnimations({ subtree: true }).forEach(animation => { animation.currentTime = 1100; animation.play(); }));
+      }
       await page.waitForFunction(() => document.getAnimations().every(animation => animation.playState === 'finished' || animation.playState === 'idle'));
       assert.equal(await page.locator('.katex-error').count(), 0);
-      if (state.step >= 1) {
+      if (state.scene === 'dual-basis-coordinate-reading' && state.step === 2) {
+        await page.locator('[data-role=reading]').evaluateAll(nodes => nodes.forEach(node => { node.dataset.continuity = 'checkout-result'; }));
+      }
+      if (state.step >= 1 && !(state.scene === 'dual-basis-coordinate-reading' && state.step >= 3)) {
         const screens = await page.evaluate(() => [...document.querySelectorAll('.priced-machine')].map(machine => {
           const screen = machine.querySelector('.checkout-screen').getBoundingClientRect();
           const prices = machine.querySelector('[data-role=internal-prices]').getBoundingClientRect();
@@ -50,6 +94,7 @@ try {
       }
       if (state.scene === 'dual-basis-coordinate-reading') {
         assert.deepEqual(await page.locator('[data-role=reading]').evaluateAll(nodes => nodes.map(node => node.dataset.value)), ['3', '2'].slice(0, state.step));
+        assert.equal(await page.locator('[data-role=basis-expansion]').count(), state.step >= 3 ? 1 : 0);
         const contact = await page.locator('[data-role=tray-bag]').evaluateAll(bags => bags.map(bag => {
           const tray = bag.parentElement.querySelector('[data-role=checkout-tray]').getBoundingClientRect();
           return Math.abs(bag.getBoundingClientRect().bottom - tray.top) < 1;

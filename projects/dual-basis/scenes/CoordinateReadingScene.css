@@ -1,4 +1,3 @@
-.coordinate-reading-scene .fruit-bag { --bag-color: #d8b875; }
 .coordinate-reading-scene .general-source {
   left: 155px;
   top: 230px;
@@ -14,4 +13,38 @@
 .coordinate-reading-scene .probe[data-probe="2"] { top: 365px; }
 .coordinate-reading-scene .priced-machine { transform: scale(.75); }
 .coordinate-reading-scene .probe-name { right: calc(100% + 32px); font-size: 48px; }
-.coordinate-reading-scene .checkout-reading { left: 500px; top: 78px; font-size: 64px; }
+.coordinate-reading-scene .checkout-reading {
+  left: 1200px;
+  font-size: 64px;
+  transition: left 1.2s ease-in-out, top 1.2s ease-in-out;
+}
+.coordinate-reading-scene .checkout-reading[data-probe="1"] { top: 123px; color: var(--coral); }
+.coordinate-reading-scene .checkout-reading[data-probe="2"] { top: 443px; color: var(--yellow); }
+.coordinate-reading-scene .general-source { transition: left 1.2s ease-in-out, top 1.2s ease-in-out, transform 1.2s ease-in-out; }
+.coordinate-reading-scene.show-expansion .general-source { left: 90px; top: 250px; transform: scale(1); }
+.coordinate-reading-scene.show-expansion .probe { visibility: hidden; }
+.coordinate-reading-scene.show-expansion .checkout-reading[data-probe="1"] { left: 470px; top: 290px; }
+.coordinate-reading-scene.show-expansion .checkout-reading[data-probe="2"] { left: 960px; top: 290px; }
+.basis-expansion { position: absolute; inset: 0; pointer-events: none; animation: appear .5s both; }
+.expansion-equals, .expansion-plus { position: absolute; top: 290px; font-size: 64px; }
+.expansion-equals { left: 350px; }
+.expansion-plus { left: 850px; }
+.expansion-unit { position: absolute; top: 250px; }
+.expansion-unit.unit-0 { left: 580px; }
+.expansion-unit.unit-1 { left: 1070px; }
+
+.symbolic-expansion { position: absolute; inset: 0; font-size: 48px; }
+.symbolic-expansion > div { position: absolute; top: 540px; transform: translateX(-50%); white-space: nowrap; }
+.symbolic-vector { left: 195px; color: var(--vector-color); }
+.symbolic-equals { left: 375px; }
+.symbolic-plus { left: 875px; }
+.symbolic-color-1 { color: var(--coral); }
+.symbolic-color-2 { color: var(--yellow); }
+.symbolic-coefficient { display: flex; align-items: baseline; }
+.symbolic-coefficient.symbolic-color-1 { left: 490px; }
+.symbolic-coefficient.symbolic-color-2 { left: 980px; }
+.symbolic-basis.symbolic-color-1 { left: 685px; }
+.symbolic-basis.symbolic-color-2 { left: 1175px; }
+.symbolic-expansion .vector-color { color: var(--vector-color); }
+
+.symbolic-expansion .parenthesis-color { color: #fff; }

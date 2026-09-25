@@ -13,7 +13,7 @@ button:focus-visible { outline: 2px solid #62d2c3; outline-offset: 4px; }
 .scene-navigation button { flex-shrink: 0; white-space: nowrap; }
 .scene-navigation button[aria-current="step"] { color: #62d2c3; border-color: #62d2c3; background: #162a27; }
 .scene-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; container-type: inline-size; background: #000; }
-.scene-design { --coral: #ed6a5a; --yellow: #f4c95d; --cyan: #62d2c3; --blue: #73a7ef; --purple: #ba91ef; position: absolute; width: 1440px; height: 810px; transform: scale(calc(100cqw / 1440px)); transform-origin: top left; color: #f6f2e7; background: #000; }
+.scene-design { --coral: #ed6a5a; --yellow: #f4c95d; --cyan: #62d2c3; --blue: #73a7ef; --purple: #ba91ef; --vector-color: var(--cyan); --functional-color: var(--purple); position: absolute; width: 1440px; height: 810px; transform: scale(calc(100cqw / 1440px)); transform-origin: top left; color: #f6f2e7; background: #000; }
 .scene-content { width: 1440px; height: 810px; }
 .recording-mode { position: fixed; inset: 0; z-index: 20; width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; }
 .recording-mode .page-toolbar { display: none; }

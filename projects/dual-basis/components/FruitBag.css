@@ -1,4 +1,4 @@
-.fruit-bag { --bag-color: #f0f0ed; position: relative; width: 210px; height: 190px; padding: 48px 24px 22px; border: 4px solid var(--bag-color); border-top: 0; border-radius: 24px 24px 55px 55px; background: color-mix(in srgb, var(--bag-color) 6%, transparent); }
+.fruit-bag { --bag-color: var(--vector-color); position: relative; width: 210px; height: 190px; padding: 48px 24px 22px; border: 4px solid var(--bag-color); border-top: 0; border-radius: 24px 24px 55px 55px; background: color-mix(in srgb, var(--bag-color) 6%, transparent); }
 .fruit-bag[data-tone="apple"] { --bag-color: var(--coral); }
 .fruit-bag[data-tone="banana"] { --bag-color: var(--yellow); }
 .fruit-bag.compact { transform: scale(.78); margin: -23px -24px -16px; }

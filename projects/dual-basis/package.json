@@ -14,7 +14,8 @@
     "video:production": "node scripts/video/render.mjs --preset production",
     "video:check": "node scripts/video/render.mjs --preset production --check",
     "check:layout": "npm run build && node scripts/check-layout.mjs",
-    "test": "node --experimental-strip-types --test tests/*.test.mjs"
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "morph:export": "npm run build && node scripts/export-morph-shapes.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.0.2",

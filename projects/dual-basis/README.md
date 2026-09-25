@@ -21,7 +21,7 @@
 
 ## 读出水果斤数
 
-`CoordinateReadingScene` 接在开场之后，共三步：先展示含 3 斤苹果、2 斤香蕉的水果袋 v；再把袋子放到 f₁ 上，得到 3；最后把同样的袋子放到 f₂ 上，得到 2。两次放袋均使用共享 CheckoutPlacement，结果与袋子保留在各自收银台，方便对照。f₁(v)=3、f₂(v)=2 表示分别读取两个水果坐标。
+`CoordinateReadingScene` 接在开场之后，共五步。前三步：先展示含 3 斤苹果、2 斤香蕉的水果袋 v；再把袋子放到 f₁ 上，得到 3；最后把同样的袋子放到 f₂ 上，得到 2。两次放袋均使用共享 CheckoutPlacement，结果与袋子保留在各自收银台，方便对照。f₁(v)=3、f₂(v)=2 表示分别读取两个水果坐标。第四步将同一袋水果写成 3 倍苹果单位袋加 2 倍香蕉单位袋。系数 3、2 直接复用两个收银台的读数元素，从结算位置移动到对应基袋前；保留数值和颜色，不再显示坐标列和提取箭头。第五步从上方七个元素的实际位置开始，在 2.2 秒内连续插值轮廓、位置和颜色，变成对应符号，在图形下方逐项对齐显示 v = f₁(v)e₁ + f₂(v)e₂，所有 v 使用青色，f₁/e₁ 使用苹果红，f₂/e₂ 使用香蕉黄。
 
 ## 验收与录屏
 
@@ -30,3 +30,9 @@
 - `npm run check:layout -w dual-basis`：构建后检查桌面、窄屏与 1920×1080 全部步骤及导航，截图保存到忽略的 exports/qa-layout。
 - `npm run video:check -w dual-basis`
 - `npm run video:production -w dual-basis`：动画结束后停留，再进入下一步。
+
+## 对象配色
+
+本项目中，苹果基袋 e₁ 与对偶基 f₁ 统一使用苹果红，香蕉基袋 e₂ 与对偶基 f₂ 统一使用香蕉黄。一般水果袋 v 使用青色（`--vector-color`），一般泛函 f 使用紫色（`--functional-color`）。基袋须显式指定 FruitBag 的 apple / banana tone；未指定时使用一般向量的青色。袋内水果仍保持各自颜色。
+
+轮廓补间实现与资产重生成方法见 [lib/animation/README.md](lib/animation/README.md)。
