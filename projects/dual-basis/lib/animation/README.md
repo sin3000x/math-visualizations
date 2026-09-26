@@ -32,3 +32,9 @@ MORPH_PYTHON=/path/to/venv/bin/python npm run morph:export -w dual-basis
 `independence-shapes.json` 由 `scripts/export-independence-shapes.mjs` 从实际画面提取。每次代入各有三组完整结算项和两个运算符，共十组；源包含系数、收银台、托盘水果袋与标签。使用同一个 `animateContourTransform` 连续变形成下方结果，并保留上方等式。
 
 重新生成：先构建，再执行 `MORPH_PYTHON=/path/to/venv/bin/python node projects/dual-basis/scripts/export-independence-shapes.mjs`。截图和 manifest 保存在忽略的 `exports/independence-morph-source/`。
+
+## 张成场景的系数变形
+
+`spanning-shapes.json` 保存 3、2 到完整 f₁(v)、f₂(v) 结算图标的两组轮廓，包含收银台、托盘水果袋和标签。使用 1 秒路径及颜色补间，不再复制左式水果袋或播放飞袋动画。换序与提取共同输入分为后续两个独立步骤。
+
+先构建，再执行 `MORPH_PYTHON=/path/to/venv/bin/python node projects/dual-basis/scripts/export-spanning-shapes.mjs` 重新从实际渲染生成资产。`check-spanning.mjs` 验证两个完整轮廓在 25%、50%、75%、99.9% 处的持续变化和步骤分离。

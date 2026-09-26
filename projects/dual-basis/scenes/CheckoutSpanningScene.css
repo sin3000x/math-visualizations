@@ -1,0 +1,103 @@
+.spanning-scene { position: relative; width: 1440px; height: 810px; background: #000; }
+.spanning-scene h1 { position: absolute; top: 44px; width: 100%; margin: 0; text-align: center; font-size: 42px; font-weight: 500; }
+.spanning-scene .math-formula { display: inline-block; white-space: nowrap; }
+.spanning-evaluation, .spanning-dual { position: absolute; top: 290px; width: 244px; height: 218px; transition: left 1s ease, top 1s ease; }
+.evaluation-0 { left: 15px; }
+.evaluation-0 .spanning-source { left: 65px; }
+.evaluation-1 { left: 650px; }
+.evaluation-2 { left: 1130px; }
+.spanning-source { position: absolute; left: 0; top: 0; }
+.number-1 { left: 555px; }
+.number-2 { left: 1035px; }
+.spanning-number { position: absolute; top: 350px; font-size: 62px; }
+.spanning-equals, .spanning-plus { position: absolute; top: 350px; font-size: 52px; transition: left 1s ease; }
+.spanning-equals { left: 425px; }
+.spanning-plus { left: 960px; }
+.spanning-counter-name { position: absolute; left: 92px; top: 162px; transform: translateX(-50%); font-size: 34px; }
+.spanning-tray-bag { position: absolute; left: 156px; top: 24px; width: 84px; height: 76px; }
+.spanning-tray-bag > .fruit-bag { transform: scale(.4); transform-origin: top left; }
+.spanning-machine-reveal { animation: spanning-reveal 1.25s both; }
+@keyframes spanning-reveal { 0%, 64% { opacity: 0; } 100% { opacity: 1; } }
+.spanning-dual { color: var(--dual-color); }
+.spanning-dual-machine { position: absolute; inset: 0; }
+.spanning-scene[data-stage="2"] .evaluation-0,
+.spanning-scene:is([data-stage="3"], [data-stage="4"], [data-stage="5"], [data-stage="6"]) .evaluation-0 { left: 15px; }
+.spanning-scene[data-stage="2"] .evaluation-1 { left: 615px; }
+.spanning-scene[data-stage="2"] .evaluation-2 { left: 1180px; }
+.dual-1 { left: 355px; }
+.dual-2 { left: 920px; }
+.spanning-scene[data-stage="2"] .spanning-equals { left: 280px; }
+.spanning-scene[data-stage="2"] .spanning-plus { left: 868px; }
+.spanning-scene:is([data-stage="3"], [data-stage="4"], [data-stage="5"], [data-stage="6"]) .evaluation-1 { left: 335px; }
+.spanning-scene:is([data-stage="3"], [data-stage="4"], [data-stage="5"], [data-stage="6"]) .evaluation-2 { left: 825px; }
+.spanning-scene:is([data-stage="3"], [data-stage="4"], [data-stage="5"], [data-stage="6"]) .dual-1 { left: 590px; }
+.spanning-scene:is([data-stage="3"], [data-stage="4"], [data-stage="5"], [data-stage="6"]) .dual-2 { left: 1080px; }
+.spanning-scene:is([data-stage="3"], [data-stage="4"], [data-stage="5"], [data-stage="6"]) .spanning-equals { left: 258px; }
+.spanning-scene:is([data-stage="3"], [data-stage="4"], [data-stage="5"], [data-stage="6"]) .spanning-plus { left: 775px; }
+.spanning-scene:is([data-stage="4"], [data-stage="5"], [data-stage="6"]) .spanning-dual .checkout-tray { visibility: hidden; }
+/* 换序时两项分别走上、下弧线，避免收银台相穿。 */
+.spanning-scene[data-stage="3"] .spanning-evaluation:not(.evaluation-0) { animation: spanning-upper 1s; }
+.spanning-scene[data-stage="3"] .spanning-dual { animation: spanning-lower 1s; }
+@keyframes spanning-upper { 50% { translate: 0 -115px; } }
+@keyframes spanning-lower { 50% { translate: 0 115px; } }
+.spanning-bracket { position: absolute; top: 320px; font-size: 82px; }
+.spanning-bracket.opening { left: 300px; }
+.spanning-bracket.closing { left: 1260px; }
+.spanning-argument { position: absolute; top: 312px; left: 1310px; width: 115.5px; height: 104.5px; }
+.spanning-argument > .fruit-bag { transform: scale(.55); transform-origin: top left; }
+.spanning-clock { position: absolute; width: 1px; height: 1px; pointer-events: none; }
+
+.spanning-morph-layer { position: absolute; inset: 0; pointer-events: none; }
+
+/* 先只换序：两只对偶收银台仍带输入袋，保留完整托盘宽度。 */
+.spanning-scene[data-stage="3"] .spanning-equals { left: 280px; }
+.spanning-scene[data-stage="3"] .evaluation-1 { left: 340px; }
+.spanning-scene[data-stage="3"] .dual-1 { left: 595px; }
+.spanning-scene[data-stage="3"] .spanning-plus { left: 855px; }
+.spanning-scene[data-stage="3"] .evaluation-2 { left: 920px; }
+.spanning-scene[data-stage="3"] .dual-2 { left: 1175px; }
+/* 回退到补间步时也按最终目标位置采样，避免轮廓到达后再跳位。 */
+.spanning-scene[data-stage="2"] .spanning-dual { transition: none; }
+
+.spanning-extraction { position: absolute; inset: 0; pointer-events: none; }
+.spanning-extracted-bag { position: absolute; left: 1310px; top: 312px; width: 115.5px; height: 104.5px; transform-origin: top left; }
+.spanning-extracted-bag > .fruit-bag { transform: scale(.55); transform-origin: top left; }
+/* 收银台收拢后再显出括号，避免括号穿过仍在移动的机身。 */
+.spanning-scene[data-stage="4"] .spanning-bracket { animation: spanning-extraction-brackets 1.1s both; }
+@keyframes spanning-extraction-brackets { 0%, 90% { opacity: 0; } 100% { opacity: 1; } }
+
+/* 整袋滚轮：旧袋向上滚出，新袋从下方滚入；窗口包括提手。 */
+.fruit-bag-reel { position: relative; width: 210px; height: 190px; transform-origin: top left; }
+.bag-reel-window { position: absolute; left: 0; top: -22px; width: 210px; height: 212px; overflow: hidden; }
+.bag-reel-strip { will-change: transform; }
+.bag-reel-cell { height: 212px; padding-top: 22px; box-sizing: border-box; }
+.spanning-tray-bag > .fruit-bag-reel { transform: scale(.4); }
+.spanning-argument > .fruit-bag-reel { transform: scale(.55); }
+
+/* 消去两端共同的输入，基袋结算项仍是分解系数，完整保留。 */
+.spanning-scene[data-stage="6"] .evaluation-0 > [data-checkout-placement],
+.spanning-scene[data-stage="6"] .evaluation-0 .checkout-tray,
+.spanning-scene[data-stage="6"] .spanning-argument,
+.spanning-scene[data-stage="6"] .spanning-bracket { animation: spanning-remove-input .8s ease-in-out both; }
+@keyframes spanning-remove-input { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
+
+/* 最后将五个对象排成居中的两项分解，下方公式逐项对应图标。 */
+.spanning-scene[data-stage="6"] .evaluation-0 { left: 90px; }
+.spanning-scene[data-stage="6"] .spanning-equals { left: 300px; }
+.spanning-scene[data-stage="6"] .evaluation-1 { left: 375px; }
+.spanning-scene[data-stage="6"] .dual-1 { left: 640px; }
+.spanning-scene[data-stage="6"] .spanning-plus { left: 850px; }
+.spanning-scene[data-stage="6"] .evaluation-2 { left: 925px; }
+.spanning-scene[data-stage="6"] .dual-2 { left: 1190px; }
+.spanning-counter-name { transition: opacity .8s ease-in-out; }
+.spanning-scene[data-stage="6"] .spanning-counter-name { opacity: 0; }
+.spanning-decomposition { position: absolute; top: 500px; left: 0; width: 100%; font-size: 42px; animation: spanning-labels-in 1s ease-in-out both; }
+.spanning-decomposition > span { position: absolute; transform: translateX(-50%); }
+.decomposition-f { left: 182px; }
+.decomposition-equals { left: 326px; }
+.decomposition-coefficient-1 { left: 497px; }
+.decomposition-basis-1 { left: 732px; }
+.decomposition-plus { left: 876px; }
+.decomposition-coefficient-2 { left: 1047px; }
+.decomposition-basis-2 { left: 1282px; }
+@keyframes spanning-labels-in { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }

@@ -31,3 +31,15 @@ test('等号的两横保持上下顺序，不在中点合成一横', () => {
   const ys = bars.map(bar => bar.rings[0].map(ring => ring.reduce((sum, p) => sum + p[1], 0) / ring.length));
   assert(ys[0][0] < ys[1][0] && ys[0][1] < ys[1][1]);
 });
+
+test('张成场景的两个数字和完整结算图标可以连续配对', () => {
+  const assets = JSON.parse(readFileSync(new URL('../lib/animation/spanning-shapes.json', import.meta.url)));
+  assert.deepEqual(Object.keys(assets), ['1', '2']);
+  for (const { from, to } of Object.values(assets)) {
+    assert(from.shapes.length > 0 && to.shapes.length > from.shapes.length);
+    for (const pair of pairedContours(from, to)) for (const [a, b] of pair.rings) {
+      assert.equal(a.length, b.length);
+      assert(a.flat().every(Number.isFinite) && b.flat().every(Number.isFinite));
+    }
+  }
+});
