@@ -13,7 +13,7 @@ try {
  await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/`);
  await page.locator('.scene-navigation button').last().click();
  let inputsBeforeExtraction;
- for (let step = 0; step < 7; step++) {
+ for (let step = 0; step < 9; step++) {
   if (step) await page.keyboard.press('ArrowRight');
   if (step === 1) {
    const timing = await page.evaluate(() => {
@@ -165,7 +165,14 @@ try {
   assert.equal(await page.locator('.spanning-formula, .spanning-values, .katex-error').count(), 0);
   const formulas = await page.locator('.spanning-scene annotation').allTextContents();
   assert(!formulas.some(text => /a=|b=/.test(text)));
-  assert.equal(await page.locator('.spanning-decomposition').count(), step === 6 ? 1 : 0);
+  assert.equal(await page.locator('.spanning-decomposition').count(), step >= 6 ? 1 : 0);
+  assert.equal(await page.locator('.spanning-coordinate-summary').count(), step >= 7 ? 1 : 0);
+  assert.equal(await page.locator('.spanning-row-review').count(), step >= 8 ? 1 : 0);
+  if (step >= 7) {
+   assert.equal(await page.locator('.spanning-scene h1').evaluate(node => getComputedStyle(node).opacity), '0');
+   assert.equal(await page.locator('.spanning-content').evaluate(node => new DOMMatrixReadOnly(getComputedStyle(node).transform).m42), -210);
+   assert(!(await page.locator('.spanning-argument').isVisible()));
+  }
   await page.screenshot({ path: `exports/qa-layout/spanning-${step}.png` });
  }
  await page.keyboard.press('5');

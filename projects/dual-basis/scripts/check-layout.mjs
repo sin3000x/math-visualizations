@@ -157,7 +157,7 @@ try {
         const contact = await page.locator('.spanning-scene [data-checkout-placement]').evaluateAll(bags => bags.map(bag => Math.abs(bag.getBoundingClientRect().bottom - bag.parentElement.querySelector('.checkout-tray').getBoundingClientRect().top) < 1));
         assert(contact.every(Boolean), '袋底接触托盘');
         if (state.step === 5) assert.equal(await page.locator('.spanning-scene').getAttribute('data-sample'), '8');
-        if (state.step === 6) {
+        if (state.step >= 6) {
           assert.equal(await page.locator('.spanning-evaluation:not(.evaluation-0) [data-checkout-placement]').count(), 2, '最终保留两个基袋结算图标');
           assert(!(await page.locator('.evaluation-0 > [data-checkout-placement]').isVisible()));
           assert(!(await page.locator('.spanning-argument').isVisible()));
@@ -179,7 +179,7 @@ try {
           inside: frame.left >= 0 && frame.top >= 0 && frame.right <= innerWidth + 1 && frame.bottom <= innerHeight + 1,
           ratio: frame.width / frame.height,
           clipped: [...document.querySelectorAll('.scene-content .math-formula, .scene-content .fruit-bag')].filter(visible).filter(element => !within(element.getBoundingClientRect())).length,
-          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing], .independence-evaluation, .independence-conclusions, .independence-term, .spanning-evaluation, .spanning-dual, .spanning-argument, .spanning-extracted-bag, .spanning-decomposition > span, .spanning-scene h1')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
+          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing], .independence-evaluation, .independence-conclusions, .independence-term, .spanning-evaluation, .spanning-dual, .spanning-argument, .spanning-extracted-bag, .spanning-decomposition > span, .spanning-coordinate-summary, .spanning-row-review, .spanning-scene h1')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
           controls: document.querySelector('.scene-frame').querySelectorAll('nav, button').length,
         };
       });

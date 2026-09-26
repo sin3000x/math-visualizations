@@ -19,8 +19,8 @@ const colors = ["#b995eb", "#ed6a5a", "#f4c95d"];
 export function CheckoutSpanningScene({ step }: { step: number }) {
   const [cycle, setCycle] = useState({ step, sample: 0 });
   // 切步时在绘制前重置读数，重播不能先显示上次停留的最后一袋。
-  if (cycle.step !== step) setCycle({ step, sample: step === 6 ? cycle.sample : 0 });
-  const sample = cycle.step === step || step === 6 ? cycle.sample : 0;
+  if (cycle.step !== step) setCycle({ step, sample: step >= 6 ? cycle.sample : 0 });
+  const sample = cycle.step === step || step >= 6 ? cycle.sample : 0;
   const clock = useRef<HTMLDivElement>(null);
   const morphLayer = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -40,7 +40,7 @@ export function CheckoutSpanningScene({ step }: { step: number }) {
   useLayoutEffect(() => {
     const drums = [...clock.current!.closest("section")!.querySelectorAll<HTMLElement>('[data-role="bag-reel-strip"]')];
     if (step !== 5) {
-      if (step !== 6) drums.forEach(drum => { drum.style.transform = ""; });
+      if (step < 6) drums.forEach(drum => { drum.style.transform = ""; });
       return;
     }
     const animation = clock.current!.animate([{ opacity: 1 }, { opacity: 1 }], { duration: ROLL_DURATION, fill: "forwards" });
@@ -58,15 +58,16 @@ export function CheckoutSpanningScene({ step }: { step: number }) {
       if (animation.playState !== "finished") frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(frame); animation.cancel(); drums.forEach(drum => { if (drum.closest<HTMLElement>("section")?.dataset.stage !== "6") drum.style.transform = ""; }); };
+    return () => { cancelAnimationFrame(frame); animation.cancel(); drums.forEach(drum => { if (drum.closest<HTMLElement>("section")?.dataset.complete !== "true") drum.style.transform = ""; }); };
   }, [step]);
   const [apples, bananas] = examples[step >= 5 ? sample : 0];
   const grouped = step >= 4;
   const bag = (basis = 0, rolling = false) => rolling
     ? <RollingFruitBag examples={examples} sample={step >= 5 ? sample : 0} />
     : <FruitBag apples={basis === 1 ? 1 : basis === 2 ? 0 : apples} bananas={basis === 2 ? 1 : basis === 1 ? 0 : bananas} tone={basis === 1 ? "apple" : basis === 2 ? "banana" : undefined} />;
-  return <section className="spanning-scene" data-stage={step} data-sample={sample} aria-label="f1、f2 可以张成整个对偶空间">
+  return <section className="spanning-scene" data-stage={step} data-complete={step >= 6} data-review={step >= 7} data-sample={sample} aria-label="f1、f2 可以张成整个对偶空间">
     <h1><span style={{ color: colors[1] }}><MathFormula latex="f_1" /></span><MathFormula latex={",\\,"} /><span style={{ color: colors[2] }}><MathFormula latex="f_2" /></span> 可以张成整个对偶空间</h1>
+    <div className="spanning-content">
     <div ref={clock} className="spanning-clock" aria-hidden="true" />
     <span className="spanning-equals"><MathFormula latex="=" /></span>
     <span className="spanning-plus"><MathFormula latex="+" /></span>
@@ -97,7 +98,7 @@ export function CheckoutSpanningScene({ step }: { step: number }) {
       <div className="spanning-argument">{bag(0, true)}</div>
       {step === 4 && <ExtractSharedInput>{bag()}</ExtractSharedInput>}
     </>}
-    {step === 6 && <div className="spanning-decomposition" aria-label="f = f(e1) f1 + f(e2) f2">
+    {step >= 6 && <div className="spanning-decomposition" aria-label="f = f(e1) f1 + f(e2) f2">
       <span className="decomposition-f"><MathFormula latex={"\\color{#b995eb}{f}"} /></span>
       <span className="decomposition-equals"><MathFormula latex="=" /></span>
       <span className="decomposition-coefficient-1"><MathFormula latex={"\\color{#b995eb}{f({\\color{#ed6a5a}e_1})}"} /></span>
@@ -106,5 +107,14 @@ export function CheckoutSpanningScene({ step }: { step: number }) {
       <span className="decomposition-coefficient-2"><MathFormula latex={"\\color{#b995eb}{f({\\color{#f4c95d}e_2})}"} /></span>
       <span className="decomposition-basis-2"><MathFormula latex={"\\color{#f4c95d}{f_2}"} /></span>
     </div>}
+    </div>
+    {step >= 7 && <div className="spanning-coordinate-summary">
+      <p><MathFormula latex="f" /> 在 <MathFormula latex="V^*" /> 中的坐标</p>
+      <MathFormula latex={"[f]_{(f_1,f_2)}=\\begin{bmatrix} f({\\color{#ed6a5a}e_1}) \\\\[0.35em] f({\\color{#f4c95d}e_2}) \\end{bmatrix}"} />
+    </div>}
+    {step >= 8 && <aside className="spanning-row-review" aria-label="回顾">
+      <p><MathFormula latex="f" /> 在 <MathFormula latex="V" /> 中的作用</p>
+      <MathFormula latex={"f(v)=\\begin{bmatrix}f({\\color{#ed6a5a}e_1})&f({\\color{#f4c95d}e_2})\\end{bmatrix}[v]_{(e_1,e_2)}"} />
+    </aside>}
   </section>;
 }

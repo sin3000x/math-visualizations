@@ -75,22 +75,22 @@
 .spanning-argument > .fruit-bag-reel { transform: scale(.55); }
 
 /* 消去两端共同的输入，基袋结算项仍是分解系数，完整保留。 */
-.spanning-scene[data-stage="6"] .evaluation-0 > [data-checkout-placement],
-.spanning-scene[data-stage="6"] .evaluation-0 .checkout-tray,
-.spanning-scene[data-stage="6"] .spanning-argument,
-.spanning-scene[data-stage="6"] .spanning-bracket { animation: spanning-remove-input .8s ease-in-out both; }
+.spanning-scene[data-complete="true"] .evaluation-0 > [data-checkout-placement],
+.spanning-scene[data-complete="true"] .evaluation-0 .checkout-tray,
+.spanning-scene[data-complete="true"] .spanning-argument,
+.spanning-scene[data-complete="true"] .spanning-bracket { animation: spanning-remove-input .8s ease-in-out both; }
 @keyframes spanning-remove-input { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
 
 /* 最后将五个对象排成居中的两项分解，下方公式逐项对应图标。 */
-.spanning-scene[data-stage="6"] .evaluation-0 { left: 90px; }
-.spanning-scene[data-stage="6"] .spanning-equals { left: 300px; }
-.spanning-scene[data-stage="6"] .evaluation-1 { left: 375px; }
-.spanning-scene[data-stage="6"] .dual-1 { left: 640px; }
-.spanning-scene[data-stage="6"] .spanning-plus { left: 850px; }
-.spanning-scene[data-stage="6"] .evaluation-2 { left: 925px; }
-.spanning-scene[data-stage="6"] .dual-2 { left: 1190px; }
+.spanning-scene[data-complete="true"] .evaluation-0 { left: 90px; }
+.spanning-scene[data-complete="true"] .spanning-equals { left: 300px; }
+.spanning-scene[data-complete="true"] .evaluation-1 { left: 375px; }
+.spanning-scene[data-complete="true"] .dual-1 { left: 640px; }
+.spanning-scene[data-complete="true"] .spanning-plus { left: 850px; }
+.spanning-scene[data-complete="true"] .evaluation-2 { left: 925px; }
+.spanning-scene[data-complete="true"] .dual-2 { left: 1190px; }
 .spanning-counter-name { transition: opacity .8s ease-in-out; }
-.spanning-scene[data-stage="6"] .spanning-counter-name { opacity: 0; }
+.spanning-scene[data-complete="true"] .spanning-counter-name { opacity: 0; }
 .spanning-decomposition { position: absolute; top: 500px; left: 0; width: 100%; font-size: 42px; animation: spanning-labels-in 1s ease-in-out both; }
 .spanning-decomposition > span { position: absolute; transform: translateX(-50%); }
 .decomposition-f { left: 182px; }
@@ -101,3 +101,17 @@
 .decomposition-coefficient-2 { left: 1047px; }
 .decomposition-basis-2 { left: 1282px; }
 @keyframes spanning-labels-in { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+
+/* 原分解保留身份并整体上移，留出坐标与回顾区域。 */
+.spanning-content { position: absolute; inset: 0; transform: translateY(0); transition: transform 1s ease-in-out; }
+.spanning-scene h1 { transition: opacity .5s ease-in-out; }
+.spanning-scene[data-review="true"] h1 { opacity: 0; }
+.spanning-scene[data-review="true"] .spanning-content { transform: translateY(-210px); }
+.spanning-scene[data-complete="true"] .spanning-dual .checkout-tray { visibility: hidden; }
+.spanning-coordinate-summary, .spanning-row-review { position: absolute; top: 450px; height: 215px; box-sizing: border-box; }
+.spanning-coordinate-summary { left: 90px; width: 550px; text-align: center; font-size: 42px; animation: spanning-review-in 1s .5s both; }
+.spanning-coordinate-summary > .math-formula, .spanning-row-review > .math-formula { color: #f0f0ed; }
+.spanning-coordinate-summary p, .spanning-row-review p { margin: 0 0 24px; height: 38px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 26px; color: #b4b4ae; }
+.spanning-row-review { left: 710px; width: 650px; padding: 0 0 0 40px; text-align: center; border-left: 1px solid #454540; font-size: 32px; animation: spanning-review-in .8s both; }
+.spanning-row-review > .math-formula { margin-top: 27px; }
+@keyframes spanning-review-in { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
