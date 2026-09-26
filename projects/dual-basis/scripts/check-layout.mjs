@@ -179,7 +179,7 @@ try {
           inside: frame.left >= 0 && frame.top >= 0 && frame.right <= innerWidth + 1 && frame.bottom <= innerHeight + 1,
           ratio: frame.width / frame.height,
           clipped: [...document.querySelectorAll('.scene-content .math-formula, .scene-content .fruit-bag')].filter(visible).filter(element => !within(element.getBoundingClientRect())).length,
-          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing], .independence-evaluation, .independence-conclusions, .independence-term, .spanning-evaluation, .spanning-dual, .spanning-argument, .spanning-extracted-bag, .spanning-decomposition > span, .spanning-coordinate-summary, .spanning-row-review, .spanning-scene h1')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
+          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing], .independence-evaluation, .independence-conclusions, .independence-term, .spanning-evaluation, .spanning-dual, .spanning-argument, .spanning-extracted-bag, .spanning-decomposition > span, .spanning-coordinate-summary, .spanning-right-panel, .spanning-scene h1')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
           controls: document.querySelector('.scene-frame').querySelectorAll('nav, button').length,
         };
       });

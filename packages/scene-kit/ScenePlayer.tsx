@@ -23,8 +23,8 @@ export function ScenePlayer({ title, scenes }: { title: string; scenes: readonly
         if (document.fullscreenElement) void document.exitFullscreen();
         return;
       }
-      if (/^[1-9]$/.test(event.key)) {
-        const next = Number(event.key) - 1;
+      if (/^[0-9]$/.test(event.key)) {
+        const next = event.key === "0" ? 9 : Number(event.key) - 1;
         if (next < scene.stepCount) {
           event.preventDefault();
           setPosition(current => ({ ...current, step: next }));

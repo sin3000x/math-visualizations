@@ -8,8 +8,8 @@ export function createSceneRegistry(definitions: readonly SceneDefinition[]) {
     if (ids.has(scene.id)) throw new Error(`重复 Scene id: ${scene.id}`);
     const key = `${scene.conceptId}:${scene.order}`;
     if (orders.has(key)) throw new Error(`重复 Scene order: ${key}`);
-    if (!Number.isInteger(scene.stepCount) || scene.stepCount < 1 || scene.stepCount > 9) {
-      throw new Error(`Scene 步骤数必须为 1 到 9: ${scene.id}`);
+    if (!Number.isInteger(scene.stepCount) || scene.stepCount < 1 || scene.stepCount > 10) {
+      throw new Error(`Scene 步骤数必须为 1 到 10: ${scene.id}`);
     }
     ids.add(scene.id);
     orders.add(key);

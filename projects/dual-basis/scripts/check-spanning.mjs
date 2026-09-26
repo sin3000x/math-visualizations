@@ -13,7 +13,7 @@ try {
  await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/`);
  await page.locator('.scene-navigation button').last().click();
  let inputsBeforeExtraction;
- for (let step = 0; step < 9; step++) {
+ for (let step = 0; step < 10; step++) {
   if (step) await page.keyboard.press('ArrowRight');
   if (step === 1) {
    const timing = await page.evaluate(() => {
@@ -167,7 +167,15 @@ try {
   assert(!formulas.some(text => /a=|b=/.test(text)));
   assert.equal(await page.locator('.spanning-decomposition').count(), step >= 6 ? 1 : 0);
   assert.equal(await page.locator('.spanning-coordinate-summary').count(), step >= 7 ? 1 : 0);
-  assert.equal(await page.locator('.spanning-row-review').count(), step >= 8 ? 1 : 0);
+  if (step === 7 || step === 8) {
+   await page.waitForTimeout(2500);
+   assert.equal(await page.locator('main').getAttribute('data-step'), String(step), '等待后仍停在当前步骤，必须再按键才推进');
+  }
+  assert.equal(await page.locator('.spanning-right-panel').count(), step >= 8 ? 1 : 0);
+  if (step >= 8) {
+   assert.equal(await page.locator('.spanning-row-review').isVisible(), step === 8);
+   assert.equal(await page.locator('.spanning-vector-coordinates').isVisible(), step === 9);
+  }
   if (step >= 7) {
    assert.equal(await page.locator('.spanning-scene h1').evaluate(node => getComputedStyle(node).opacity), '0');
    assert.equal(await page.locator('.spanning-content').evaluate(node => new DOMMatrixReadOnly(getComputedStyle(node).transform).m42), -210);

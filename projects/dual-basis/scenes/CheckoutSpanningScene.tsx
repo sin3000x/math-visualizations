@@ -112,9 +112,15 @@ export function CheckoutSpanningScene({ step }: { step: number }) {
       <p><MathFormula latex="f" /> 在 <MathFormula latex="V^*" /> 中的坐标</p>
       <MathFormula latex={"[f]_{(f_1,f_2)}=\\begin{bmatrix} f({\\color{#ed6a5a}e_1}) \\\\[0.35em] f({\\color{#f4c95d}e_2}) \\end{bmatrix}"} />
     </div>}
-    {step >= 8 && <aside className="spanning-row-review" aria-label="回顾">
-      <p><MathFormula latex="f" /> 在 <MathFormula latex="V" /> 中的作用</p>
-      <MathFormula latex={"f(v)=\\begin{bmatrix}f({\\color{#ed6a5a}e_1})&f({\\color{#f4c95d}e_2})\\end{bmatrix}[v]_{(e_1,e_2)}"} />
+    {step >= 8 && <aside className="spanning-right-panel" aria-label={step === 8 ? "回顾 f 在 V 中的作用" : "v 在 V 中的坐标"}>
+      <div className="spanning-row-review" aria-hidden={step >= 9}>
+        <p><MathFormula latex="f" /> 在 <MathFormula latex="V" /> 中的作用</p>
+        <MathFormula latex={"f(v)=\\begin{bmatrix}f({\\color{#ed6a5a}e_1})&f({\\color{#f4c95d}e_2})\\end{bmatrix}[v]_{(e_1,e_2)}"} />
+      </div>
+      <div className="spanning-vector-coordinates" aria-hidden={step < 9}>
+      <p><MathFormula latex="v" /> 在 <MathFormula latex="V" /> 中的坐标</p>
+      <MathFormula latex={"[v]_{(e_1,e_2)}=\\begin{bmatrix}{\\color{#ed6a5a}f_1}(v) \\\\[0.35em] {\\color{#f4c95d}f_2}(v)\\end{bmatrix}"} />
+      </div>
     </aside>}
   </section>;
 }
