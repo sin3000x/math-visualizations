@@ -1,0 +1,80 @@
+.lagrange-basis { position: absolute; left: 126px; top: 350px; display: flex; gap: 6px; color: var(--yellow); }
+.lagrange-basis-graph { width: 152px; text-align: center; font-size: 34px; }
+.lagrange-basis-graph svg { display: block; width: 152px; height: auto; overflow: visible; }
+.lagrange-axis { fill: none; stroke: #999; stroke-width: 1.5; }
+.lagrange-guide { fill: none; stroke: #777; stroke-width: 1; stroke-dasharray: 3 4; }
+.lagrange-curve { fill: none; stroke: var(--yellow); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.lagrange-ticks { fill: var(--yellow); color: #ddd; font-size: 18px; }
+.lagrange-ticks .svg-formula { display: flex; justify-content: center; }
+
+.lagrange-scene[data-basis-focused="true"] .polynomial-examples > :last-child { visibility: hidden; }
+
+.lagrange-node { fill: #fff; stroke: #000; stroke-width: 1.5; }
+.lagrange-sampling { position: absolute; top: 294px; left: 126px; width: 468px; display: flex; align-items: baseline; justify-content: center; gap: 18px; font-size: 30px; color: #fff; }
+.lagrange-scene[data-basis-focused="true"] .polynomial-examples { transform: translateY(-180px) scale(.45); }
+.lagrange-basis { transition: left 1s, top 1s, gap 1s; }
+.lagrange-basis-graph, .lagrange-basis-graph svg { transition: width 1s, font-size 1s; }
+.lagrange-basis-graph > .math-formula { transition: transform 1s; }
+.lagrange-sampling { transition: opacity .8s; }
+.lagrange-scene[data-isolated="true"] .polynomial-spaces,
+.lagrange-scene[data-isolated="true"] .lagrange-sampling { opacity: 0; pointer-events: none; }
+.lagrange-scene[data-isolated="true"] .lagrange-basis { left: 245px; top: 200px; gap: 130px; }
+.lagrange-scene[data-isolated="true"] .lagrange-basis-graph { width: 230px; font-size: 42px; }
+.lagrange-scene[data-isolated="true"] .lagrange-basis-graph svg { width: 230px; }
+.lagrange-scene[data-sampled="true"] .lagrange-basis { top: 280px; }
+.lagrange-scene[data-weighted="true"] .lagrange-basis-graph > .math-formula { transform: translateX(65px); }
+.lagrange-polynomial { position: absolute; left: 540px; top: 20px; width: 360px; color: var(--vector-color); text-align: center; font-size: 32px; animation: lagrange-appear 1s both; }
+.lagrange-polynomial svg { width: 360px; display: block; font-size: 20px; color: #fff; }
+.lagrange-p-curve { fill: none; stroke: var(--vector-color); stroke-width: 3; }
+.lagrange-reading { position: absolute; top: 225px; width: 160px; text-align: center; font-size: 28px; color: var(--functional-color); transition: left 1s, top 1s, font-size 1s; }
+.lagrange-reading-0 { left: 540px; }
+.lagrange-reading-1 { left: 640px; }
+.lagrange-reading-2 { left: 740px; }
+.lagrange-scene[data-weighted="true"] .lagrange-reading { top: 284px; font-size: 38px; }
+.lagrange-scene[data-weighted="true"] .lagrange-reading-0 { left: 225px; }
+.lagrange-scene[data-weighted="true"] .lagrange-reading-1 { left: 585px; }
+.lagrange-scene[data-weighted="true"] .lagrange-reading-2 { left: 945px; }
+.lagrange-identity { position: absolute; top: 610px; width: 1440px; text-align: center; font-size: 40px; animation: lagrange-appear 1s both; }
+@keyframes lagrange-appear { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .lagrange-scene *, .lagrange-scene *::before { transition: none !important; animation: none !important; }
+}
+
+.lagrange-graph-equation { font-size: 42px; animation: lagrange-appear 1s both; }
+.lagrange-graph-equation > span { position: absolute; top: 280px; }
+.lagrange-equation-input { left: 95px; color: var(--vector-color); }
+.lagrange-equation-plus.first { left: 520px; }
+.lagrange-equation-plus.second { left: 880px; }
+
+.lagrange-functionals { color: var(--functional-color); transition: opacity .5s; }
+.lagrange-functionals > div { position: absolute; left: 900px; width: 360px; text-align: center; font-size: 44px; transition: left 1s, top 1s, font-size 1s, opacity .5s; }
+.lagrange-functionals > div[data-functional-index="0"] { top: 220px; }
+.lagrange-functionals > div[data-functional-index="1"] { top: 355px; }
+.lagrange-functionals > div[data-functional-index="2"] { top: 490px; }
+.lagrange-scene .polynomial-functional-examples { visibility: hidden; }
+.lagrange-functional-name { display: inline-block; max-width: 0; opacity: 0; overflow: hidden; vertical-align: bottom; margin-right: 0; transition: max-width 1s, opacity 1s, margin-right 1s; }
+.lagrange-scene[data-isolated="true"] .lagrange-functionals > div { top: 90px; font-size: 34px; }
+.lagrange-scene[data-isolated="true"] .lagrange-functionals > div[data-functional-index="0"] { left: 180px; }
+.lagrange-scene[data-isolated="true"] .lagrange-functionals > div[data-functional-index="1"] { left: 540px; }
+.lagrange-scene[data-isolated="true"] .lagrange-functionals > div[data-functional-index="2"] { left: 900px; }
+.lagrange-scene[data-isolated="true"] .lagrange-functional-name { max-width: 100px; opacity: 1; margin-right: 12px; }
+.lagrange-functionals[aria-hidden="true"] { opacity: 0; pointer-events: none; }
+.lagrange-functionals > div[data-active="false"] { opacity: .25; }
+.lagrange-probe { transition: transform 1s; }
+.lagrange-probe path { stroke: var(--functional-color); stroke-width: 1.5; stroke-dasharray: 3 3; opacity: .8; }
+.lagrange-node[data-active="true"] { stroke: var(--functional-color); stroke-width: 3; }
+.lagrange-delta-row { position: absolute; top: 535px; left: 180px; width: 1080px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 34px; animation: lagrange-appear 1s both; }
+/* Point labels use the same fixed title height and graph coordinates as the samples. */
+.lagrange-polynomial > .math-formula { height: 48px; }
+.lagrange-reading-0 { left: 480px; top: 185px; }
+.lagrange-reading-1 { left: 635px; top: 105px; }
+.lagrange-reading-2 { left: 815px; top: 150px; }
+.lagrange-basis-graph { animation: lagrange-appear .6s both; }
+.lagrange-reconstruction { position: absolute; inset: 0; width: 1440px; height: 810px; pointer-events: none; color: #fff; font-size: 24px; }
+.lagrange-addition-segment { fill: none; stroke: var(--functional-color); stroke-width: 2.5; stroke-dasharray: 4 4; }
+.lagrange-scene[data-weighted="true"] .lagrange-polynomial svg,
+.lagrange-scene[data-weighted="true"] .lagrange-reading,
+.lagrange-scene[data-weighted="true"] .lagrange-basis-graph > .math-formula,
+.lagrange-scene[data-weighted="true"] .lagrange-graph-equation { opacity: calc(1 - var(--reconstruction-move, 0)); }
+.lagrange-scene[data-weighted="true"] .lagrange-identity { animation-delay: 6s; }
+.lagrange-scene[data-weighted="true"] .lagrange-graph-equation > span { opacity: calc(1 - var(--reconstruction-move, 0)); }

@@ -6,6 +6,7 @@ import { CheckoutIndependenceScene } from "./CheckoutIndependenceScene";
 import { CheckoutSpanningScene } from "./CheckoutSpanningScene";
 import { DualBasisNotationScene } from "./DualBasisNotationScene";
 import { PolynomialDualSpaceScene } from "./PolynomialDualSpaceScene";
+import { LagrangeBasisScene } from "./LagrangeBasisScene";
 export const project = { title: "对偶基", conceptId: "dual-basis" };
 export const registry = createSceneRegistry([{
   id: "dual-basis-pairing", conceptId: project.conceptId, order: 10, route: "/",
@@ -31,4 +32,8 @@ export const registry = createSceneRegistry([{
   id: "dual-basis-polynomial-space", conceptId: project.conceptId, order: 60, route: "/",
   title: "PolynomialDualSpaceScene", summary: "突出单项式基，逐步用取值与导数读出三个系数，将读数代回多项式展开式，再表示积分泛函。",
   viewport: SCENE_VIEWPORT, stepCount: 10, component: PolynomialDualSpaceScene,
+}, {
+  id: "dual-basis-lagrange", conceptId: project.conceptId, order: 70, route: "/",
+  title: "LagrangeBasisScene", summary: "以节点 -1、0、1 的小函数图像展示拉格朗日基，逐点验证取值泛函的对偶基性质，再将多项式采样读数移为展开系数。",
+  viewport: SCENE_VIEWPORT, stepCount: 11, component: LagrangeBasisScene,
 }]);

@@ -19,7 +19,7 @@ npm run dev
 
 `@math-visualizations/scene-kit/ScenePlayer` 管理 Scene 和步骤状态、键盘和全屏；`app/App.tsx` 只选择概念。每个 Scene 切换时重新挂载，步骤变化时保留当前 Scene 的局部状态。需要重置某段动画时，在该动画组件上用 `key={step}`，不要给整个播放器加 key。
 
-注册表检查 ID 唯一、同概念顺序唯一及步骤数为 1–9；查询按顺序排序。`route` 是 Scene 元数据；本模板在 `/` 内切换状态，没有安装路由器，支持通过 `?scene=<ID>` 选择初始场景。
+注册表检查 ID 唯一、同概念顺序唯一及步骤数为正整数（新 Scene 默认保持 1–9 步）；查询按顺序排序。`route` 是 Scene 元数据；本模板在 `/` 内切换状态，没有安装路由器，支持通过 `?scene=<ID>` 选择初始场景。
 
 ## 布局与导航
 
@@ -31,7 +31,7 @@ Scene 内容可用区域为 1440×810（留白由 Scene 自己安排），不为
 
 - 右方向键 / PageDown：下一步，到末尾进入下一 Scene。
 - 左方向键 / PageUp：上一步，到开头返回上一 Scene。
-- 数字键 1–9：跳转当前 Scene 内步骤。
+- 数字键 1–9、0：跳转当前 Scene 的前十步；更后的步骤用方向键或 PageUp/PageDown 导航。
 - 输入框、选择框及可编辑内容保留原生键盘行为。
 
 公式从 `@math-visualizations/scene-kit/MathFormula` 导入 `MathFormula`；SVG 标签从 `@math-visualizations/scene-kit/SvgFormula` 导入 `SvgFormula`。公式字体与横向排版由全局样式负责。示例中的两条线段共用比例尺，长度分别为 300 和 600，对应数值 2 和 4。

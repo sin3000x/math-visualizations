@@ -12,7 +12,7 @@ test('registry rejects ambiguous ids, order and unusable step counts', () => {
   assert.throws(() => createSceneRegistry([]));
   assert.throws(() => createSceneRegistry([example, { ...example, order: 20 }]));
   assert.throws(() => createSceneRegistry([example, { ...example, id: 'two' }]));
-  for (const stepCount of [0, -1, 1.5, 11]) {
+  for (const stepCount of [0, -1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
     assert.throws(() => createSceneRegistry([{ ...example, stepCount }]));
   }
 });
@@ -43,4 +43,12 @@ test('ten-step scenes retain distinct last stops in both directions', () => {
   assert.equal(registry.getConceptScenes('example')[0].stepCount, 10);
   assert.deepEqual(moveStep([10], { sceneIndex: 0, step: 8 }, 1), { sceneIndex: 0, step: 9 });
   assert.deepEqual(moveStep([10], { sceneIndex: 0, step: 9 }, -1), { sceneIndex: 0, step: 8 });
+});
+
+test('scenes beyond numeric shortcuts remain reachable with arrows', () => {
+  const registry = createSceneRegistry([{ ...example, stepCount: 11 }]);
+  assert.equal(registry.getConceptScenes('example')[0].stepCount, 11);
+  assert.deepEqual(moveStep([11, 2], { sceneIndex: 0, step: 9 }, 1), { sceneIndex: 0, step: 10 });
+  assert.deepEqual(moveStep([11, 2], { sceneIndex: 0, step: 10 }, 1), { sceneIndex: 1, step: 0 });
+  assert.deepEqual(moveStep([11, 2], { sceneIndex: 1, step: 0 }, -1), { sceneIndex: 0, step: 10 });
 });

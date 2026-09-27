@@ -86,3 +86,5 @@ npm run check                       # 全部 workspace 的 lint、测试、构�
 - [基、坐标、行向量](./projects/basis-coordinates)：独立第三集，展示基、坐标和换基的关系。
 - [对偶基](./projects/dual-basis)：独立第四集，用两袋水果和两个收银台展示四个对偶基配对关系。
 - [KKT 条件](./projects/kkt-conditions)：历史可视化，共享依赖安装，保留原有构建方式。
+
+Scene 步骤数须为正整数。数字键 1–9 与 0 对应前十步；更后的步骤通过方向键或 PageUp/PageDown 继续导航。

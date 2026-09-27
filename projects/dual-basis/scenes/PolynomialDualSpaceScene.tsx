@@ -99,12 +99,9 @@ function IntegralCombination({ expanded }: { expanded: boolean }) {
   </span>;
 }
 
-export function PolynomialDualSpaceScene({ step }: { step: number }) {
-  const focused = step >= 2;
-  const algebra = step >= 3;
-  const substituted = step >= 7;
-  return <section className="polynomial-scene" data-basis-focused={focused} data-algebra={algebra} data-substituted={substituted} aria-label="单项式基与读取多项式系数的对偶基">
-    <div className="polynomial-spaces" aria-hidden={algebra}>
+export function PolynomialSpaces({ showDual, hidden = false }: { showDual: boolean; hidden?: boolean }) {
+  return (
+    <div className="polynomial-spaces" aria-hidden={hidden}>
       <div className="polynomial-space polynomial-vectors" data-role="polynomial-space">
         <div className="polynomial-space-label"><MathFormula latex={"V=P_2(\\mathbb R)"} /></div>
         <div className="polynomial-examples">
@@ -112,7 +109,7 @@ export function PolynomialDualSpaceScene({ step }: { step: number }) {
           <MathFormula latex={"\\cdots"} />
         </div>
       </div>
-      {step >= 1 && <div className="polynomial-space polynomial-functionals" data-role="polynomial-dual-space">
+      {showDual && <div className="polynomial-space polynomial-functionals" data-role="polynomial-dual-space">
         <div className="polynomial-space-label"><MathFormula latex={"V^*"} /></div>
         <div className="polynomial-functional-examples">
           <MathFormula latex={"p\\mapsto p(0)"} />
@@ -122,6 +119,15 @@ export function PolynomialDualSpaceScene({ step }: { step: number }) {
         </div>
       </div>}
     </div>
+  );
+}
+
+export function PolynomialDualSpaceScene({ step }: { step: number }) {
+  const focused = step >= 2;
+  const algebra = step >= 3;
+  const substituted = step >= 7;
+  return <section className="polynomial-scene" data-basis-focused={focused} data-algebra={algebra} data-substituted={substituted} aria-label="单项式基与读取多项式系数的对偶基">
+    <PolynomialSpaces showDual={step >= 1} hidden={algebra} />
     {focused && <div className="polynomial-monomial-basis" data-role="monomial-basis" aria-label="单项式基：1、x、x 的平方">
       {monomials.map((latex, index) => <div className="polynomial-basis-token" data-basis-index={index} aria-hidden={algebra && index === 0} key={latex}><MathFormula latex={latex} /></div>)}
     </div>}
