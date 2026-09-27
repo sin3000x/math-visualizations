@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
-import { animateLagrangeReconstruction } from "../lib/animation/lagrangeReconstruction";
+import { animateLagrangeScaling } from "../lib/animation/lagrangeScaling";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { SvgFormula } from "@math-visualizations/scene-kit/SvgFormula";
 import { lagrangeNodes, lagrangeValue, examplePolynomial } from "../lib/math/lagrange";
@@ -36,22 +36,14 @@ function BasisGraph({ index, activeNode }: { index: number; activeNode: number |
 }
 
 
-function Reconstruction() {
-  const ref = useRef<SVGSVGElement>(null);
+function BasisScaling() {
+  const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
-    const overlay = ref.current;
-    const scene = overlay?.closest<HTMLElement>(".lagrange-scene");
-    if (overlay && scene) return animateLagrangeReconstruction(scene, overlay);
+    const clockElement = ref.current;
+    const scene = clockElement?.closest<HTMLElement>(".lagrange-scene");
+    if (clockElement && scene) return animateLagrangeScaling(scene, clockElement);
   }, []);
-  return <svg ref={ref} className="lagrange-reconstruction" viewBox="0 0 1440 810" aria-label="缩放后的基函数逐点相加，重构多项式">
-    <g data-role="sum-axes" opacity="0">
-      <path className="lagrange-axis" d="M480,350 H960 M720,470 V140" />
-      {lagrangeNodes.map(node => <SvgFormula key={node} x={704 + 160 * node} y={365} width={32} height={40} latex={String(node)} />)}
-    </g>
-    {lagrangeNodes.map((_, i) => <path key={i} data-role="reconstruction-term" data-term-index={i} className="lagrange-curve" opacity="0" />)}
-    {[0, 1, 2, 3].map(i => <path key={i} data-role="addition-segment" className="lagrange-addition-segment" />)}
-    <g data-role="sum-nodes" opacity="0">{lagrangeNodes.map(node => <circle key={node} className="lagrange-node" cx={720 + 160 * node} cy={350 - 160 * examplePolynomial(node)} r={6} />)}</g>
-  </svg>;
+  return <div ref={ref} className="lagrange-scaling-clock" aria-hidden="true" />;
 }
 
 export function LagrangeBasisScene({ step }: { step: number }) {
@@ -92,7 +84,6 @@ export function LagrangeBasisScene({ step }: { step: number }) {
       <span className="lagrange-equation-plus first"><MathFormula latex="+" /></span>
       <span className="lagrange-equation-plus second"><MathFormula latex="+" /></span>
     </div>}
-    {step >= 10 && <Reconstruction />}
-    {step >= 10 && <div className="lagrange-identity" data-role="lagrange-identity"><MathFormula latex={"\\textcolor{#62d2c3}{p}=\\textcolor{#ba91ef}{p(-1)}\\textcolor{#f4c95d}{l_0}+\\textcolor{#ba91ef}{p(0)}\\textcolor{#f4c95d}{l_1}+\\textcolor{#ba91ef}{p(1)}\\textcolor{#f4c95d}{l_2}"} /></div>}
+    {step >= 10 && <BasisScaling />}
   </section>;
 }

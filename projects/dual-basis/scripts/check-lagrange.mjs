@@ -43,20 +43,24 @@ try {
         assert.deepEqual(motion, [['480px', '225px'], ['635px', '585px'], ['815px', '945px']]);
       }
       if (step === 10) {
-        for (const time of [0, 1500, 2500, 3500, 4500, 5500, 6500]) {
+        for (const time of [0, 1500, 2000]) {
           await page.evaluate(time => document.getAnimations().forEach(a => { a.pause(); a.currentTime = time; }), time);
           await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-          if (time === 2500) {
+          if (time === 2000) {
             const factors = await page.locator('.lagrange-basis-graph svg').evaluateAll(nodes => nodes.map(n => Number(n.dataset.scaleFactor)));
             factors.forEach((factor, i) => assert(Math.abs(factor - examplePolynomial(lagrangeNodes[i])) < 1e-12));
           }
-          if (time === 6500) {
-            const path = await page.locator('[data-role=reconstruction-term][data-term-index="2"]').getAttribute('d');
-            const points = [...path.matchAll(/[ML]([^,]+),([^ML]+)/g)].map(match => [Number(match[1]), Number(match[2])]);
-            assert.equal(points.length, 121);
-            points.forEach(([px, py]) => assert(Math.abs(py - (350 - 160 * examplePolynomial((px - 720) / 160))) < 1e-9));
+          if (time === 2000) {
+            const paths = await page.locator('.lagrange-basis-graph .lagrange-curve').evaluateAll(nodes => nodes.map(n => n.getAttribute('d')));
+            paths.forEach((path, i) => {
+              const points = [...path.matchAll(/[ML]([^,]+),([^ML]+)/g)].map(match => [Number(match[1]), Number(match[2])]);
+              assert.equal(points.length, 121);
+              points.forEach(([px, py]) => assert(Math.abs(py - (112 - 48 * examplePolynomial(lagrangeNodes[i]) * lagrangeValue(i, (px - 72) / 48))) < 1e-9));
+            });
+            assert.equal(await page.locator('[data-role=reconstruction-term]').count(), 0);
+            assert(await page.locator('.lagrange-basis-graph svg').evaluateAll(nodes => nodes.every(n => getComputedStyle(n).opacity === '1')));
           }
-          if (recording) await page.screenshot({ path: `${root}exports/qa-lagrange/reconstruction-${time}.png` });
+          if (recording) await page.screenshot({ path: `${root}exports/qa-lagrange/scaling-${time}.png` });
         }
         await page.evaluate(() => document.getAnimations().forEach(a => a.finish()));
       }
@@ -86,7 +90,7 @@ try {
       assert(await page.evaluate(() => {
         const frame = document.querySelector('.scene-frame').getBoundingClientRect();
         return document.documentElement.scrollHeight === document.documentElement.clientHeight && frame.left >= 0 && frame.right <= innerWidth + 1 && frame.bottom <= innerHeight + 1 &&
-          [...document.querySelectorAll('.polynomial-space, .polynomial-space-label, .lagrange-basis-graph, .lagrange-sampling, .lagrange-polynomial, .lagrange-reading, .lagrange-identity, .lagrange-functionals > div, .lagrange-delta-row')].every(n => {
+          [...document.querySelectorAll('.polynomial-space, .polynomial-space-label, .lagrange-basis-graph, .lagrange-sampling, .lagrange-polynomial, .lagrange-reading, .lagrange-functionals > div, .lagrange-delta-row')].every(n => {
             const b = n.getBoundingClientRect();
             return b.left >= frame.left && b.right <= frame.right && b.top >= frame.top && b.bottom <= frame.top + frame.height * .84;
           });
@@ -98,7 +102,6 @@ try {
       }
       assert.equal(await page.locator('.lagrange-polynomial').count(), step >= 9 ? 1 : 0);
       if (step >= 9) assert(await page.locator('.lagrange-reading').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).color === 'rgb(186, 145, 239)')));
-      if (step === 10) assert((await page.locator('.lagrange-identity annotation').textContent()).includes('p(-1)'));
 
       await page.screenshot({ path: `${root}exports/qa-lagrange/${name}-${step}.png` });
     }

@@ -34,7 +34,6 @@
 .lagrange-scene[data-weighted="true"] .lagrange-reading-0 { left: 225px; }
 .lagrange-scene[data-weighted="true"] .lagrange-reading-1 { left: 585px; }
 .lagrange-scene[data-weighted="true"] .lagrange-reading-2 { left: 945px; }
-.lagrange-identity { position: absolute; top: 610px; width: 1440px; text-align: center; font-size: 40px; animation: lagrange-appear 1s both; }
 @keyframes lagrange-appear { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .lagrange-scene *, .lagrange-scene *::before { transition: none !important; animation: none !important; }
@@ -70,11 +69,4 @@
 .lagrange-reading-1 { left: 635px; top: 105px; }
 .lagrange-reading-2 { left: 815px; top: 150px; }
 .lagrange-basis-graph { animation: lagrange-appear .6s both; }
-.lagrange-reconstruction { position: absolute; inset: 0; width: 1440px; height: 810px; pointer-events: none; color: #fff; font-size: 24px; }
-.lagrange-addition-segment { fill: none; stroke: var(--functional-color); stroke-width: 2.5; stroke-dasharray: 4 4; }
-.lagrange-scene[data-weighted="true"] .lagrange-polynomial svg,
-.lagrange-scene[data-weighted="true"] .lagrange-reading,
-.lagrange-scene[data-weighted="true"] .lagrange-basis-graph > .math-formula,
-.lagrange-scene[data-weighted="true"] .lagrange-graph-equation { opacity: calc(1 - var(--reconstruction-move, 0)); }
-.lagrange-scene[data-weighted="true"] .lagrange-identity { animation-delay: 6s; }
-.lagrange-scene[data-weighted="true"] .lagrange-graph-equation > span { opacity: calc(1 - var(--reconstruction-move, 0)); }
+.lagrange-scaling-clock { position: absolute; width: 0; height: 0; pointer-events: none; }
