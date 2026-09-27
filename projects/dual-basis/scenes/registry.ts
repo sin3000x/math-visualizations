@@ -29,6 +29,6 @@ export const registry = createSceneRegistry([{
   viewport: SCENE_VIEWPORT, stepCount: 9, component: DualBasisNotationScene,
 }, {
   id: "dual-basis-polynomial-space", conceptId: project.conceptId, order: 60, route: "/",
-  title: "PolynomialDualSpaceScene", summary: "用具体多项式展示次数不超过二的实多项式空间，并用取值、求导和定积分展示其对偶空间中的线性泛函。",
-  viewport: SCENE_VIEWPORT, stepCount: 2, component: PolynomialDualSpaceScene,
+  title: "PolynomialDualSpaceScene", summary: "突出单项式基，逐步用取值与导数读出三个系数，将读数代回多项式展开式，再表示积分泛函。",
+  viewport: SCENE_VIEWPORT, stepCount: 10, component: PolynomialDualSpaceScene,
 }]);
