@@ -7,6 +7,7 @@ import { CheckoutSpanningScene } from "./CheckoutSpanningScene";
 import { DualBasisNotationScene } from "./DualBasisNotationScene";
 import { PolynomialDualSpaceScene } from "./PolynomialDualSpaceScene";
 import { LagrangeBasisScene } from "./LagrangeBasisScene";
+import { DualBasisRecapScene } from "./DualBasisRecapScene";
 export const project = { title: "对偶基", conceptId: "dual-basis" };
 export const registry = createSceneRegistry([{
   id: "dual-basis-pairing", conceptId: project.conceptId, order: 10, route: "/",
@@ -36,4 +37,8 @@ export const registry = createSceneRegistry([{
   id: "dual-basis-lagrange", conceptId: project.conceptId, order: 70, route: "/",
   title: "LagrangeBasisScene", summary: "以节点 -1、0、1 的小函数图像展示拉格朗日基，逐点验证取值泛函的对偶基性质，再将多项式采样读数移为展开系数。",
   viewport: SCENE_VIEWPORT, stepCount: 11, component: LagrangeBasisScene,
+}, {
+  id: "dual-basis-recap", conceptId: project.conceptId, order: 80, route: "/",
+  title: "DualBasisRecapScene", summary: "回顾 n 个基向量及其 n 个对偶基泛函，用 1 与 0 展开配对关系，最后强调有限维前提。",
+  viewport: SCENE_VIEWPORT, stepCount: 3, component: DualBasisRecapScene,
 }]);

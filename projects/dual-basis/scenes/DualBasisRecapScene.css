@@ -1,0 +1,8 @@
+.recap-scene { position: relative; width: 1440px; height: 810px; background: #000; font-size: 48px; }
+.recap-finite { position: absolute; top: 48px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 28px; font-size: 32px; }
+.recap-finite > span { color: #f4c95d; }
+.recap-space { position: absolute; top: 155px; width: 470px; height: 260px; border: 3px solid currentColor; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+.recap-primal { left: 125px; color: var(--vector-color); }
+.recap-dual { left: 845px; color: var(--functional-color); }
+.recap-correspondence { position: absolute; left: 615px; top: 257px; width: 210px; text-align: center; font-size: 60px; }
+.recap-pairing { position: absolute; top: 460px; width: 100%; text-align: center; font-size: 34px; }
