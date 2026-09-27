@@ -31,6 +31,7 @@ try {
       assert.equal(await page.locator('main').getAttribute('data-scene-id'), expected.scene);
       assert.equal(await page.locator('main').getAttribute('data-step'), String(expected.step));
     };
+    let notationBeforeMapping;
     for (let index = 0; index < states.length; index++) {
       if (index) await page.keyboard.press('ArrowRight');
       const state = states[index];
@@ -99,7 +100,33 @@ try {
         await page.screenshot({ path: path.join(output, `${name}-independence-morph-${state.step}-midpoint.png`) });
         await page.locator('.independence-evaluation').evaluate(layer => layer.getAnimations({ subtree: true }).forEach(a => a.play()));
       }
+      if (state.scene === 'dual-basis-notation' && state.step === 5) {
+        const positions = await page.locator('.notation-scene').evaluate(scene => {
+          const animations = scene.getAnimations({ subtree: true }).filter(a => a.playState === 'running');
+          const read = () => [...scene.querySelectorAll('.notation-row > :last-child .katex-html')].map(node => {
+            const r = node.getBoundingClientRect();
+            return { x: r.x, y: r.y };
+          });
+          const frames = [0, 500, 1000].map(time => {
+            animations.forEach(a => { a.pause(); a.currentTime = time; });
+            return read();
+          });
+          animations.forEach(a => a.finish());
+          return frames;
+        });
+        positions[0].forEach((start, i) => {
+          assert(Math.abs(start.x - notationBeforeMapping[i].x) < 1 && Math.abs(start.y - notationBeforeMapping[i].y) < 1, '基的移动起点必须与上一步连续');
+          const middle = positions[1][i], end = positions[2][i];
+          assert(middle.x > Math.min(start.x, end.x) && middle.x < Math.max(start.x, end.x), '基必须经过中间位置，不能闪现');
+        });
+      }
       await page.waitForFunction(() => document.getAnimations().every(animation => animation.playState === 'finished' || animation.playState === 'idle'));
+      if (state.scene === 'dual-basis-notation' && state.step === 4) {
+        notationBeforeMapping = await page.locator('.notation-row > :last-child .katex-html').evaluateAll(nodes => nodes.map(node => {
+          const r = node.getBoundingClientRect();
+          return { x: r.x, y: r.y };
+        }));
+      }
       assert.equal(await page.locator('.katex-error').count(), 0);
       if (state.scene === 'dual-basis-coordinate-reading' && state.step >= 4) {
         assert.equal(await page.locator('[data-role=symbolic-functional]').count(), state.step === 5 ? 2 : 0);
@@ -164,6 +191,23 @@ try {
           assert.equal(await page.locator('.spanning-formula, .spanning-values').count(), 0);
         }
       }
+      if (state.scene === 'dual-basis-notation') {
+        for (const [role, firstStep] of [['notation-basis-map', 5], ['notation-isomorphism', 6], ['notation-vector-map', 7], ['notation-new-basis-map', 8]]) {
+          assert.equal(await page.locator(`[data-role=${role}]`).count(), state.step >= firstStep ? 1 : 0);
+        }
+        assert.equal(await page.locator('[data-role=notation-functionals]').count(), state.step >= 1 ? 1 : 0);
+        assert.equal(await page.locator('[data-role=notation-condition]').count(), state.step === 2 ? 1 : 0);
+        assert.equal(await page.locator('[data-role=notation-alternative]').count(), state.step === 4 ? 1 : 0);
+        assert.equal(await page.locator('.notation-map-label').count(), 0);
+        if (state.step === 8) {
+          const equals = await page.locator('.notation-expansion > :first-child').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().right));
+          assert(Math.abs(equals[0] - equals[1]) < 1, '两行展开式的等号必须对齐');
+        }
+        if (state.step >= 1) {
+          const symbols = await page.locator('.notation-symbols annotation').textContent();
+          assert.equal(symbols, state.step >= 3 ? '(v_1^*,\\ldots,v_n^*)' : '(f_1,\\ldots,f_n)');
+        }
+      }
       const bounds = await page.evaluate(() => {
         const frame = document.querySelector('.scene-frame').getBoundingClientRect();
         const within = rect => rect.left >= frame.left - 1 && rect.top >= frame.top - 1 && rect.right <= frame.right + 1 && rect.bottom <= frame.bottom + 1;
@@ -179,7 +223,7 @@ try {
           inside: frame.left >= 0 && frame.top >= 0 && frame.right <= innerWidth + 1 && frame.bottom <= innerHeight + 1,
           ratio: frame.width / frame.height,
           clipped: [...document.querySelectorAll('.scene-content .math-formula, .scene-content .fruit-bag')].filter(visible).filter(element => !within(element.getBoundingClientRect())).length,
-          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing], .independence-evaluation, .independence-conclusions, .independence-term, .spanning-evaluation, .spanning-dual, .spanning-argument, .spanning-extracted-bag, .spanning-decomposition > span, .spanning-coordinate-summary, .spanning-right-panel, .spanning-scene h1')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
+          subtitleSafe: [...document.querySelectorAll('.space-outline, .basis-bag, .probe, .checkout-reading, [data-role=pairing], .independence-evaluation, .independence-conclusions, .independence-term, .spanning-evaluation, .spanning-dual, .spanning-argument, .spanning-extracted-bag, .spanning-decomposition > span, .spanning-coordinate-summary, .spanning-right-panel, .spanning-scene h1, .notation-row, .notation-condition, .notation-alternative, .notation-basis-arrow, .notation-isomorphism, .notation-vector-map')].filter(visible).every(element => element.getBoundingClientRect().bottom <= frame.top + frame.height * .84),
           controls: document.querySelector('.scene-frame').querySelectorAll('nav, button').length,
         };
       });

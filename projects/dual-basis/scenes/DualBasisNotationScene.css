@@ -1,0 +1,28 @@
+.notation-scene { position: relative; width: 1440px; height: 810px; background: #000; font-size: 58px; }
+.notation-row { position: absolute; left: 270px; width: 900px; height: 100px; transition: left 1s, top 1s; }
+.notation-row > :first-child { position: absolute; left: 0; top: 0; transition: opacity .3s; }
+.notation-row > :last-child { position: absolute; left: 170px; top: 0; width: 730px; text-align: center; transition: left 1s, width 1s; }
+.notation-vectors { top: 135px; color: var(--vector-color); }
+.notation-functionals { top: 305px; color: var(--functional-color); }
+.notation-condition { position: absolute; top: 490px; left: 0; width: 1440px; text-align: center; font-size: 46px; }
+.notation-alternative { position: absolute; top: 490px; left: 440px; width: 730px; text-align: center; color: var(--functional-color); }
+.notation-scene[data-mapping="true"] .notation-row { top: 135px; width: 500px; }
+.notation-scene[data-mapping="true"] .notation-row > :last-child { left: 0; width: 500px; }
+.notation-scene[data-mapping="true"] .notation-vectors { left: 100px; }
+.notation-scene[data-mapping="true"] .notation-functionals { left: 840px; }
+.notation-scene[data-mapping="true"] .notation-row > .math-formula:first-child { opacity: 0; }
+.notation-basis-arrow { position: absolute; top: 135px; left: 600px; width: 240px; text-align: center; }
+.notation-isomorphism { position: absolute; top: 290px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.notation-vector-map { position: absolute; top: 455px; left: 100px; width: 1240px; display: grid; grid-template-columns: 500px 240px 500px; align-items: center; justify-items: center; font-size: 42px; }
+.notation-new-basis-map { top: 580px; }
+.notation-expansion { display: grid; grid-template-columns: 95px 285px; align-items: center; gap: 12px; }
+.notation-expansion > :first-child { justify-self: end; }
+.notation-vector-map > :first-child { color: var(--vector-color); }
+.notation-vector-map > :last-child { color: var(--functional-color); }
+.notation-basis-arrow, .notation-isomorphism, .notation-vector-map { animation: notation-reveal 1s both; }
+.notation-symbols, .notation-condition, .notation-alternative { animation: notation-reveal 1s both; }
+@keyframes notation-reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .notation-row, .notation-row > :first-child, .notation-row > :last-child { transition: none; }
+  .notation-symbols, .notation-condition, .notation-alternative, .notation-basis-arrow, .notation-isomorphism, .notation-vector-map { animation: none; }
+}
