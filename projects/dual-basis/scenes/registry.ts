@@ -5,6 +5,7 @@ import { CoordinateReadingScene } from "./CoordinateReadingScene";
 import { CheckoutIndependenceScene } from "./CheckoutIndependenceScene";
 import { CheckoutSpanningScene } from "./CheckoutSpanningScene";
 import { DualBasisNotationScene } from "./DualBasisNotationScene";
+import { PolynomialDualSpaceScene } from "./PolynomialDualSpaceScene";
 export const project = { title: "对偶基", conceptId: "dual-basis" };
 export const registry = createSceneRegistry([{
   id: "dual-basis-pairing", conceptId: project.conceptId, order: 10, route: "/",
@@ -26,4 +27,8 @@ export const registry = createSceneRegistry([{
   id: "dual-basis-notation", conceptId: project.conceptId, order: 50, route: "/",
   title: "DualBasisNotationScene", summary: "从配对条件介绍两种对偶基记号，再将基的对应线性延拓为依赖所选基的 V 到对偶空间的同构。",
   viewport: SCENE_VIEWPORT, stepCount: 9, component: DualBasisNotationScene,
+}, {
+  id: "dual-basis-polynomial-space", conceptId: project.conceptId, order: 60, route: "/",
+  title: "PolynomialDualSpaceScene", summary: "用具体多项式展示次数不超过二的实多项式空间，并用取值、求导和定积分展示其对偶空间中的线性泛函。",
+  viewport: SCENE_VIEWPORT, stepCount: 2, component: PolynomialDualSpaceScene,
 }]);
