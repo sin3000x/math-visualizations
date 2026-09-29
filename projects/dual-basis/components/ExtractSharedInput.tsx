@@ -39,6 +39,6 @@ export function ExtractSharedInput({ children }: { children: ReactNode }) {
     };
   }, []);
   return <div ref={layer} className="spanning-extraction" aria-hidden="true">
-    {[1, 2].map(index => <div key={index} className="spanning-extracted-bag" data-extraction-source={index}>{children}</div>)}
+    {[1, 2].map(index => <div key={index} data-layout-content className="spanning-extracted-bag" data-extraction-source={index}>{children}</div>)}
   </div>;
 }

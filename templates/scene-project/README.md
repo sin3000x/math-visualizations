@@ -19,7 +19,9 @@ npm run dev
 
 `@math-visualizations/scene-kit/ScenePlayer` 管理 Scene 和步骤状态、键盘和全屏；`app/App.tsx` 只选择概念。每个 Scene 切换时重新挂载，步骤变化时保留当前 Scene 的局部状态。需要重置某段动画时，在该动画组件上用 `key={step}`，不要给整个播放器加 key。
 
-注册表检查 ID 唯一、同概念顺序唯一及步骤数为正整数（新 Scene 默认保持 1–9 步）；查询按顺序排序。`route` 是 Scene 元数据；本模板在 `/` 内切换状态，没有安装路由器，支持通过 `?scene=<ID>` 选择初始场景。
+注册表检查 ID 唯一、同概念顺序唯一及步骤数为正整数（新 Scene 默认保持 1–9 步）；查询按顺序排序。`route` 是 Scene 元数据；本模板在 `/` 内切换状态，没有安装路由器，支持通过 `?scene=<ID>&step=<步骤数>` 选择初始场景和步骤。URL 的 `step` 从 1 开始，对应 Scene 组件中从 0 开始的 `step`；普通模式工具栏的“复制当前步骤链接”可直接分享当前画面。
+
+实际教学图形和公式组添加 `data-layout-content`，共享布局检查会确认对象不出界、不进入底部 16% 字幕安全区。不要给铺满画布的定位容器添加此标记。主题数学断言可放在 `scripts/check-layout.mjs` 的 `checkStep` 回调中；动画连续性断言使用 `beforeStep`，详见 [共享验收工具](../../packages/video-tools/README.md#共享布局验收)。
 
 ## 布局与导航
 
@@ -42,8 +44,12 @@ Scene 内容可用区域为 1440×810（留白由 Scene 自己安排），不为
 npm run lint
 npm run build
 npm run test -w @math-visualizations/scene-kit
+npm run check:layout
+npm run video:check
 git diff --check
 ```
+
+修改公共组件时，在仓库根目录运行 `npm run check:all`，串行完成 lint、构建、测试及所有已声明的 `check:layout` / `video:check`。只需统一视觉验收时运行根目录 `npm run check:visual`；没有声明相应脚本的项目不会自动覆盖，仍须人工检查。
 
 同时检查普通桌面、窄屏、1920×1080 全屏录制下的所有 Scene / 步骤：KaTeX 无错误、控制台无运行时错误、录屏无滚动、内容在画布内、页面底部和画布内无导航、键盘跨 Scene 往返及 Escape 正常。新增交互另按根目录 AGENTS.md 验证数学关系与边界状态。
 

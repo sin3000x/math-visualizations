@@ -106,7 +106,7 @@ type SceneDefinition = Readonly<{
 - `id` 全局唯一；
 - 同一 `conceptId` 下 `order` 唯一；
 - 查询结果始终按 `order` 排序；
-- 步骤数是 1–9 的整数。
+- 步骤数是正整数；默认每个 Scene 为 1–9 步，按教学需要可扩展，不要为了数字键范围合并必要的独立停顿。
 
 ## 4. Scene 导航与录屏
 
@@ -120,7 +120,7 @@ type SceneDefinition = Readonly<{
 - 键盘导航是必需能力：
   - `ArrowRight` / `PageDown`：下一步骤；当前 Scene 结束后进入下一 Scene。
   - `ArrowLeft` / `PageUp`：上一步骤；当前 Scene 开头时返回上一 Scene。
-  - 数字键：跳转当前 Scene 内步骤。
+  - 数字键 1–9 与 0：分别跳转当前 Scene 的第 1–9 步与第 10 步；更多步骤通过方向键或 PageUp/PageDown 继续导航。
   - `Escape`：退出录屏模式。
 - Scene 切换时应保留录屏状态；不要强制退出全屏。
 - 键盘事件不得抢占 `input`、`textarea`、`select` 或可编辑元素。
@@ -231,6 +231,7 @@ const PLOT_X = (VIEW_W - PLOT_W) / 2;
 
 ### 自动检查
 
+- 仓库根目录 `npm run check` 统一运行 lint、构建与测试；`npm run check:visual` 串行运行各 workspace 已声明的布局与录屏检查；`npm run check:all` 顺序运行二者。未声明视觉检查脚本的项目仍需按下述标准人工验收，不能把命令通过视为已覆盖全部主题。
 - lint 通过；
 - production build 通过；
 - `git diff --check` 无空白错误；

@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     "./render": "./render.mjs",
-    "./timeline": "./timeline.mjs"
+    "./timeline": "./timeline.mjs",
+    "./layout": "./layout.mjs"
   },
   "scripts": {
     "lint": "eslint .",

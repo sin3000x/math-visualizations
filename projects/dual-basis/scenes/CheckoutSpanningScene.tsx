@@ -68,13 +68,13 @@ export function CheckoutSpanningScene({ step: sceneStep }: { step: number }) {
     ? <RollingFruitBag examples={examples} sample={step >= 5 ? sample : 0} />
     : <FruitBag apples={basis === 1 ? 1 : basis === 2 ? 0 : apples} bananas={basis === 2 ? 1 : basis === 1 ? 0 : bananas} tone={basis === 1 ? "apple" : basis === 2 ? "banana" : undefined} />;
   return <section className="spanning-scene" data-stage={step} data-complete={step >= 6} data-review={step >= 7} data-sample={sample} aria-label="f1、f2 可以张成整个对偶空间">
-    <h1><span style={{ color: colors[1] }}><MathFormula latex="f_1" /></span><MathFormula latex={",\\,"} /><span style={{ color: colors[2] }}><MathFormula latex="f_2" /></span> 可以张成整个对偶空间</h1>
+    <h1 data-layout-content><span style={{ color: colors[1] }}><MathFormula latex="f_1" /></span><MathFormula latex={",\\,"} /><span style={{ color: colors[2] }}><MathFormula latex="f_2" /></span> 可以张成整个对偶空间</h1>
     <div className="spanning-content" hidden={sceneStep === 0}>
     <div ref={clock} className="spanning-clock" aria-hidden="true" />
-    <span className="spanning-equals"><MathFormula latex="=" /></span>
-    <span className="spanning-plus"><MathFormula latex="+" /></span>
-    {[1, 2].map(index => <span key={index} className={`spanning-number number-${index}`} style={{ color: colors[index], visibility: step < 2 ? "visible" : "hidden" }}><MathFormula latex={index === 1 ? "3" : "2"} /></span>)}
-    {[0, 1, 2].map(index => <div key={index} className={`spanning-evaluation evaluation-${index}`} data-evaluation={index}>
+    <span data-layout-content className="spanning-equals"><MathFormula latex="=" /></span>
+    <span data-layout-content className="spanning-plus"><MathFormula latex="+" /></span>
+    {[1, 2].map(index => <span key={index} data-layout-content className={`spanning-number number-${index}`} style={{ color: colors[index], visibility: step < 2 ? "visible" : "hidden" }}><MathFormula latex={index === 1 ? "3" : "2"} /></span>)}
+    {[0, 1, 2].map(index => <div key={index} data-layout-content className={`spanning-evaluation evaluation-${index}`} data-evaluation={index}>
       <div className="spanning-source" data-source={index} style={{ visibility: step === 0 ? "visible" : "hidden" }}>{bag(index)}</div>
       {step >= 1 && <>
         <div className="spanning-machine-reveal">
@@ -86,7 +86,7 @@ export function CheckoutSpanningScene({ step: sceneStep }: { step: number }) {
         </CheckoutPlacement>
       </>}
     </div>)}
-    {step >= 2 && [1, 2].map(index => <div key={index} className={`spanning-dual dual-${index}`} style={{ "--dual-color": colors[index] } as CSSProperties}>
+    {step >= 2 && [1, 2].map(index => <div key={index} data-layout-content className={`spanning-dual dual-${index}`} style={{ "--dual-color": colors[index] } as CSSProperties}>
       <div className="spanning-dual-machine">
       <PricedCheckout apples={index === 1 ? 1 : 0} bananas={index === 2 ? 1 : 0} color={colors[index]} scale={.4} />
       <span className="spanning-counter-name"><MathFormula latex={`f_${index}`} /></span>
@@ -95,26 +95,26 @@ export function CheckoutSpanningScene({ step: sceneStep }: { step: number }) {
     </div>)}
     <div ref={morphLayer} className="spanning-morph-layer" aria-hidden="true" />
     {grouped && <>
-      <span className="spanning-bracket opening"><MathFormula latex="(" /></span>
-      <span className="spanning-bracket closing"><MathFormula latex=")" /></span>
-      <div className="spanning-argument">{bag(0, true)}</div>
+      <span data-layout-content className="spanning-bracket opening"><MathFormula latex="(" /></span>
+      <span data-layout-content className="spanning-bracket closing"><MathFormula latex=")" /></span>
+      <div data-layout-content className="spanning-argument">{bag(0, true)}</div>
       {step === 4 && <ExtractSharedInput>{bag()}</ExtractSharedInput>}
     </>}
     {step >= 6 && <div className="spanning-decomposition" aria-label="f = f(e1) f1 + f(e2) f2">
-      <span className="decomposition-f"><MathFormula latex={"\\color{#b995eb}{f}"} /></span>
-      <span className="decomposition-equals"><MathFormula latex="=" /></span>
-      <span className="decomposition-coefficient-1"><MathFormula latex={"\\color{#b995eb}{f({\\color{#ed6a5a}e_1})}"} /></span>
-      <span className="decomposition-basis-1"><MathFormula latex={"\\color{#ed6a5a}{f_1}"} /></span>
-      <span className="decomposition-plus"><MathFormula latex="+" /></span>
-      <span className="decomposition-coefficient-2"><MathFormula latex={"\\color{#b995eb}{f({\\color{#f4c95d}e_2})}"} /></span>
-      <span className="decomposition-basis-2"><MathFormula latex={"\\color{#f4c95d}{f_2}"} /></span>
+      <span data-layout-content className="decomposition-f"><MathFormula latex={"\\color{#b995eb}{f}"} /></span>
+      <span data-layout-content className="decomposition-equals"><MathFormula latex="=" /></span>
+      <span data-layout-content className="decomposition-coefficient-1"><MathFormula latex={"\\color{#b995eb}{f({\\color{#ed6a5a}e_1})}"} /></span>
+      <span data-layout-content className="decomposition-basis-1"><MathFormula latex={"\\color{#ed6a5a}{f_1}"} /></span>
+      <span data-layout-content className="decomposition-plus"><MathFormula latex="+" /></span>
+      <span data-layout-content className="decomposition-coefficient-2"><MathFormula latex={"\\color{#b995eb}{f({\\color{#f4c95d}e_2})}"} /></span>
+      <span data-layout-content className="decomposition-basis-2"><MathFormula latex={"\\color{#f4c95d}{f_2}"} /></span>
     </div>}
     </div>
-    {step >= 7 && <div className="spanning-coordinate-summary">
+    {step >= 7 && <div data-layout-content className="spanning-coordinate-summary">
       <p><MathFormula latex="f" /> 在 <MathFormula latex="V^*" /> 中的坐标</p>
       <MathFormula latex={"[f]_{(f_1,f_2)}=\\begin{bmatrix} f({\\color{#ed6a5a}e_1}) \\\\[0.35em] f({\\color{#f4c95d}e_2}) \\end{bmatrix}"} />
     </div>}
-    {step >= 8 && <aside className="spanning-right-panel" aria-label={step === 8 ? "回顾 f 在 V 中的作用" : "v 在 V 中的坐标"}>
+    {step >= 8 && <aside data-layout-content className="spanning-right-panel" aria-label={step === 8 ? "回顾 f 在 V 中的作用" : "v 在 V 中的坐标"}>
       <div className="spanning-row-review" aria-hidden={step >= 9}>
         <p><MathFormula latex="f" /> 在 <MathFormula latex="V" /> 中的作用</p>
         <MathFormula latex={"f(v)=\\begin{bmatrix}f({\\color{#ed6a5a}e_1})&f({\\color{#f4c95d}e_2})\\end{bmatrix}[v]_{(e_1,e_2)}"} />

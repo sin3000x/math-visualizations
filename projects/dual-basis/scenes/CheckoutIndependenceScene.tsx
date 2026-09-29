@@ -19,10 +19,10 @@ export function CheckoutIndependenceScene({ step }: { step: number }) {
   const evaluated = step === 3 || step === 4 || step >= 6;
   const results = counters.map(counter => counter.apples * bag.apples + counter.bananas * bag.bananas);
   return <section className="independence-scene" aria-label="两个收银台线性无关" data-basis={basis}>
-    <h1><span style={{ color: counters[0].color }}><MathFormula latex="f_1" /></span><MathFormula latex={",\\,"} /><span style={{ color: counters[1].color }}><MathFormula latex="f_2" /></span> 线性无关</h1>
+    <h1 data-layout-content><span style={{ color: counters[0].color }}><MathFormula latex="f_1" /></span><MathFormula latex={",\\,"} /><span style={{ color: counters[1].color }}><MathFormula latex="f_2" /></span> 线性无关</h1>
     {step >= 1 && <>
       <div className="independence-equation" >
-        {counters.map((counter, index) => <div className="independence-term" data-term={index} key={counter.label} style={{ color: counter.color }}>
+        {counters.map((counter, index) => <div data-layout-content className="independence-term" data-term={index} key={counter.label} style={{ color: counter.color }}>
           {index > 0 && <span className="independence-operator"><MathFormula latex={index === 1 ? "+" : "="} /></span>}
           <div className="independence-machine-expression">
             {index < 2 && <span className="independence-coefficient"><MathFormula latex={index === 0 ? "x" : "y"} /></span>}
@@ -38,7 +38,7 @@ export function CheckoutIndependenceScene({ step }: { step: number }) {
         </div>)}
       </div>
       {evaluated && <EvaluationRow key={basis} basis={basis} results={results} />}
-      <div className="independence-conclusions">
+      <div data-layout-content className="independence-conclusions">
         {step >= 4 && <MathFormula latex="x=0" />}
         {step >= 7 && <MathFormula latex="y=0" />}
       </div>
@@ -64,7 +64,7 @@ function EvaluationRow({ basis, results }: { basis: number; results: number[] })
     return () => cleanups.forEach(cleanup => cleanup());
   }, [basis]);
   const source = (index: number) => `[data-term="${index}"] .independence-machine-expression`;
-  return <div ref={root} className="independence-evaluation" aria-label={basis === 1 ? "x 加零等于零" : "零加 y 等于零"}>
+  return <div ref={root} data-layout-content className="independence-evaluation" aria-label={basis === 1 ? "x 加零等于零" : "零加 y 等于零"}>
     {counters.map((counter, index) => <div className="independence-result-term" key={counter.label}>
       {index > 0 && <span className="independence-result-operator" data-from={`[data-term="${index}"] .independence-operator .katex`}><MathFormula latex={index === 1 ? "+" : "="} /></span>}
       <span className="independence-number" style={{ color: counter.color }} data-from={source(index)}><MathFormula latex={results[index] === 0 ? "0" : index === 0 ? "x" : "y"} /></span>

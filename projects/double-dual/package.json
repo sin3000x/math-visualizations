@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.app.json && vite build",
     "lint": "eslint .",
+    "check:layout": "npm run build && node scripts/check-layout.mjs",
     "video:debug": "node scripts/video/render.mjs --preset debug",
     "video:production": "node scripts/video/render.mjs --preset production",
     "video:check": "node scripts/video/render.mjs --preset production --check",

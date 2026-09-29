@@ -53,7 +53,7 @@ function CoefficientReading({ index, substituted }: { index: number; substituted
     if (substituted) coefficientRef.current?.getAnimations().forEach(animation => animation.cancel());
   }, [substituted]);
 
-  return <div className={`polynomial-coefficient-reading polynomial-column-${index}`} data-role="polynomial-coefficient-reading" data-coefficient-index={index}>
+  return <div data-layout-content className={`polynomial-coefficient-reading polynomial-column-${index}`} data-role="polynomial-coefficient-reading" data-coefficient-index={index}>
     <span className="polynomial-reading-content">
       <span ref={extractedRef} className="polynomial-extracted-coefficient" data-role="polynomial-extracted-coefficient" data-coefficient-index={index}><MathFormula latex={coefficientReadings[index]} /></span>
       <span className="polynomial-reading-equality" aria-hidden={substituted}>
@@ -102,15 +102,15 @@ function IntegralCombination({ expanded }: { expanded: boolean }) {
 export function PolynomialSpaces({ showDual, hidden = false }: { showDual: boolean; hidden?: boolean }) {
   return (
     <div className="polynomial-spaces" aria-hidden={hidden}>
-      <div className="polynomial-space polynomial-vectors" data-role="polynomial-space">
-        <div className="polynomial-space-label"><MathFormula latex={"V=P_2(\\mathbb R)"} /></div>
+      <div data-layout-content className="polynomial-space polynomial-vectors" data-role="polynomial-space">
+        <div data-layout-content className="polynomial-space-label"><MathFormula latex={"V=P_2(\\mathbb R)"} /></div>
         <div className="polynomial-examples">
           {["1+2x-x^2", "3-2x", "2-x+3x^2"].map(latex => <MathFormula key={latex} latex={latex} />)}
           <MathFormula latex={"\\cdots"} />
         </div>
       </div>
-      {showDual && <div className="polynomial-space polynomial-functionals" data-role="polynomial-dual-space">
-        <div className="polynomial-space-label"><MathFormula latex={"V^*"} /></div>
+      {showDual && <div data-layout-content className="polynomial-space polynomial-functionals" data-role="polynomial-dual-space">
+        <div data-layout-content className="polynomial-space-label"><MathFormula latex={"V^*"} /></div>
         <div className="polynomial-functional-examples">
           <MathFormula latex={"p\\mapsto p(0)"} />
           <MathFormula latex={"p\\mapsto p'(1)"} />
@@ -129,17 +129,17 @@ export function PolynomialDualSpaceScene({ step }: { step: number }) {
   return <section className="polynomial-scene" data-basis-focused={focused} data-algebra={algebra} data-substituted={substituted} aria-label="单项式基与读取多项式系数的对偶基">
     <PolynomialSpaces showDual={step >= 1} hidden={algebra} />
     {focused && <div className="polynomial-monomial-basis" data-role="monomial-basis" aria-label="单项式基：1、x、x 的平方">
-      {monomials.map((latex, index) => <div className="polynomial-basis-token" data-basis-index={index} aria-hidden={algebra && index === 0} key={latex}><MathFormula latex={latex} /></div>)}
+      {monomials.map((latex, index) => <div data-layout-content className="polynomial-basis-token" data-basis-index={index} aria-hidden={algebra && index === 0} key={latex}><MathFormula latex={latex} /></div>)}
     </div>}
     {algebra && <div className="polynomial-algebra" data-role="polynomial-algebra">
       <div className="polynomial-expansion" data-role="polynomial-expansion">
-        <span className="polynomial-expansion-input"><MathFormula latex="p(x)=" /></span>
-        {monomials.map((_, index) => <span className={`polynomial-symbolic-coefficient polynomial-column-${index}`} data-role="polynomial-source-coefficient" data-coefficient-index={index} key={index} aria-hidden={substituted}><MathFormula latex={`a_${index}`} /></span>)}
-        <span className="polynomial-plus polynomial-plus-1"><MathFormula latex="+" /></span>
-        <span className="polynomial-plus polynomial-plus-2"><MathFormula latex="+" /></span>
+        <span data-layout-content className="polynomial-expansion-input"><MathFormula latex="p(x)=" /></span>
+        {monomials.map((_, index) => <span data-layout-content className={`polynomial-symbolic-coefficient polynomial-column-${index}`} data-role="polynomial-source-coefficient" data-coefficient-index={index} key={index} aria-hidden={substituted}><MathFormula latex={`a_${index}`} /></span>)}
+        <span data-layout-content className="polynomial-plus polynomial-plus-1"><MathFormula latex="+" /></span>
+        <span data-layout-content className="polynomial-plus polynomial-plus-2"><MathFormula latex="+" /></span>
       </div>
       {coefficientReadings.map((_, index) => step >= index + 4 && <CoefficientReading index={index} substituted={substituted} key={index} />)}
-      {step >= 8 && <div className="polynomial-integral-expansion" data-role="polynomial-integral-expansion">
+      {step >= 8 && <div data-layout-content className="polynomial-integral-expansion" data-role="polynomial-integral-expansion">
         <MathFormula latex={"\\displaystyle\\int_0^1\\textcolor{#62d2c3}{p(x)}\\,\\mathrm{d}x"} />
         <IntegralCombination expanded={step >= 9} />
       </div>}

@@ -3,7 +3,7 @@ import type { SceneProps } from "@math-visualizations/scene-kit/types";
 
 export function ObservationScene({ step }: SceneProps) {
   return <section className="example-scene" aria-label="长度加倍的直观关系">
-    <svg viewBox="0 0 1200 440" role="img" aria-label={step === 0 ? "长度为二的线段" : "长度为二和四的线段"}>
+    <svg data-layout-content viewBox="0 0 1200 440" role="img" aria-label={step === 0 ? "长度为二的线段" : "长度为二和四的线段"}>
       <line x1="200" y1="120" x2="500" y2="120" stroke="var(--yellow)" strokeWidth="12" />
       <SvgFormula x={230} y={140} latex="2" />
       {step === 1 && <>
