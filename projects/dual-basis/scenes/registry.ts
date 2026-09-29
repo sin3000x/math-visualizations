@@ -24,7 +24,7 @@ export const registry = createSceneRegistry([{
 }, {
   id: "dual-basis-spanning", conceptId: project.conceptId, order: 40, route: "/",
   title: "CheckoutSpanningScene", summary: "从任意水果袋的基分解出发，将任意收银台写成两个对偶基收银台的线性组合，说明它们张成整个对偶空间。",
-  viewport: SCENE_VIEWPORT, stepCount: 10, component: CheckoutSpanningScene,
+  viewport: SCENE_VIEWPORT, stepCount: 11, component: CheckoutSpanningScene,
 }, {
   id: "dual-basis-notation", conceptId: project.conceptId, order: 50, route: "/",
   title: "DualBasisNotationScene", summary: "从配对条件介绍两种对偶基记号，再将基的对应线性延拓为依赖所选基的 V 到对偶空间的同构。",

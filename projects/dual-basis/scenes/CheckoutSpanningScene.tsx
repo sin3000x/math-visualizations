@@ -16,7 +16,9 @@ const CYCLE_MS = HOLD_MS + ROLL_MS;
 const ROLL_DURATION = (examples.length - 1) * CYCLE_MS + HOLD_MS;
 const colors = ["#b995eb", "#ed6a5a", "#f4c95d"];
 
-export function CheckoutSpanningScene({ step }: { step: number }) {
+export function CheckoutSpanningScene({ step: sceneStep }: { step: number }) {
+  // 开场单独停在标题；后续沿用分解动画的阶段编号。
+  const step = sceneStep - 1;
   const [cycle, setCycle] = useState({ step, sample: 0 });
   // 切步时在绘制前重置读数，重播不能先显示上次停留的最后一袋。
   if (cycle.step !== step) setCycle({ step, sample: step >= 6 ? cycle.sample : 0 });
@@ -67,7 +69,7 @@ export function CheckoutSpanningScene({ step }: { step: number }) {
     : <FruitBag apples={basis === 1 ? 1 : basis === 2 ? 0 : apples} bananas={basis === 2 ? 1 : basis === 1 ? 0 : bananas} tone={basis === 1 ? "apple" : basis === 2 ? "banana" : undefined} />;
   return <section className="spanning-scene" data-stage={step} data-complete={step >= 6} data-review={step >= 7} data-sample={sample} aria-label="f1、f2 可以张成整个对偶空间">
     <h1><span style={{ color: colors[1] }}><MathFormula latex="f_1" /></span><MathFormula latex={",\\,"} /><span style={{ color: colors[2] }}><MathFormula latex="f_2" /></span> 可以张成整个对偶空间</h1>
-    <div className="spanning-content">
+    <div className="spanning-content" hidden={sceneStep === 0}>
     <div ref={clock} className="spanning-clock" aria-hidden="true" />
     <span className="spanning-equals"><MathFormula latex="=" /></span>
     <span className="spanning-plus"><MathFormula latex="+" /></span>

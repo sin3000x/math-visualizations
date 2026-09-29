@@ -179,12 +179,13 @@ try {
         assert(contact.every(Boolean), '基袋必须落在三个托盘上');
       }
       if (state.scene === 'dual-basis-spanning') {
+        assert.equal(await page.locator('.spanning-content').isVisible(), state.step > 0);
         assert.equal(await page.locator('.evaluation-0 [data-role=internal-prices]').count(), 0, '任意 f 的屏幕留空');
-        assert.equal(await page.locator('.spanning-scene [data-role=internal-prices]').count(), state.step >= 2 ? 2 : 0);
+        assert.equal(await page.locator('.spanning-scene [data-role=internal-prices]').count(), state.step >= 3 ? 2 : 0);
         const contact = await page.locator('.spanning-scene [data-checkout-placement]').evaluateAll(bags => bags.map(bag => Math.abs(bag.getBoundingClientRect().bottom - bag.parentElement.querySelector('.checkout-tray').getBoundingClientRect().top) < 1));
         assert(contact.every(Boolean), '袋底接触托盘');
-        if (state.step === 5) assert.equal(await page.locator('.spanning-scene').getAttribute('data-sample'), '8');
-        if (state.step >= 6) {
+        if (state.step === 6) assert.equal(await page.locator('.spanning-scene').getAttribute('data-sample'), '8');
+        if (state.step >= 7) {
           assert.equal(await page.locator('.spanning-evaluation:not(.evaluation-0) [data-checkout-placement]').count(), 2, '最终保留两个基袋结算图标');
           assert(!(await page.locator('.evaluation-0 > [data-checkout-placement]').isVisible()));
           assert(!(await page.locator('.spanning-argument').isVisible()));

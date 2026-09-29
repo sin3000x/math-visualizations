@@ -15,7 +15,7 @@ try {
   await page.evaluate(() => document.fonts.ready);
   const items = [1, 2].map(index => ({ selector: String(index) }));
   for (const side of ['from', 'to']) {
-    await page.keyboard.press(side === 'from' ? '2' : '3');
+    await page.keyboard.press(side === 'from' ? '3' : '4');
     await page.waitForFunction(() => document.getAnimations().every(a => a.playState === 'finished' || a.playState === 'idle'));
     for (const [i, pair] of items.entries()) {
       const node = page.locator(side === 'from' ? `.number-${i + 1}` : `.dual-${i + 1}`);

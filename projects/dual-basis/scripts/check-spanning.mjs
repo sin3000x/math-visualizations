@@ -11,7 +11,14 @@ const browser = await chromium.launch({ channel: 'chrome', headless: true });
 try {
  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
  await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/`);
- await page.locator('.scene-navigation button').last().click();
+ await page.getByRole('button', { name: 'CheckoutSpanningScene', exact: true }).click();
+ assert(await page.locator('.spanning-scene h1').isVisible());
+ assert(!(await page.locator('.spanning-content').isVisible()));
+ await page.keyboard.press('ArrowRight');
+ assert(await page.locator('.spanning-content').isVisible());
+ await page.keyboard.press('ArrowLeft');
+ assert(!(await page.locator('.spanning-content').isVisible()));
+ await page.keyboard.press('ArrowRight');
  let inputsBeforeExtraction;
  for (let step = 0; step < 10; step++) {
   if (step) await page.keyboard.press('ArrowRight');
@@ -169,7 +176,7 @@ try {
   assert.equal(await page.locator('.spanning-coordinate-summary').count(), step >= 7 ? 1 : 0);
   if (step === 7 || step === 8) {
    await page.waitForTimeout(2500);
-   assert.equal(await page.locator('main').getAttribute('data-step'), String(step), '等待后仍停在当前步骤，必须再按键才推进');
+   assert.equal(await page.locator('main').getAttribute('data-step'), String(step + 1), '等待后仍停在当前步骤，必须再按键才推进');
   }
   assert.equal(await page.locator('.spanning-right-panel').count(), step >= 8 ? 1 : 0);
   if (step >= 8) {
@@ -183,22 +190,22 @@ try {
   }
   await page.screenshot({ path: `exports/qa-layout/spanning-${step}.png` });
  }
- await page.keyboard.press('5');
- assert(await page.locator('[data-role="bag-reel-strip"]').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).transform === 'none')), '从分解式回退时恢复第一袋位置');
  await page.keyboard.press('6');
+ assert(await page.locator('[data-role="bag-reel-strip"]').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).transform === 'none')), '从分解式回退时恢复第一袋位置');
+ await page.keyboard.press('7');
  assert.equal(await page.locator('.spanning-scene').getAttribute('data-sample'), '0', '重播第一帧直接从第一袋开始');
- await page.keyboard.press('4');
+ await page.keyboard.press('5');
  await page.waitForFunction(() => document.getAnimations().every(a => a.playState === 'finished' || a.playState === 'idle'));
- await page.keyboard.press('3');
+ await page.keyboard.press('4');
  const targets = await page.locator('.spanning-dual').evaluateAll(nodes => nodes.map(node => {
   const scene = node.closest('section').getBoundingClientRect();
   return (node.getBoundingClientRect().left - scene.left) / (scene.width / 1440);
  }));
  assert(targets.every((x, i) => Math.abs(x - [355, 920][i]) < .1), '回退后的补间终点与实际图标位置一致');
- await page.keyboard.press('4');
- assert.equal(await page.locator('.spanning-morph-layer svg').count(), 0, '快速跳步清理补间图层');
  await page.keyboard.press('5');
- await page.keyboard.press('4');
+ assert.equal(await page.locator('.spanning-morph-layer svg').count(), 0, '快速跳步清理补间图层');
+ await page.keyboard.press('6');
+ await page.keyboard.press('5');
  assert.equal(await page.locator('.spanning-extraction').count(), 0, '回退清理提取动画');
  assert(await page.locator('.dual-1 [data-role=morphed-input]').isVisible());
  assert(await page.locator('.dual-2 [data-role=morphed-input]').isVisible());
