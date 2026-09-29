@@ -102,7 +102,16 @@ export function animateContourTransform({ layer, source, target, outlines, durat
     ], { duration, easing: 'cubic-bezier(.45, 0, .55, 1)', fill: 'both' });
   });
   let disposed = false;
-  const restore = () => { svg.remove(); target.style.visibility = visibility; };
+  let frame = 0;
+  const restore = () => { cancelAnimationFrame(frame); svg.remove(); target.style.visibility = visibility; };
+  // 导出器暂停 WAAPI 后逐帧设置 currentTime，不会触发 finished。
+  // 到达终点也要交回真实 DOM，避免简化字形轮廓留在停留画面中。
+  const checkCompletion = () => {
+    if (disposed) return;
+    if (animations.every(animation => Number(animation.currentTime ?? 0) >= duration)) restore();
+    else frame = requestAnimationFrame(checkCompletion);
+  };
+  frame = requestAnimationFrame(checkCompletion);
   void Promise.all(animations.map(animation => animation.finished)).then(() => { if (!disposed) restore(); }, () => {});
   return () => { disposed = true; animations.forEach(animation => animation.cancel()); restore(); };
 }
