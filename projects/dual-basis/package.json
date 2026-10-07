@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "cover:export": "node ../../scripts/export-cover.mjs dual-basis",
     "build": "tsc --noEmit -p tsconfig.app.json && vite build",
     "lint": "eslint .",
     "video:debug": "node scripts/video/render.mjs --preset debug",

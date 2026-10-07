@@ -1,0 +1,32 @@
+.cover-preview { position:fixed; inset:0; display:grid; place-items:center; background:#000; }
+.cover-frame { position:relative; width:min(100vw, calc(100vh * 16 / 9)); aspect-ratio:16 / 9; container-type:inline-size; }
+.dual-basis-cover { --coral:#ed6a5a; --yellow:#f4c95d; position:absolute; width:1920px; height:1080px; background:#000; color:#f4efe1; transform:scale(calc(100cqw / 1920px)); transform-origin:top left; }
+.dual-basis-cover *, .dual-basis-cover *::before, .dual-basis-cover *::after { animation:none !important; transition:none !important; }
+.dual-basis-cover .cover-space { position:absolute; top:145px; width:790px; height:820px; border:14px solid; border-radius:50%; }
+.dual-basis-cover .cover-bags { left:90px; color:#fff; }
+.dual-basis-cover .cover-checkouts { right:90px; color:#fff; }
+.dual-basis-cover .cover-space-label { position:absolute; left:50%; top:-130px; transform:translateX(-50%); padding:0 25px; background:#000; font-size:164px; }
+.dual-basis-cover .cover-bag-row { position:absolute; left:245px; width:470px; height:240px; display:flex; align-items:center; gap:60px; font-size:112px; }
+.dual-basis-cover .cover-bag { width:252px; height:228px; }
+.dual-basis-cover .fruit-bag { transform:scale(1.2); transform-origin:top left; border-width:9px; border-top:0; }
+.dual-basis-cover .bag-handle { border-width:9px; border-bottom:0; }
+.dual-basis-cover .cover-probe-row { position:absolute; left:1155px; width:650px; height:338px; display:flex; align-items:center; gap:10px; font-size:112px; }
+.dual-basis-cover .cover-machine { position:relative; width:391px; height:338px; flex-shrink:0; }
+.dual-basis-cover .checkout-icon { width:100%; max-width:none; }
+
+.dual-basis-cover .cover-machine .checkout-icon { width:460px; }
+.dual-basis-cover .cover-machine .checkout-tray { display:none; }
+.dual-basis-cover .cover-space-label .katex { -webkit-text-stroke:2.5px currentColor; }
+
+/* 缩略图增强仅用于封面，保留 Scene 的组件与配色。 */
+.dual-basis-cover .cover-probe-row > .math-formula { width:120px; flex-shrink:0; }
+.dual-basis-cover .cover-bag-row > .math-formula .katex,
+.dual-basis-cover .cover-probe-row > .math-formula .katex { -webkit-text-stroke:2.5px currentColor; }
+.dual-basis-cover .checkout-screen-shell,
+.dual-basis-cover .checkout-body { stroke-width:6px; }
+.dual-basis-cover .checkout-drawer { stroke-width:3px; }
+.dual-basis-cover .probe-price { font-size:34px; gap:8px; }
+.dual-basis-cover .probe-price .katex .mord { font-family:"PingFang SC", "Noto Sans CJK SC", sans-serif; font-weight:800; }
+.dual-basis-cover .probe-price .katex { -webkit-text-stroke:.45px currentColor; }
+.dual-basis-cover .fruit-measure { font-size:30px; }
+.dual-basis-cover .fruit-measure .katex { -webkit-text-stroke:.6px currentColor; }

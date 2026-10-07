@@ -4,4 +4,8 @@ import "katex/dist/katex.min.css";
 import "./globals.css";
 import App from "./App";
 
-createRoot(document.getElementById("root")!).render(<StrictMode><App /></StrictMode>);
+const View = new URLSearchParams(location.search).has("cover")
+  ? (await import("../cover/Cover")).default
+  : App;
+
+createRoot(document.getElementById("root")!).render(<StrictMode><View /></StrictMode>);

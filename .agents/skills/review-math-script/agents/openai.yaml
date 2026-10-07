@@ -1,4 +1,4 @@
 interface:
-  display_name: "数学讲稿与动画审查"
-  short_description: "审查子项目讲稿的数学逻辑、直观表达，以及逐段讲述与动画步骤的配合"
-  default_prompt: "使用 $review-math-script 审查我提供的子项目文字稿，检查数学逻辑与表达，并结合实际 Scene 和动画步骤提出最小有效改进。"
+  display_name: "数学讲稿审查"
+  short_description: "审查子项目讲稿的数学逻辑、直观表达与 Scene 画面支撑"
+  default_prompt: "使用 $review-math-script 审查我提供的子项目文字稿，检查数学逻辑、表达与画面支撑，提出最小修改建议；不审查节奏、气口或音画时机。"

@@ -6,7 +6,7 @@ import path from "node:path";
 import { parseArgs } from "node:util";
 
 const repository = fileURLToPath(new URL("../", import.meta.url));
-const projects = ["dual-space", "double-dual", "basis-coordinates", "kkt-conditions"];
+const projects = ["dual-space", "double-dual", "basis-coordinates", "kkt-conditions", "dual-basis"];
 const { values, positionals } = parseArgs({ allowPositionals: true, options: {
   output: { type: "string" },
   browser: { type: "string", default: process.env.VIDEO_BROWSER ?? "chrome" },
