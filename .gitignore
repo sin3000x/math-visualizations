@@ -3,6 +3,7 @@
 .vscode/
 
 # Video recordings and exports
+exports/
 *.mp4
 *.mov
 *.m4v

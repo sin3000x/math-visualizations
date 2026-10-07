@@ -53,6 +53,14 @@ math-visualizations/
 
 `projects/kkt-conditions/` 也由 workspaces 统一安装。它保留 vinext/Cloudflare 构建方式及原有精确版本约束；兼容依赖复用根目录安装，有版本冲突的依赖由 npm 自动放在子目录。各项目 `dist/` 与 Vite 缓存保持独立，构建产物不提交 Git。
 
+## 资源与导出目录
+
+- `public/`：网页运行时需要的静态资源，例如人物图片和 favicon；这些文件会随网站构建发布。
+- `exports/`：视频、封面 PNG、验收截图、时间线报告和录制素材；由 Git 忽略，不随网站发布。
+- `cover/`：可编辑的 React/CSS 封面源码；通过 `npm run cover:export -w <项目名>` 生成 `exports/<项目名>-video-cover.png`。
+
+旧版封面 SVG/JPG 也保存在 `exports/`，仅供历史参考。KKT 的录屏及配套字幕位于 `projects/kkt-conditions/exports/videos/`。
+
 ## 公共代码边界
 
 - `packages/scene-kit/`：共享 `MathFormula`、`SvgFormula`、`ScenePlayer`、Scene 类型、注册表校验和步骤导航。通过包的明确子路径导入，例如 `@math-visualizations/scene-kit/MathFormula`。

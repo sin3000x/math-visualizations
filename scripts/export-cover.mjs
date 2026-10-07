@@ -24,7 +24,7 @@ for (const project of positionals.length ? positionals : projects) {
   const require = createRequire(path.join(root, "package.json"));
   const { build, preview } = await import(pathToFileURL(require.resolve("vite")).href);
   const { chromium } = require("playwright");
-  const output = values.output ? path.resolve(values.output) : path.join(root, "public", `${project}-video-cover.png`);
+  const output = values.output ? path.resolve(values.output) : path.join(root, "exports", `${project}-video-cover.png`);
   const snapshot = await mkdtemp(path.join(tmpdir(), `${project}-cover-`));
   const pending = `${output}.${process.pid}.partial.png`;
   let server;

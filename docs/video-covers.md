@@ -22,7 +22,7 @@ npm --prefix projects/basis-coordinates run cover:export
 npm run cover:export
 ```
 
-默认覆盖对应项目的 `public/<项目名>-video-cover.png`。已有 SVG 是旧版静态文件，导出脚本不读取或更新它；后续以 React 封面源码和 PNG 为准。
+默认覆盖对应项目的 `exports/<项目名>-video-cover.png`。`exports/` 由 Git 忽略，不随网站构建发布；可编辑源码仍保留在 `cover/`。已有 SVG/JPG 已迁到 `exports/`，是旧版静态文件，导出脚本不读取或更新它；后续以 React 封面源码和 PNG 为准。
 
 指定其他输出位置时，路径相对于执行命令的当前目录：
 
@@ -74,10 +74,10 @@ node scripts/export-cover.mjs basis-coordinates --output /tmp/row-vector.png
 
 ## KKT 封面
 
-`projects/kkt-conditions/cover/` 复用教学页的 `Arrow`、数学坐标变换和 KaTeX 组件，用边界上的等长反向箭头表示力平衡。为适配该项目的 vinext 服务端架构，封面采用独立 Vite 入口：`npm run cover:dev -w kkt-conditions`，导出运行 `npm run cover:export -w kkt-conditions`。成品为 `projects/kkt-conditions/public/kkt-conditions-video-cover.png`；旧 SVG/JPG 保留为历史版本。
+`projects/kkt-conditions/cover/` 复用教学页的 `Arrow`、数学坐标变换和 KaTeX 组件，用边界上的等长反向箭头表示力平衡。为适配该项目的 vinext 服务端架构，封面采用独立 Vite 入口：`npm run cover:dev -w kkt-conditions`，导出运行 `npm run cover:export -w kkt-conditions`。成品为 `projects/kkt-conditions/exports/kkt-conditions-video-cover.png`；旧 SVG/JPG 保留为历史版本。
 
 图中使用目标函数 `f=((x-1.4)^2+(y-1.4)^2)/2`、约束 `g=x+y≤0`，在原点取乘子 `λ=1.4`。两支箭头分别是下降方向与约束反力，其和为零；目标等高线与约束边界在最优点相切。
 
 ## 对偶基封面
 
-`projects/dual-basis/cover/` 复用水果袋与 Scene 的 `PricedCheckout` 组件，展示基和对应的两台收银台。运行 `npm run cover:export -w dual-basis`，输出 `projects/dual-basis/public/dual-basis-video-cover.png`。
+`projects/dual-basis/cover/` 复用水果袋与 Scene 的 `PricedCheckout` 组件，展示基和对应的两台收银台。运行 `npm run cover:export -w dual-basis`，输出 `projects/dual-basis/exports/dual-basis-video-cover.png`。
