@@ -1,0 +1,2 @@
+/* KaTeX 外层保持横排，窄容器中也不得按字符折行。 */
+.math-formula { display: inline-block; white-space: nowrap; }

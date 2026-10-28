@@ -1,48 +1,38 @@
-.scene-player.experience:not(.recording-mode) {
-  width: min(1600px, 100%);
-  height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: 8px;
-  container-type: size;
-}
+/*
+ * 播放器与教学画布的唯一样式来源。项目 globals.css 在其后加载，只覆盖主题变量或补充主题样式。
+ * 普通模式：工具栏在画布外，画布按 16:9 适配剩余空间；录屏模式：隐藏工具栏，画布铺满 16:9 视口。
+ * Scene 统一使用 1440×810 设计坐标，由 .scene-design 等比缩放，Scene 内不得再缩放。
+ */
+:root { font-family: "PingFang SC", system-ui, sans-serif; color: #eee; background: #101010; font-synthesis: none; }
+* { box-sizing: border-box; }
+html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+#root { padding: 16px; }
+button { font: inherit; cursor: pointer; }
+button:focus-visible { outline: 2px solid #62d2c3; outline-offset: 4px; }
 
-.scene-player:not(.recording-mode) .page-toolbar {
-  height: auto;
-  flex-wrap: wrap;
-}
+.scene-player { width: min(1600px, 100%); height: 100%; margin: auto; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 8px; container-type: size; }
+.scene-player .page-toolbar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: start; }
+.scene-player .page-toolbar button { padding: 8px 16px; border: 1px solid #444; border-radius: 8px; color: #ddd; background: #191919; }
+.scene-player .page-toolbar > button { flex-shrink: 0; white-space: nowrap; }
+.scene-player .scene-navigation { display: flex; flex: 1 1 600px; flex-wrap: wrap; min-width: 0; gap: 8px; }
+.scene-player .scene-navigation button { flex-shrink: 0; white-space: nowrap; }
+.scene-player .scene-navigation button[aria-current="step"] { color: #62d2c3; border-color: #62d2c3; background: #162a27; }
+@media (max-width: 600px) { .scene-player .scene-navigation button { padding: 5px 8px; font-size: 12px; } }
 
-.scene-player .scene-navigation {
-  flex: 1 1 600px;
-  flex-wrap: wrap;
-}
+.scene-player .scene-link-feedback { flex: 1 1 100%; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: #ddd; }
+.scene-player .scene-link-feedback input { flex: 1 1 320px; min-width: 0; padding: 8px; border: 1px solid #444; border-radius: 4px; font: inherit; color: inherit; background: #191919; }
 
-.scene-player:not(.recording-mode) .scene-frame {
-  width: auto;
-  height: 100%;
-  max-width: 100%;
-  max-height: calc(100cqw * 9 / 16);
-  justify-self: center;
+.scene-frame { position: relative; width: auto; height: 100%; max-width: 100%; max-height: calc(100cqw * 9 / 16); aspect-ratio: 16 / 9; justify-self: center; overflow: hidden; container-type: inline-size; background: #000; }
+.scene-design {
+  --coral: #ed6a5a; --yellow: #f4c95d; --cyan: #62d2c3; --blue: #73a7ef; --purple: #ba91ef;
+  --vector-color: #d8b875;
+  position: absolute; width: 1440px; height: 810px; transform: scale(calc(100cqw / 1440px)); transform-origin: top left; color: #f6f2e7; background: #000;
 }
+.scene-content { width: 1440px; height: 810px; }
 
-.scene-player .scene-link-feedback {
-  flex: 1 1 100%;
-  min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  color: #ddd;
-}
+.scene-player.recording-mode { position: fixed; inset: 0; z-index: 20; display: block; width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; }
+.recording-mode .page-toolbar { display: none; }
+.recording-mode .scene-frame { width: 100%; height: 100%; max-height: none; }
 
-.scene-player .scene-link-feedback input {
-  flex: 1 1 320px;
-  min-width: 0;
-  padding: 8px;
-  border: 1px solid #444;
-  border-radius: 4px;
-  font: inherit;
-  color: inherit;
-  background: #191919;
-}
+/* SvgFormula 在教学画布内居中显示。 */
+.scene-design .svg-formula { display: grid; place-items: center; height: 100%; font-size: 40px; }

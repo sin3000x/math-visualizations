@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "katex/dist/katex.min.css";
-import "./globals.css";
+import "@math-visualizations/scene-kit/ScenePlayer.css";
 import App from "./App";
 
 // 封面按需加载，封面样式不进入普通教学页面。

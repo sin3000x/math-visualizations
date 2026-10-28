@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "katex/dist/katex.min.css";
+import "@math-visualizations/scene-kit/ScenePlayer.css";
 import "./globals.css";
 import App from "./App";
 

@@ -13,7 +13,8 @@
     "./CheckoutPlacement": "./CheckoutPlacement.tsx",
     "./UnitPrices": "./UnitPrices.tsx",
     "./CheckoutIcon": "./CheckoutIcon.tsx",
-    "./FruitIcon": "./FruitIcon.tsx"
+    "./FruitIcon": "./FruitIcon.tsx",
+    "./ScenePlayer.css": "./ScenePlayer.css"
   },
   "scripts": {
     "lint": "eslint .",
