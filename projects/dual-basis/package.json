@@ -14,7 +14,7 @@
     "video:debug": "node scripts/video/render.mjs --preset debug",
     "video:production": "node scripts/video/render.mjs --preset production",
     "video:check": "node scripts/video/render.mjs --preset production --check",
-    "check:layout": "npm run build && node scripts/check-layout.mjs",
+    "check:layout": "node scripts/check-layout.mjs",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "morph:export": "npm run build && node scripts/export-morph-shapes.mjs"
   },

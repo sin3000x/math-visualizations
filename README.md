@@ -88,7 +88,7 @@ npm run check:all                   # 顺序运行 check 与 check:visual
 
 `check` 先构建再测试，KKT 的生产 HTML 测试复用本轮构建产物，避免重复构建。根目录和 KKT 子目录中的独立 `npm test` 仍会自动构建 KKT。`test:built` 仅适合已有最新构建产物时使用：它运行测试本体，并通过 `--ignore-scripts` 跳过 workspace 的 `pretest` / `posttest` 生命周期。
 
-`check:visual` 先串行运行各 workspace 的 `check:layout`，再串行运行 `video:check`，避免同一项目的构建和检查同时读写 `dist/`。未声明对应脚本的 workspace 会跳过；当前自动覆盖如下，KKT 的画面仍需人工验收：
+`check:visual` 由 `scripts/check-visual.mjs` 并行运行各 workspace 的视觉检查：每个项目内先 `check:layout` 再 `video:check`，二者都构建到临时目录，不读写 `dist/`。可用 `-- --jobs 2` 调整并行数、`-- --only linear-map` 只跑指定项目；日志写入各项目 `exports/check-visual.log`，结束时汇总通过情况。未声明对应脚本的 workspace 会跳过；当前自动覆盖如下，KKT 的画面仍需人工验收：
 
 | 检查 | 当前覆盖 |
 | --- | --- |

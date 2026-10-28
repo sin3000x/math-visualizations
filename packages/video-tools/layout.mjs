@@ -1,17 +1,22 @@
 import assert from 'node:assert/strict';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { preview } from 'vite';
+import { build, preview } from 'vite';
 
 // These callbacks stay in each topic: animation continuity before settling,
 // mathematical and object-specific assertions after settling.
 export async function checkLayout({ root, beforeStep, checkStep }) {
   const output = path.join(root, 'exports/qa-layout');
   await mkdir(output, { recursive: true });
-  const server = await preview({ root, preview: { host: '127.0.0.1', port: 0 } });
+  // 与录屏检查一致：构建到临时目录，不依赖、也不覆盖项目 dist/。
+  const snapshot = await mkdtemp(path.join(tmpdir(), 'scene-layout-'));
+  let server;
   let browser;
   try {
+    await build({ root, logLevel: 'error', build: { outDir: snapshot, emptyOutDir: true } });
+    server = await preview({ root, build: { outDir: snapshot }, preview: { host: '127.0.0.1', port: 0, open: false } });
     const url = `http://127.0.0.1:${server.httpServer.address().port}/`;
     assert((await fetch(url)).ok, '预览服务不可访问');
     browser = await chromium.launch({ channel: process.env.VIDEO_BROWSER ?? 'chrome', headless: true });
@@ -87,7 +92,8 @@ export async function checkLayout({ root, beforeStep, checkStep }) {
     }
   } finally {
     if (browser) await browser.close();
-    await new Promise(resolve => server.httpServer.close(resolve));
+    if (server) await new Promise(resolve => server.httpServer.close(resolve));
+    await rm(snapshot, { recursive: true, force: true });
   }
 }
 

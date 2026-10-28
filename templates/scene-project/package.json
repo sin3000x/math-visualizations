@@ -13,7 +13,7 @@
     "video:debug": "node scripts/video/render.mjs --preset debug",
     "video:production": "node scripts/video/render.mjs --preset production",
     "video:check": "node scripts/video/render.mjs --preset production --check",
-    "check:layout": "npm run build && node scripts/check-layout.mjs"
+    "check:layout": "node scripts/check-layout.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.0.2",

@@ -49,7 +49,7 @@ npm run video:check
 git diff --check
 ```
 
-修改公共组件时，在仓库根目录运行 `npm run check:all`，串行完成 lint、构建、测试及所有已声明的 `check:layout` / `video:check`。只需统一视觉验收时运行根目录 `npm run check:visual`；没有声明相应脚本的项目不会自动覆盖，仍须人工检查。
+修改公共组件时，在仓库根目录运行 `npm run check:all`，依次完成 lint、构建、测试，再并行运行各项目已声明的 `check:layout` / `video:check`。只需统一视觉验收时运行根目录 `npm run check:visual`；没有声明相应脚本的项目不会自动覆盖，仍须人工检查。
 
 同时检查普通桌面、窄屏、1920×1080 全屏录制下的所有 Scene / 步骤：KaTeX 无错误、控制台无运行时错误、录屏无滚动、内容在画布内、页面底部和画布内无导航、键盘跨 Scene 往返及 Escape 正常。新增交互另按根目录 AGENTS.md 验证数学关系与边界状态。
 

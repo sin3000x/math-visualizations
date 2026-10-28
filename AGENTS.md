@@ -233,7 +233,7 @@ const PLOT_X = (VIEW_W - PLOT_W) / 2;
 
 ### 自动检查
 
-- 仓库根目录 `npm run check` 统一运行 lint、构建与测试；`npm run check:visual` 串行运行各 workspace 已声明的布局与录屏检查；`npm run check:all` 顺序运行二者。未声明视觉检查脚本的项目仍需按下述标准人工验收，不能把命令通过视为已覆盖全部主题。
+- 仓库根目录 `npm run check` 统一运行 lint、构建与测试；`npm run check:visual` 并行运行各 workspace 已声明的布局与录屏检查并汇总结果；`npm run check:all` 顺序运行二者。未声明视觉检查脚本的项目仍需按下述标准人工验收，不能把命令通过视为已覆盖全部主题。
 - lint 通过；
 - production build 通过；
 - `git diff --check` 无空白错误；

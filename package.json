@@ -25,7 +25,7 @@
     "build": "npm run build --workspaces --if-present",
     "check": "npm run lint && npm run build && npm run test:built",
     "test:built": "node --test tests/*.test.mjs && npm run test --workspaces --if-present --ignore-scripts",
-    "check:visual": "npm run check:layout --workspaces --if-present && npm run video:check --workspaces --if-present",
+    "check:visual": "node scripts/check-visual.mjs",
     "check:all": "npm run check && npm run check:visual"
   }
 }
