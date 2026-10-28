@@ -1,0 +1,19 @@
+.space { position: absolute; top: 112px; height: 528px; border: 3px solid #e8e5df; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.space > .formula { position: absolute; top: -39px; background: #000; padding: 0 18px; font-size: 52px; }
+.input-space { left: 65px; width: 450px; }
+.output-space { left: 915px; width: 460px; }
+.intro-selected-bag { position: absolute; left: 185px; top: 193px; transition: top 1s ease-in-out; }
+.comparing .intro-selected-bag { top: 280px; }
+.intro-example-bag { position: absolute; top: 423px; transform: scale(.65); transform-origin: top left; }
+.intro-example-bag.bag-a { left: 132px; }.intro-example-bag.bag-b { left: 305px; }
+.intro-output { position: absolute; left: 1037px; width: 310px; transform: scale(.68); transform-origin: top left; }
+.intro-output.output-0 { top: 151px; }.intro-output.output-1 { top: 316px; }.intro-output.output-2 { top: 481px; }
+.intro-machine { position: absolute; left: 628px; display: flex; align-items: center; gap: 12px; }
+.intro-machine .formula { font-size: 30px; width: 30px; }
+.intro-machine .juicer-icon { width: 98px; height: 112px; }
+.intro-machine.machine-0 { top: 159px; }.intro-machine.machine-1 { top: 324px; }.intro-machine.machine-2 { top: 489px; }
+.intro-flow { position: absolute; inset: 0; width: 1440px; height: 810px; pointer-events: none; }
+.intro-flow path { fill: none; stroke: currentColor; stroke-width: 3; stroke-dasharray: 1; animation: intro-flow 1s ease-in-out both; }
+.mapped-output { animation: intro-output 1.3s both; }
+@keyframes intro-flow { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes intro-output { 0%, 65% { opacity: 0; } 100% { opacity: 1; } }

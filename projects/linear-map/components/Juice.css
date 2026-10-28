@@ -1,0 +1,5 @@
+.juice-set { display: flex; gap: 20px; align-items: flex-start; }
+.juice-item { width: 90px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 31px; }
+.juice-item svg { width: 90px; height: 140px; overflow: visible; }
+.juice-liquid { transition: y 1s ease-in-out, height 1s ease-in-out; }
+.juice-name { font-size: 22px; white-space: nowrap; }

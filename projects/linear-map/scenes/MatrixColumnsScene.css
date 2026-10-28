@@ -1,0 +1,10 @@
+.column-name { position: absolute; top: 115px; width: 320px; }
+.name-0 { left: 245px; }.name-1 { left: 875px; }
+.assembled .column-name { top: 170px; width: 100px; font-size: 30px; }
+.assembled .name-0 { left: 663px; }.assembled .name-1 { left: 777px; }
+.moving-column { position: absolute; top: 242px; width: 100px; transition: left 1s ease-in-out; }
+.moving-column .formula { font-size: 57px; }
+.col-0 { left: 355px; }.col-1 { left: 985px; }
+.assembled .col-0 { left: 663px; }.assembled .col-1 { left: 777px; }
+.matrix-brackets { position: absolute; left: 647px; top: 233px; width: 248px; height: 246px; border-left: 4px solid white; border-right: 4px solid white; background: linear-gradient(white,white) left top/15px 4px no-repeat, linear-gradient(white,white) left bottom/15px 4px no-repeat, linear-gradient(white,white) right top/15px 4px no-repeat, linear-gradient(white,white) right bottom/15px 4px no-repeat; }
+.matrix-equals { position: absolute; left: 482px; top: 310px; font-size: 56px; }

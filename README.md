@@ -9,9 +9,9 @@
 需要 Node.js >= 22.13，在仓库根目录执行：
 
 ```sh
-node scripts/create-project.mjs linear-map
+node scripts/create-project.mjs my-topic
 npm ci
-npm run dev -w linear-map
+npm run dev -w my-topic
 ```
 
 创建命令在 `projects/<项目名>/` 下复制 [工程模板](./templates/scene-project)，设置包名，并拒绝覆盖已有目录。自动登记到根目录 npm workspaces 并更新统一锁文件（此步需要 npm registry 或本地缓存可用），不安装依赖或启动服务。随后在根目录运行 `npm ci`。
@@ -34,6 +34,7 @@ math-visualizations/
     ├── double-dual/         # 第二集：双对偶
     ├── basis-coordinates/   # 第三集：基、坐标、行向量
     ├── dual-basis/          # 第四集：对偶基
+    ├── linear-map/          # 水果袋到三种果汁：线性映射与矩阵
     └── kkt-conditions/      # 保留 vinext/Cloudflare 构建方式
 ```
 
@@ -91,8 +92,8 @@ npm run check:all                   # 顺序运行 check 与 check:visual
 
 | 检查 | 当前覆盖 |
 | --- | --- |
-| `check:layout` | 对偶的对偶；基、坐标、行向量；对偶基；模板 |
-| `video:check` | 对偶空间；对偶的对偶；基、坐标、行向量；对偶基；模板 |
+| `check:layout` | 对偶的对偶；基、坐标、行向量；对偶基；线性映射与矩阵；模板 |
+| `video:check` | 对偶空间；对偶的对偶；基、坐标、行向量；对偶基；线性映射与矩阵；模板 |
 
 视觉检查需要本机 Chrome，输出截图与报告到各项目的 `exports/`；也可用 `npm run check:layout -w dual-basis` 或 `npm run video:check -w dual-basis` 只检查当前主题。命令通过代表自动断言通过，画面关系、遮挡与可读性仍应结合输出截图确认。
 
@@ -106,6 +107,7 @@ npm run check:all                   # 顺序运行 check 与 check:visual
 - [对偶的对偶](./projects/double-dual)：独立第二集，从测量水果袋回顾到“谁来测量收银台”的悬念。
 - [基、坐标、行向量](./projects/basis-coordinates)：独立第三集，展示基、坐标和换基的关系。
 - [对偶基](./projects/dual-basis)：独立第四集，用两袋水果和两个收银台展示四个对偶基配对关系。
+- [线性映射与矩阵](./projects/linear-map)：水果袋映到三种果汁，基的像组成矩阵的列。
 - [KKT 条件](./projects/kkt-conditions)：历史可视化，共享依赖安装，保留原有构建方式。
 
 Scene 步骤数须为正整数。数字键 1–9 与 0 对应前十步；更后的步骤通过方向键或 PageUp/PageDown 继续导航。

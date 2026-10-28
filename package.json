@@ -15,7 +15,8 @@
     "projects/basis-coordinates",
     "templates/scene-project",
     "projects/kkt-conditions",
-    "projects/dual-basis"
+    "projects/dual-basis",
+    "projects/linear-map"
   ],
   "scripts": {
     "create:project": "node scripts/create-project.mjs",

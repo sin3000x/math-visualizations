@@ -1,0 +1,3 @@
+.lesson { position: relative; width: 1440px; height: 810px; }
+.apple-color { color: var(--coral); }
+.banana-color { color: var(--yellow); }

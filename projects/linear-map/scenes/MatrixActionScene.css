@@ -1,0 +1,4 @@
+.action-bag { position: absolute; left: 130px; top: 188px; display: flex; align-items: center; gap: 55px; }
+.action-bag .formula { font-size: 36px; }
+.action-calculation { position: absolute; top: 177px; left: 715px; width: 610px; font-size: 39px; }
+.action-juice { position: absolute; left: 865px; top: 374px; }

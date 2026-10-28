@@ -1,0 +1,6 @@
+.formula { font-size: 36px; text-align: center; }
+.foot-equation { position: absolute; top: 577px; left: 100px; width: 1240px; font-size: 39px; }
+.juicer-map { display: flex; flex-direction: column; align-items: center; gap: 12px; color: #f6f2e7; }
+.juicer-icon { display: block; flex-shrink: 0; }
+.flow-arrow { display: block; width: 100%; height: 32px; }
+.map-arrow { position: absolute; top: 202px; left: 554px; width: 240px; }

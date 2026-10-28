@@ -1,0 +1,6 @@
+.basis-row { position: absolute; left: 80px; width: 1280px; height: 220px; display: grid; grid-template-columns: 65px 210px 130px 310px 360px; align-items: center; gap: 38px; }
+.row-0 { top: 90px; }.row-1 { top: 389px; }
+.basis-row > .formula { font-size: 32px; }
+.basis-map { width: 130px; gap: 8px; }
+.basis-map .juicer-icon { width: 96px; height: 110px; }
+.basis-map .flow-arrow { height: 23px; }

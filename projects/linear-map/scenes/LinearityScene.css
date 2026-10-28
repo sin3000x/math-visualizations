@@ -1,0 +1,20 @@
+.sum-source { position: absolute; top: 40px; transition: left 1s ease-in-out, opacity .2s .9s; }
+.sum-source.first { left: 365px; }.sum-source.second { left: 865px; }
+.input-plus { position: absolute; left: 699px; top: 133px; }
+.output-plus { position: absolute; left: 699px; top: 400px; }
+.vertical-map { position: absolute; left: 684px; top: 250px; width: 72px; gap: 3px; }
+.vertical-map .juicer-icon { width: 70px; height: 80px; }
+.vertical-map .flow-arrow { width: 23px; height: 23px; }
+.sum-juice { position: absolute; top: 375px; transition: left 1s ease-in-out; }
+.sum-juice.first { left: 315px; }.sum-juice.second { left: 815px; }
+.merged .sum-source { left: 615px; opacity: 0; }
+.merged .sum-juice.first { left: 565px; }
+.merged .sum-juice.second { left: 565px; opacity: 0; transition: left 1s ease-in-out, opacity .2s .8s; }
+.merged-bag { position: absolute; left: 615px; top: 40px; animation: appear-after 1s both; }
+@keyframes appear-after { 0%, 85% { opacity: 0; } 100% { opacity: 1; } }
+.scale-input { position: absolute; left: 285px; top: 236px; }
+.scale-output { position: absolute; left: 865px; top: 233px; }
+.horizontal-map { position: absolute; left: 622px; top: 225px; width: 160px; }
+.horizontal-map .juicer-icon { width: 112px; height: 128px; }
+.times-input { position: absolute; left: 352px; top: 132px; color: var(--coral); }
+.times-output { position: absolute; left: 979px; top: 132px; color: var(--coral); }
