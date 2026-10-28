@@ -1,6 +1,8 @@
 .DS_Store
 .idea/
 .vscode/
+# Claude desktop preview launcher (local only)
+.claude/launch.json
 
 # Video recordings and exports
 exports/
