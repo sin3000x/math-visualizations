@@ -1,4 +1,4 @@
-import type { SceneDefinition } from "./types.ts";
+import { SCENE_VIEWPORT, type SceneDefinition } from "./types.ts";
 
 export function createSceneRegistry(definitions: readonly SceneDefinition[]) {
   const ids = new Set<string>();
@@ -20,4 +20,14 @@ export function createSceneRegistry(definitions: readonly SceneDefinition[]) {
         .sort((a, b) => a.order - b.order);
     },
   };
+}
+
+/** 一个概念中的 Scene；conceptId、route 和 viewport 由 defineConcept 统一填写。 */
+export type ConceptSceneInput = Omit<SceneDefinition, "conceptId" | "route" | "viewport"> & Partial<Pick<SceneDefinition, "route">>;
+export type Concept = Readonly<{ title: string; conceptId: string; scenes: readonly SceneDefinition[] }>;
+
+/** 登记一个概念的全部 Scene，完成注册表校验并按 order 排序。 */
+export function defineConcept({ title, conceptId, scenes }: { title: string; conceptId: string; scenes: readonly ConceptSceneInput[] }): Concept {
+  const definitions = scenes.map(scene => ({ route: "/", ...scene, conceptId, viewport: SCENE_VIEWPORT }));
+  return { title, conceptId, scenes: createSceneRegistry(definitions).getConceptScenes(conceptId) };
 }

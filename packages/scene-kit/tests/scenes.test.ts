@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createSceneRegistry } from '@math-visualizations/scene-kit/registry';
+import { createSceneRegistry, defineConcept } from '@math-visualizations/scene-kit/registry';
 import { moveStep } from '@math-visualizations/scene-kit/navigation';
 import { SCENE_VIEWPORT, type SceneDefinition } from '@math-visualizations/scene-kit/types';
 
@@ -51,4 +51,21 @@ test('scenes beyond numeric shortcuts remain reachable with arrows', () => {
   assert.deepEqual(moveStep([11, 2], { sceneIndex: 0, step: 9 }, 1), { sceneIndex: 0, step: 10 });
   assert.deepEqual(moveStep([11, 2], { sceneIndex: 0, step: 10 }, 1), { sceneIndex: 1, step: 0 });
   assert.deepEqual(moveStep([11, 2], { sceneIndex: 1, step: 0 }, -1), { sceneIndex: 0, step: 10 });
+});
+
+test('defineConcept fills shared metadata, validates and sorts', () => {
+  const concept = defineConcept({ title: '示例', conceptId: 'example', scenes: [
+    { id: 'two', order: 20, title: 'TwoScene', summary: '第二', stepCount: 1, component: () => null },
+    { id: 'one', order: 10, title: 'OneScene', summary: '第一', stepCount: 2, component: () => null },
+  ] });
+  assert.deepEqual(concept.scenes.map(scene => scene.id), ['one', 'two']);
+  for (const scene of concept.scenes) {
+    assert.equal(scene.conceptId, 'example');
+    assert.equal(scene.route, '/');
+    assert.deepEqual(scene.viewport, SCENE_VIEWPORT);
+  }
+  assert.throws(() => defineConcept({ title: '重复', conceptId: 'x', scenes: [
+    { id: 'a', order: 10, title: 'A', summary: '', stepCount: 1, component: () => null },
+    { id: 'b', order: 10, title: 'B', summary: '', stepCount: 1, component: () => null },
+  ] }));
 });
