@@ -1,7 +1,5 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "@math-visualizations/scene-kit/ScenePlayer.css";
+import { mountConcept } from "@math-visualizations/scene-kit/mount";
 import "./globals.css";
-import App from "./App";
+import { concept } from "../scenes/registry";
 
-createRoot(document.getElementById("root")!).render(<StrictMode><App /></StrictMode>);
+await mountConcept(concept);

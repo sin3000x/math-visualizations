@@ -16,7 +16,8 @@
     "./FruitIcon": "./FruitIcon.tsx",
     "./ScenePlayer.css": "./ScenePlayer.css",
     "./FruitBag": "./FruitBag.tsx",
-    "./FruitBag.css": "./FruitBag.css"
+    "./FruitBag.css": "./FruitBag.css",
+    "./mount": "./mount.tsx"
   },
   "scripts": {
     "lint": "eslint .",
@@ -27,13 +28,15 @@
     "katex": "^0.18.4"
   },
   "peerDependencies": {
-    "react": "19.2.6"
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
     "@math-visualizations/config": "0.1.0",
     "@types/react": "19.2.14",
     "eslint": "9.39.4",
     "typescript": "5.9.3",
-    "@types/node": "22.19.19"
+    "@types/node": "22.19.19",
+    "@types/react-dom": "19.2.3"
   }
 }

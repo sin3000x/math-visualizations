@@ -17,7 +17,7 @@ npm run dev
 3. 替换 `index.html` 的网页标题及描述，删除两个示例组件及对应注册项。
 4. 数学计算放在 `lib/math/`，坐标变换放在 `lib/geometry/`，按需要创建目录。
 
-`@math-visualizations/scene-kit/ScenePlayer` 管理 Scene 和步骤状态、键盘和全屏；`app/App.tsx` 只选择概念。每个 Scene 切换时重新挂载，步骤变化时保留当前 Scene 的局部状态。需要重置某段动画时，在该动画组件上用 `key={step}`，不要给整个播放器加 key。
+`@math-visualizations/scene-kit/ScenePlayer` 管理 Scene 和步骤状态、键盘和全屏；`app/main.tsx` 只调用 `mountConcept(concept)` 挂载注册表中的概念，并在其后导入项目 `globals.css`。每个 Scene 切换时重新挂载，步骤变化时保留当前 Scene 的局部状态。需要重置某段动画时，在该动画组件上用 `key={step}`，不要给整个播放器加 key。
 
 注册表检查 ID 唯一、同概念顺序唯一及步骤数为正整数（新 Scene 默认保持 1–9 步）；查询按顺序排序。`route` 是 Scene 元数据；本模板在 `/` 内切换状态，没有安装路由器，支持通过 `?scene=<ID>&step=<步骤数>` 选择初始场景和步骤。URL 的 `step` 从 1 开始，对应 Scene 组件中从 0 开始的 `step`；普通模式工具栏的“复制当前步骤链接”可直接分享当前画面。
 

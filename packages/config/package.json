@@ -5,10 +5,11 @@
   "type": "module",
   "exports": {
     "./eslint": "./eslint.js",
-    "./tsconfig": "./tsconfig.json"
+    "./tsconfig": "./tsconfig.json",
+    "./vite": "./vite.js"
   },
   "scripts": {
-    "lint": "node --check eslint.js"
+    "lint": "node --check eslint.js && node --check vite.js"
   },
   "dependencies": {
     "@eslint/js": "9.39.4",
@@ -19,6 +20,8 @@
   },
   "peerDependencies": {
     "eslint": "9.39.4",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite": "^8.2.2",
+    "@vitejs/plugin-react": "6.0.2"
   }
 }

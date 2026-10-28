@@ -100,7 +100,7 @@ type SceneDefinition = Readonly<{
 - `summary`：用中文登记一句话教学目标，默认不渲染到画面。
 - `viewport`：固定记录 1920×1080 的设计契约。
 
-新项目在 `scenes/registry.ts` 用 scene-kit 的 `defineConcept({ title, conceptId, scenes })` 登记 `stepCount`、`component` 与以上元数据；`conceptId`、`route` 和 `viewport` 由它统一填写，根目录测试校验每个 `title` 与组件源文件名一致。`ScenePlayer` 统一管理导航与录屏，Scene 只接收 `step` 并负责教学内容。不得在 App 中另建按索引对应的步骤数数组或组件条件链。模板默认每个 Scene 为 1–9 步，对应数字键直接跳转。
+新项目在 `scenes/registry.ts` 用 scene-kit 的 `defineConcept({ title, conceptId, scenes })` 登记 `stepCount`、`component` 与以上元数据；`conceptId`、`route` 和 `viewport` 由它统一填写，根目录测试校验每个 `title` 与组件源文件名一致。`ScenePlayer` 统一管理导航与录屏，Scene 只接收 `step` 并负责教学内容。入口 `app/main.tsx` 只调用 `mountConcept(concept, { cover })`；不得另建按索引对应的步骤数数组或组件条件链。项目 `vite.config.ts` 复用 `@math-visualizations/config/vite`。模板默认每个 Scene 为 1–9 步，对应数字键直接跳转。
 
 注册表必须检查：
 
