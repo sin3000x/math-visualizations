@@ -1,6 +1,6 @@
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { PricedCheckout } from "../components/PricedCheckout";
-import { FruitBag } from "../components/FruitBag";
+import { FruitBag } from "@math-visualizations/scene-kit/FruitBag";
 import { basis, probes } from "../lib/math/bags";
 import "./cover.css";
 

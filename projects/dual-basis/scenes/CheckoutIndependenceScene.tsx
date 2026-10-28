@@ -1,7 +1,7 @@
 import { PricedCheckout } from "../components/PricedCheckout";
 import { useLayoutEffect, useRef } from "react";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
-import { FruitBag } from "../components/FruitBag";
+import { FruitBag } from "@math-visualizations/scene-kit/FruitBag";
 import { animateContourTransform, type OutlinePair } from "../lib/animation/contourTransform";
 import independenceShapes from "../lib/animation/independence-shapes.json";
 import "./CheckoutIndependenceScene.css";

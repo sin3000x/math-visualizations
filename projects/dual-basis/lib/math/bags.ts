@@ -11,6 +11,3 @@ export const pairings = [
   { bag: 0, probe: 0 }, { bag: 1, probe: 0 },
   { bag: 0, probe: 1 }, { bag: 1, probe: 1 },
 ] as const;
-export function formatQuantity(value: number): string {
-  return Object.is(value, -0) ? "0" : String(value);
-}

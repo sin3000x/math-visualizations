@@ -3,7 +3,7 @@ import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacement";
 import { ExtractSharedInput } from "../components/ExtractSharedInput";
 import { RollingFruitBag } from "../components/RollingFruitBag";
-import { FruitBag } from "../components/FruitBag";
+import { FruitBag } from "@math-visualizations/scene-kit/FruitBag";
 import { PricedCheckout } from "../components/PricedCheckout";
 import { animateContourTransform, type OutlinePair } from "../lib/animation/contourTransform";
 import spanningShapes from "../lib/animation/spanning-shapes.json";

@@ -1,4 +1,4 @@
-import { FruitBag } from "./FruitBag";
+import { FruitBag } from "@math-visualizations/scene-kit/FruitBag";
 
 export function RollingFruitBag({ examples, sample }: { examples: readonly (readonly [number, number])[]; sample: number }) {
   const [apples, bananas] = examples[sample];

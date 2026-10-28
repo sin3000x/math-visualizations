@@ -1,6 +1,7 @@
-.fruit-bag { --bag-color: var(--vector-color); position: relative; width: 210px; height: 190px; padding: 48px 24px 22px; border: 4px solid var(--bag-color); border-top: 0; border-radius: 24px 24px 55px 55px; background: color-mix(in srgb, var(--bag-color) 6%, transparent); }
-.fruit-bag[data-tone="apple"] { --bag-color: var(--coral); }
-.fruit-bag[data-tone="banana"] { --bag-color: var(--yellow); }
+/* 共享水果袋。颜色变量在教学画布外（例如封面）也有默认值。 */
+.fruit-bag { --bag-color: var(--vector-color, #d8b875); position: relative; width: 210px; height: 190px; padding: 48px 24px 22px; border: 4px solid var(--bag-color); border-top: 0; border-radius: 24px 24px 55px 55px; background: color-mix(in srgb, var(--bag-color) 8%, transparent); }
+.fruit-bag[data-tone="apple"] { --bag-color: var(--coral, #ed6a5a); }
+.fruit-bag[data-tone="banana"] { --bag-color: var(--yellow, #f4c95d); }
 .fruit-bag.compact { transform: scale(.78); margin: -23px -24px -16px; }
 .bag-handle { position: absolute; width: 88px; height: 42px; left: 50%; top: -19px; transform: translateX(-50%); border: 5px solid var(--bag-color); border-bottom: 0; border-radius: 60px 60px 0 0; }
 .bag-fruit-list { height: 100%; display: grid; align-content: center; justify-content: center; gap: 8px; }
@@ -8,18 +9,17 @@
 .fruit-measure .math-formula { justify-self: start; text-align: left; }
 .fruit { width: 50px; height: 50px; justify-self: center; filter: drop-shadow(0 3px 2px rgba(0,0,0,.25)); }
 .fruit svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.apple .fruit-body { fill: var(--coral); stroke: #a93e35; stroke-width: 2; }
+.apple .fruit-body { fill: var(--coral, #ed6a5a); stroke: #a93e35; stroke-width: 2; }
 .apple .fruit-leaf { fill: #78b779; stroke: #416e43; stroke-width: 2; }
 .apple .fruit-stem { fill: none; stroke: #8b6338; stroke-width: 4; stroke-linecap: round; }
 .banana { width: 56px; transform: rotate(4deg); }
-.banana .fruit-body { fill: var(--yellow); stroke: #c48d2f; stroke-width: 2; }
+.banana .fruit-body { fill: var(--yellow, #f4c95d); stroke: #c48d2f; stroke-width: 2; }
 .banana .banana-inner { fill: #f7de83; opacity: .72; }
 .banana .banana-tip, .banana .banana-end { fill: #8c6530; }
 .fruit-shine { fill: none; stroke: rgba(255,255,255,.62); stroke-width: 3; stroke-linecap: round; }
 
-
-/* 正负号只改变水果分量的绘制，不改变袋子的配色。 */
-.negative-fruit.apple { color: var(--coral); }
-.negative-fruit.banana { color: var(--yellow); }
+/* 负分量只改变水果的绘制，不改变袋子配色。 */
+.negative-fruit.apple { color: var(--coral, #ed6a5a); }
+.negative-fruit.banana { color: var(--yellow, #f4c95d); }
 .fruit.negative-fruit svg * { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-dasharray: 5 4; }
 .negative-fruit .fruit-shine, .negative-fruit .banana-inner { display: none; }

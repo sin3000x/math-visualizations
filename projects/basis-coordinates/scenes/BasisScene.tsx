@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
-import { FruitBag } from "../components/FruitBag";
+import { FruitBag } from "@math-visualizations/scene-kit/FruitBag";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { basis } from "../lib/math/bags";
 import type { SceneProps } from "@math-visualizations/scene-kit/types";

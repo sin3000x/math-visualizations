@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import { CheckoutIcon } from "../components/CheckoutIcon";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import type { SceneProps } from "@math-visualizations/scene-kit/types";
-import "../components/FruitBag.css";
+import "@math-visualizations/scene-kit/FruitBag.css";
 import "./CheckoutBasisScene.css";
 import "./GeneralBasisScene.css";
 

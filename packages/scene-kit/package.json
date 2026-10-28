@@ -14,7 +14,9 @@
     "./UnitPrices": "./UnitPrices.tsx",
     "./CheckoutIcon": "./CheckoutIcon.tsx",
     "./FruitIcon": "./FruitIcon.tsx",
-    "./ScenePlayer.css": "./ScenePlayer.css"
+    "./ScenePlayer.css": "./ScenePlayer.css",
+    "./FruitBag": "./FruitBag.tsx",
+    "./FruitBag.css": "./FruitBag.css"
   },
   "scripts": {
     "lint": "eslint .",

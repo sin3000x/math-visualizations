@@ -2,7 +2,7 @@ import { CheckoutIcon } from "../components/CheckoutIcon";
 import { UnitPrices } from "../components/UnitPrices";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import { basisPrices } from "../lib/math/prices";
-import "../components/FruitBag.css";
+import "@math-visualizations/scene-kit/FruitBag.css";
 import "./cover.css";
 
 export default function Cover() {

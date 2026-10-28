@@ -3,7 +3,7 @@ import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacem
 import { PricedCheckout } from "../components/PricedCheckout";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import type { SceneProps } from "@math-visualizations/scene-kit/types";
-import { FruitBag } from "../components/FruitBag";
+import { FruitBag } from "@math-visualizations/scene-kit/FruitBag";
 import { basis, evaluate, probes } from "../lib/math/bags";
 import { animateContourTransform, type OutlinePair } from "../lib/animation/contourTransform";
 import coordinateShapes from "../lib/animation/coordinate-shapes.json";

@@ -1,6 +1,6 @@
 import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacement";
 import { CheckoutIcon } from "../components/CheckoutIcon";
-import { FruitBag } from "../components/FruitBag";
+import { FruitBag } from "@math-visualizations/scene-kit/FruitBag";
 import { UnitPrices } from "../components/UnitPrices";
 import { basisPrices as prices } from "../lib/math/prices";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";

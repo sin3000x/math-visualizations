@@ -2,7 +2,7 @@ import { CheckoutPlacement } from "@math-visualizations/scene-kit/CheckoutPlacem
 import type { CSSProperties } from "react";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
 import type { SceneProps } from "@math-visualizations/scene-kit/types";
-import { FruitBag } from "../components/FruitBag";
+import { FruitBag } from "@math-visualizations/scene-kit/FruitBag";
 import { PricedCheckout } from "../components/PricedCheckout";
 import { basis, probes, pairings, evaluate } from "../lib/math/bags";
 import "./DualBasisScene.css";
