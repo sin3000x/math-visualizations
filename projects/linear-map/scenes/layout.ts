@@ -39,14 +39,20 @@ export const machineArrows = (className?: string): Arrow[] => MACHINES.list.flat
   { id: `machine-out-${i}`, from: [760, y], to: [1022, y], delay: FLOW.out, color, className },
 ]);
 
+/**
+ * 等式从左读到右：左边是运算对象，右边一列 C 是合并或缩放后的结果。
+ * 加法 P1 + P2 = C 与数乘 0.5 × P = C 宽度不同，各自水平居中；垂直方向在底部字幕安全区以上居中。
+ */
 export const LIN = {
-  L: 330, R1: 900, R2: 1190, bagY: 125, juicerY: 300, trayY: 530, equalsY: 493, equalsX: 615,
+  P1: 270, P2: 630, C: 1170, plusX: 450, equalsX: 900,
+  scale: { P: 522, C: 1062, timesX: 327, equalsX: 792 },
+  bagY: 125, juicerY: 300, trayY: 530, equalsY: 493,
   trayScale: .9, bagScale: .72, juicerScale: 100 / 120,
 };
 /** 竖直一列：袋子 → 榨汁机 → 托盘。 */
 export const columnArrows = (id: string, x: number, className?: string): Arrow[] => [
-  { id: `${id}-in`, from: [x, 200], to: [x, 240], delay: 0, className },
-  { id: `${id}-out`, from: [x, 362], to: [x, 430], delay: FLOW.out, className },
+  { id: `${id}-in`, from: [x, LIN.bagY + 75], to: [x, LIN.juicerY - 60], delay: 0, className },
+  { id: `${id}-out`, from: [x, LIN.juicerY + 62], to: [x, LIN.trayY - 100], delay: FLOW.out, className },
 ];
 
 export const BASIS = {

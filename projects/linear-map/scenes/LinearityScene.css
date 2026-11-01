@@ -1,7 +1,1 @@
 .linearity .emerge-down { --from-x: 0px; --from-y: -26px; animation: emerge .5s ease-out var(--delay) both; }
-
-/* 数乘一袋水果：原袋轻轻收缩并淡出，同一位置出现缩放后的袋子。 */
-.linearity .bag-scale-out { animation: bag-scale-out .9s ease-in-out both; }
-.linearity .bag-scale-in { animation: bag-scale-in .9s ease-in-out both; }
-@keyframes bag-scale-out { 0% { transform: none; opacity: 1; } 60% { transform: scale(.88); opacity: 1; } 100% { transform: scale(.88); opacity: 0; } }
-@keyframes bag-scale-in { 0%, 55% { transform: scale(.88); opacity: 0; } 100% { transform: none; opacity: 1; } }
