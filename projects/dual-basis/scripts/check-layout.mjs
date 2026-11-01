@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url';
 import { checkLayout } from '@math-visualizations/video-tools/layout';
 import path from 'node:path';
 
-let notationBeforeMapping;
+// 按尺寸记录：各尺寸并行检查。
+const notationBeforeMapping = {};
 
 await checkLayout({
   root: fileURLToPath(new URL('../', import.meta.url)),
@@ -87,15 +88,15 @@ await checkLayout({
         return frames;
       });
       positions[0].forEach((start, i) => {
-        assert(Math.abs(start.x - notationBeforeMapping[i].x) < 1 && Math.abs(start.y - notationBeforeMapping[i].y) < 1, '基的移动起点必须与上一步连续');
+        assert(Math.abs(start.x - notationBeforeMapping[name][i].x) < 1 && Math.abs(start.y - notationBeforeMapping[name][i].y) < 1, '基的移动起点必须与上一步连续');
         const middle = positions[1][i], end = positions[2][i];
         assert(middle.x > Math.min(start.x, end.x) && middle.x < Math.max(start.x, end.x), '基必须经过中间位置，不能闪现');
       });
     }
   },
-  checkStep: async ({ page, state }) => {
+  checkStep: async ({ page, state, name }) => {
     if (state.scene === 'dual-basis-notation' && state.step === 4) {
-      notationBeforeMapping = await page.locator('.notation-row > :last-child .katex-html').evaluateAll(nodes => nodes.map(node => {
+      notationBeforeMapping[name] = await page.locator('.notation-row > :last-child .katex-html').evaluateAll(nodes => nodes.map(node => {
         const r = node.getBoundingClientRect();
         return { x: r.x, y: r.y };
       }));

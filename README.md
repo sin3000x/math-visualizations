@@ -95,7 +95,7 @@ npm run check:all                   # 顺序运行 check 与 check:visual
 | `check:layout` | 对偶的对偶；基、坐标、行向量；对偶基；线性映射与矩阵；模板 |
 | `video:check` | 对偶空间；对偶的对偶；基、坐标、行向量；对偶基；线性映射与矩阵；模板 |
 
-视觉检查需要本机 Chrome，输出截图与报告到各项目的 `exports/`；也可用 `npm run check:layout -w dual-basis` 或 `npm run video:check -w dual-basis` 只检查当前主题。命令通过代表自动断言通过，画面关系、遮挡与可读性仍应结合输出截图确认。
+视觉检查需要本机 Chrome，输出截图与报告到各项目的 `exports/`；也可用 `npm run check:layout -w dual-basis` 或 `npm run video:check -w dual-basis` 只检查当前主题；布局检查还可加 `-- --scene <id> --mode desktop` 只查某几个 Scene、某种尺寸（`--mode` 可选 desktop、narrow、recording）。布局检查把每一步的动画直接推到结尾再断言，三种尺寸并行运行；回调 `beforeStep` 在推进之前执行，用于检查动画中途的状态。命令通过代表自动断言通过，画面关系、遮挡与可读性仍应结合输出截图确认。
 
 进入子项目后仍可执行 `npm run dev` 等命令。通用 Scene 契约测试位于 `packages/scene-kit/tests/`，录屏测试位于 `packages/video-tools/tests/`；根目录 `npm test` 统一运行这些测试与各主题的数学测试。无主题专属测试的项目不重复声明 `test` 脚本。新增依赖用 `npm install <包名> -w <项目名>`，将项目声明和根锁文件一起提交。不要为 workspace 单独生成锁文件。首次从旧结构迁移时，可先删除三个主题及模板内旧的 `node_modules`，再在根目录执行 `npm ci`。KKT 迁移时也由根目录 `npm ci` 重建依赖，不保留旧的 `.pnpm` 安装目录。
 
