@@ -1,0 +1,3 @@
+.matrix-vector-scene .weight { color: #f6f2e7; }
+.matrix-vector-scene .weight-fly { animation: weight-fly .9s ease-in-out both; }
+@keyframes weight-fly { from { transform: translate(var(--fx), var(--fy)); } }

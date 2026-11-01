@@ -55,15 +55,36 @@ export const columnArrows = (id: string, x: number, className?: string): Arrow[]
   { id: `${id}-out`, from: [x, LIN.juicerY + 62], to: [x, LIN.trayY - 100], delay: FLOW.out, className },
 ];
 
+/**
+ * 上方一行并排两张映射：基袋 → T → 托盘。下方两行是一个等式，从左读到右：
+ * 上行 (1, 0.5) = 1 × 苹果基袋 + 0.5 × 香蕉基袋，下行把每只袋子换成它的托盘，按列与上行对应。
+ * 最后在一般的一袋与它的托盘之间放上 T，对准上下两个对象。上下两部分之间用一条细线分开。
+ */
 export const BASIS = {
-  rowY: [210, 470], bagX: 120, bagScale: .62, juicerX: 320, juicerScale: .75, trayX: 550, trayScale: .68,
-  target: [1100, 110] as const, targetScale: .62,
-  /** (1, 0.5) 拆成 1 袋苹果基袋与 0.5 袋香蕉基袋。 */
-  parts: [{ x: 1000, bag: [1, 0] as Bag, tone: "apple" as const }, { x: 1230, bag: [0, .5] as Bag, tone: "banana" as const }],
-  partY: 110, partScale: .5,
-  appleCopy: [1000, 500] as const, bananaCopy: [1230, 300] as const, copyScale: .68,
+  rowY: 105, bagX: [154, 855], bagScale: .62, juicerX: [344, 1045], juicerScale: .75, trayX: [560, 1260], trayScale: .68,
+  eq: {
+    bagY: 300, trayY: 602, scale: .62,
+    resultX: 343, equalsX: 467, coefX: [552, 930], termX: [694, 1099], plusX: 818,
+    juicerY: 450, juicerScale: .6,
+  },
+  divider: { y: 208, left: 90, right: 1350 },
 };
 export const basisArrows = (i: number, className?: string): Arrow[] => [
-  { id: `basis-in-${i}`, from: [192, BASIS.rowY[i]], to: [270, BASIS.rowY[i]], delay: 0, className },
-  { id: `basis-out-${i}`, from: [372, BASIS.rowY[i]], to: [448, BASIS.rowY[i]], delay: FLOW.out, className },
+  { id: `basis-in-${i}`, from: [BASIS.bagX[i] + 75, BASIS.rowY], to: [BASIS.juicerX[i] - 55, BASIS.rowY], delay: 0, className },
+  { id: `basis-out-${i}`, from: [BASIS.juicerX[i] + 55, BASIS.rowY], to: [BASIS.trayX[i] - 101, BASIS.rowY], delay: FLOW.out, className },
 ];
+/** 一般的一袋 → T → 它的托盘，竖直对准。 */
+export const equationArrows = (className?: string): Arrow[] => {
+  const { bagY, trayY, resultX: x, juicerY: y } = BASIS.eq;
+  return [
+    { id: "eq-in", from: [x, bagY + 67], to: [x, y - 47], delay: 0, className },
+    { id: "eq-out", from: [x, y + 47], to: [x, trayY - 72], delay: FLOW.out, className },
+  ];
+};
+
+/** MatrixVectorScene 中矩阵的位置：在安全区以上居中。 */
+export const MATRIX_END = {
+  columnX: [557, 707], rowY: [245, 340, 435], numberSize: 54,
+  /** 方括号相对列与行的外扩。 */
+  padX: 60, padY: 50,
+};

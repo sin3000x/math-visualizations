@@ -1,6 +1,7 @@
 .place { position: absolute; translate: -50% -50%; transition: opacity .3s ease; }
 .place-inner { width: max-content; }
 .operator { color: #c9c7bd; line-height: 1; }
+.divider { position: absolute; height: 2px; background: #3a3833; }
 
 .space-oval { position: absolute; display: flex; justify-content: center; border: 3px solid #e8e5df; border-radius: 50%; }
 .space-name { position: absolute; top: -38px; padding: 0 18px; background: #000; font-size: 54px; line-height: 1.2; }

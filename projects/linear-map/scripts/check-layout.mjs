@@ -8,24 +8,29 @@ const expectedJuice = {
   'juice-map': ['2,0,3|4,1,2|0,3,1|6,6,2', '', '5,4,3', '5,4,3|5,7,4', '5,4,3|5,7,4|6,3,3'],
   machines: ['5,4,3|5,7,4|6,3,3', '', '5,4,3|3,5,2|4,2,6'],
   linearity: ['5,4,3|3,5,2|4,2,6', '', '', '3,3,2|2,1,1|5,4,3', '3,3,2|2,1,1|5,4,3', '', '5,4,3|2.5,2,1.5', '5,4,3|2.5,2,1.5'],
-  'basis-images': ['5,4,3|2.5,2,1.5', '', '2,1,1|1,2,1', '2,1,1|1,2,1', '2,1,1|1,2,1|2,1,1|1,2,1', '2,1,1|1,2,1|2,1,1|0.5,1,0.5', '2,1,1|1,2,1|2.5,2,1.5'],
-  matrix: ['2.5,2,1.5|2,1,1|1,2,1', '2,1,1|1,2,1', '', '', '2.5,2,1.5'],
+  'basis-images': ['5,4,3|2.5,2,1.5', '', '2,1,1|1,2,1', '2,1,1|1,2,1', '2,1,1|1,2,1', '2,1,1|1,2,1|2,1,1|1,2,1', '2,1,1|1,2,1|2,1,1|1,2,1|2.5,2,1.5', '2,1,1|1,2,1|2,1,1|1,2,1|2.5,2,1.5'],
+  matrix: [...Array(10).fill('2,1,1|1,2,1'), ...Array(6).fill('')],
+  'matrix-vector': ['', '', '', '2.5,2,1.5'],
 };
 
 await checkLayout({
   root: fileURLToPath(new URL('../', import.meta.url)),
   beforeStep: async ({ page, state }) => {
-    if (state.scene === 'matrix' && state.step === 2) {
-      const moves = await page.locator('.matrix-number').evaluateAll(nodes => nodes.map(node => {
-        const a = node.getAnimations().find(a => a.transitionProperty === 'left');
-        if (!a) return false;
-        a.pause();
-        const read = t => { a.currentTime = t; return parseFloat(getComputedStyle(node).left); };
-        const start = read(0), middle = read(500), end = read(1000);
-        a.finish();
-        return middle > Math.min(start, end) && middle < Math.max(start, end);
-      }));
-      assert.deepEqual(moves, Array(6).fill(true), '托盘读数必须连续移动到矩阵中');
+    // 第 4、5 步：每个矩阵元素从上方托盘的读数原地复制出发，原读数留在原处。
+    if (state.scene === 'matrix' && (state.step === 4 || state.step === 5)) {
+      const starts = await page.evaluate(() => {
+        const center = node => { const b = node.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2, b.height]; };
+        const readings = [...document.querySelectorAll('.tray-reading')].map(center);
+        return [...document.querySelectorAll('.matrix-number.copy-fly')].map(node => {
+          const a = node.getAnimations().find(a => a.animationName === 'copy-fly');
+          if (!a) return false;
+          a.pause(); a.currentTime = 0;
+          const [x, y] = center(node.querySelector('.katex'));
+          a.finish();
+          return readings.some(([rx, ry, h]) => Math.hypot(rx - x, ry - y) < h * .3);
+        });
+      });
+      assert.deepEqual(starts, Array(3).fill(true), '矩阵元素必须从托盘读数处复制出发');
     }
   },
   checkStep: async ({ page, state }) => {

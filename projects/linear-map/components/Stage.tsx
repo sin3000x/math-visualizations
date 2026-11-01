@@ -40,6 +40,11 @@ export function Space({ name, x, y, width, height, className = "" }: { name: str
   </div>;
 }
 
+/** 一条水平细线，分开画面上下两部分。 */
+export function Divider({ y, left, right, className = "", delay }: { y: number; left: number; right: number; className?: string; delay?: number }) {
+  return <div className={`divider ${className}`} style={{ top: y, left, width: right - left, ...vars({ "--delay": delay === undefined ? undefined : `${delay}s` }) }} data-layout-content />;
+}
+
 /** className：dim 变暗，still 直接画好（复现上一幕结尾时用），fade-out 淡出。 */
 export type Arrow = Readonly<{ id: string; from: readonly [number, number]; to: readonly [number, number]; delay: number; color?: string; className?: string }>;
 
