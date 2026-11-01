@@ -1,0 +1,35 @@
+.place { position: absolute; translate: -50% -50%; transition: opacity .3s ease; }
+.place-inner { width: max-content; }
+.operator { color: #c9c7bd; line-height: 1; }
+
+.space-oval { position: absolute; display: flex; justify-content: center; border: 3px solid #e8e5df; border-radius: 50%; }
+.space-name { position: absolute; top: -38px; padding: 0 18px; background: #000; font-size: 54px; line-height: 1.2; }
+
+.flow-arrows { position: absolute; inset: 0; width: 1440px; height: 810px; overflow: visible; pointer-events: none; }
+.flow-arrows g { color: #f6f2e7; transition: opacity .5s ease; }
+.arrow-shaft, .arrow-head { fill: none; stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+/* 间隔长于箭杆，且开始绘制前完全隐藏：零长度虚线段配圆头会在两端画出小点。 */
+.arrow-shaft { stroke-dasharray: 1 2; animation: draw .45s ease-in-out var(--delay) both, arrow-show 1ms linear var(--delay) both; }
+.arrow-head { animation: fade-in .1s linear calc(var(--delay) + .4s) both; }
+
+.juicer-run { animation: juicer-run .35s ease-in-out var(--delay) both; }
+.emerge { animation: emerge .5s ease-out var(--delay, 0s) both; }
+.fade-in { animation: fade-in .5s ease var(--delay, 0s) both; }
+.fade-out { animation: fade-out .4s ease var(--delay, 0s) both; }
+.dim { opacity: .16; }
+.still .arrow-shaft, .still .arrow-head { animation: none; }
+/* --delay 是箭头的绘制时刻；离场时整组箭头同时淡出，不沿用它。 */
+.flow-arrows g.fade-out { animation-delay: 0s; }
+/* 跨步骤保留的对象：位置与大小连续过渡。 */
+.glide { transition: left 1s ease-in-out, top 1s ease-in-out, opacity .5s ease; }
+.glide > .place-inner { transition: scale 1s ease-in-out; }
+/* 复制品：从原件位置飞到新位置。 */
+.fly { animation: fly .8s ease-in-out var(--delay, 0s) both; }
+@keyframes fly { from { transform: translate(var(--from-x), var(--from-y)); } }
+
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes arrow-show { from { opacity: 0; } to { opacity: 1; } }
+@keyframes juicer-run { 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
+@keyframes emerge { from { opacity: 0; transform: translate(var(--from-x, -28px), var(--from-y, 0)) scale(.85); } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }

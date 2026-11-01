@@ -1,11 +1,22 @@
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { checkLayout } from '@math-visualizations/video-tools/layout';
+
+// 每一步结束后画面上各托盘的读数（不含正在倒出的来源托盘）。
+const expectedJuice = {
+  'juice-space': ['1,2,1', '1,2,1', '3,3,1', '3,3,1', '6,6,2', '2,0,3|4,1,2|0,3,1|6,6,2'],
+  'juice-map': ['2,0,3|4,1,2|0,3,1|6,6,2', '', '5,4,3', '5,4,3|5,7,4', '5,4,3|5,7,4|6,3,3'],
+  machines: ['5,4,3|5,7,4|6,3,3', '', '5,4,3|3,5,2|4,2,6'],
+  linearity: ['5,4,3|3,5,2|4,2,6', '', '', '5,4,3|3,3,2|2,1,1', '5,4,3|5,4,3', '5,4,3', '5,4,3', '2.5,2,1.5|5,4,3', '2.5,2,1.5|2.5,2,1.5'],
+  'basis-images': ['2.5,2,1.5|2.5,2,1.5', '', '2,1,1|1,2,1', '2,1,1|1,2,1', '2,1,1|1,2,1|2,1,1|1,2,1', '2,1,1|1,2,1|2,1,1|0.5,1,0.5', '2,1,1|1,2,1|2.5,2,1.5'],
+  matrix: ['2.5,2,1.5|2,1,1|1,2,1', '2,1,1|1,2,1', '', '', '2.5,2,1.5'],
+};
+
 await checkLayout({
   root: fileURLToPath(new URL('../', import.meta.url)),
   beforeStep: async ({ page, state }) => {
-    if (state.scene === 'matrix-columns' && state.step === 2) {
-      const moves = await page.locator('.moving-column').evaluateAll(nodes => nodes.map(node => {
+    if (state.scene === 'matrix' && state.step === 2) {
+      const moves = await page.locator('.matrix-number').evaluateAll(nodes => nodes.map(node => {
         const a = node.getAnimations().find(a => a.transitionProperty === 'left');
         if (!a) return false;
         a.pause();
@@ -14,30 +25,19 @@ await checkLayout({
         a.finish();
         return middle > Math.min(start, end) && middle < Math.max(start, end);
       }));
-      assert.deepEqual(moves, [true, true], '矩阵两列必须经过连续的中间位置');
+      assert.deepEqual(moves, Array(6).fill(true), '托盘读数必须连续移动到矩阵中');
     }
   },
   checkStep: async ({ page, state }) => {
     assert.equal(await page.locator('.lesson').getAttribute('data-step'), String(state.step));
-    if (state.scene === 'juice-map') {
-      assert.equal(await page.locator('[data-role=shared-input]').count(), 1);
-      if (state.step < 2) {
-        assert.equal(await page.locator('.fruit-bag').count(), 3);
-        assert.equal(await page.locator('[data-role=juice]').count(), state.step === 1 ? 3 : 0);
-      } else {
-        assert.equal(await page.locator('.fruit-bag').count(), 1);
-        assert.deepEqual(await page.locator('[data-role=juice]').evaluateAll(nodes => nodes.map(n => n.dataset.values)), ['5,4,3', '3,5,2', '4,2,6'].slice(0, state.step - 1));
-      }
-    }
-    if (state.scene === 'matrix-action' && state.step >= 2)
-      assert.equal(await page.locator('[data-role=juice]').getAttribute('data-values'), '5,4,3');
-    if (state.scene === 'basis-images' && state.step === 3)
-      assert.deepEqual(await page.locator('[data-role=juice]').evaluateAll(nodes => nodes.map(n=>n.dataset.values)), ['2,1,1','1,2,1']);
-    if (state.scene === 'linearity')
-      assert.equal(await page.locator('.foot-equation').count(), state.step % 2, '线性等式只在合并或加倍完成后出现');
-    if (state.scene === 'linearity' && state.step === 1)
-      assert.equal(await page.locator('.sum-juice.first [data-role=juice]').getAttribute('data-values'), '3,3,2');
-    if (state.scene === 'linearity' && state.step === 3)
-      assert.equal(await page.locator('[data-role=juice]').getAttribute('data-values'), '4,2,2');
+    const values = await page.locator('[data-role=juice]').evaluateAll(nodes => nodes.filter(node => {
+      for (let n = node; n; n = n.parentElement) if (Number(getComputedStyle(n).opacity) === 0) return false;
+      return true;
+    }).map(node => node.dataset.values).join('|'));
+    assert.equal(values, expectedJuice[state.scene][state.step], `${state.scene}/${state.step + 1}: 果汁读数`);
+    // 倒完之后，来源托盘必须已经消失。
+    const sources = await page.locator('[data-role=juice-source]').evaluateAll(nodes => nodes.filter(node => Number(getComputedStyle(node).opacity) > 0).length);
+    const pouring = await page.locator('.juice-tray.pouring').count();
+    if (pouring) assert.equal(sources, 0, '倒完后来源托盘仍可见');
   },
 });

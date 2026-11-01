@@ -1,0 +1,26 @@
+.juice-tray { position: relative; width: max-content; }
+.tray-body { display: grid; justify-items: center; }
+.tray-cups, .tray-readings { display: flex; gap: 20px; padding: 0 14px; }
+.tray-cup { position: relative; width: 66px; height: 124px; border: 4px solid currentColor; border-top: 0; border-radius: 0 0 14px 14px; }
+/* 液体只画一种颜色，不画层间分隔线：倒入前后液面位置必须一致。 */
+.juice-layer { position: absolute; left: 4px; right: 4px; background: color-mix(in srgb, currentColor 62%, transparent); }
+.juice-layer:first-child { border-radius: 0 0 8px 8px; }
+.tray-base { width: 100%; height: 9px; margin-top: 8px; border-radius: 5px; background: #8c877b; }
+.tray-reading { width: 66px; display: grid; place-items: center; font-size: 46px; line-height: 1.25; }
+.tray-reading > * { grid-area: 1 / 1; }
+
+/* 倒入：来源移到目标上方，液体落下，空杯淡出，最后读数变为总和。 */
+.tray-source { position: absolute; left: 0; top: 0; transform: translate(var(--sx), var(--sy)); }
+.pouring > .tray-source { animation: pour-move .45s ease-in-out var(--start) both, pour-fade .25s ease var(--leave) both; }
+.pouring > .tray-source .juice-layer { animation: pour-vanish 1ms linear var(--fall-at) both; }
+.pouring > .tray-body .juice-layer.poured { animation: pour-show 1ms linear var(--at) both, pour-fall .4s cubic-bezier(.55, 0, 1, .45) var(--at) both; }
+/* 数乘：同一杯液面从原高度连续伸缩，杯子不复制、不替换。 */
+.scaling > .tray-body .juice-layer { transform-origin: bottom; animation: scale-level 1s ease-in-out var(--scale-at) both; }
+.pouring > .tray-body .reading-before, .scaling > .tray-body .reading-before { animation: pour-fade .3s ease var(--done) both; }
+.pouring > .tray-body .reading-after, .scaling > .tray-body .reading-after { animation: pour-show .3s ease var(--done) both; }
+@keyframes pour-move { from { transform: translate(var(--sx), var(--sy)); } to { transform: translate(0, calc(-1 * var(--rise))); } }
+@keyframes pour-fade { to { opacity: 0; } }
+@keyframes pour-vanish { from { opacity: 1; } to { opacity: 0; } }
+@keyframes pour-show { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pour-fall { from { transform: translateY(var(--fall)); } }
+@keyframes scale-level { from { transform: scaleY(var(--g)); } }
