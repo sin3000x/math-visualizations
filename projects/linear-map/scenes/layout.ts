@@ -133,3 +133,13 @@ export const MATRIX_VECTOR = {
     small: { bagScale: .45, juicerScale: .5, juicerDX: -121, parenDX: 66, parenSize: 84 },
   },
 } as const;
+
+/**
+ * TakeawayScene：上方一行 袋 → T → 托盘，由上一幕下行的 榨汁机(一袋) 与结果托盘移来，水平居中。
+ * 下方左边 T = 矩阵；右边上下两行 苹果基袋 → T → 托盘、香蕉基袋 → T → 托盘，托盘读数依次复制成矩阵的两列。
+ */
+export const TAKEAWAY = {
+  map: { y: 150, bagX: 470, juicerX: 720, trayX: 970, bagScale: .62, juicerScale: .85, trayScale: .62 },
+  juicerX: 200, equalsX: 310, columnX: [510, 660], rowY: [380, 475, 570],
+  basis: { y: [400, 570], bagX: 880, juicerX: 1040, trayX: 1230, bagScale: .45, juicerScale: .55, trayScale: .5 },
+} as const;

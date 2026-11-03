@@ -105,10 +105,17 @@ function PreviousEnd({ className }: { className: string }) {
  * 5 下行：= 1 × 榨汁机(苹果基袋) + 0.5 × 榨汁机(香蕉基袋) = 结果托盘，与上行逐项对齐，从左到右逐项出现。
  */
 export function MatrixVectorScene({ step }: { step: number }) {
+  return <section className="lesson matrix-vector-scene" data-step={step} aria-label="水果数量是矩阵各列的权重，加权和就是榨出的果汁">
+    <MatrixVectorContent step={step} />
+  </section>;
+}
+
+/** 本幕的画面内容；下一幕第 1 步用它复现本幕结尾。 */
+export function MatrixVectorContent({ step }: { step: number }) {
   const appear = (at: number) => step === at ? "fade-in" : "";
   const arc = (at: number) => step === at ? "arc" : "";
   const [left, right] = [columnX[0] - padX, columnX[1] + padX];
-  return <section className="lesson matrix-vector-scene" data-step={step} aria-label="水果数量是矩阵各列的权重，加权和就是榨出的果汁">
+  return <>
     {step <= AT.move && <PreviousEnd className={step === AT.move ? "fade-out" : ""} />}
 
     <div className="mv-stage" style={{ scale: String(S), width: 1440 / S, height: 810 / S }}>
@@ -122,7 +129,7 @@ export function MatrixVectorScene({ step }: { step: number }) {
       </div>
 
       {/* 下行左端 榨汁机(一袋)：与矩阵的移动同时出现。 */}
-      {step >= AT.move && <Application bag={input} x={bagX} y={bottomY} size={apply.big} className={appear(AT.move)} delay={.3} />}
+      {step >= AT.move && <Application bag={input} x={bagX} y={bottomY} size={apply.big} className={`input-apply ${appear(AT.move)}`} delay={.3} />}
 
       {/* 数量从袋中原样浮起，依次飞上去成为向量，再写出向量的方括号与右侧的水果。 */}
       {step >= AT.lift && <>
@@ -170,10 +177,10 @@ export function MatrixVectorScene({ step }: { step: number }) {
         </div>)}
         <Op latex="+" x={bottom.plusX} y={bottomY} className={appear(AT.juice)} delay={TERM_AT[2]} />
         <Op latex="=" x={bottom.equalsX[1]} y={bottomY} className={appear(AT.juice)} delay={TERM_AT[3]} />
-        <Place x={bottom.trayX} y={bottomY} scale={trayScale} className={step === AT.juice ? "emerge" : ""} delay={TERM_AT[3]}>
+        <Place x={bottom.trayX} y={bottomY} scale={trayScale} className={`result-tray ${step === AT.juice ? "emerge" : ""}`} delay={TERM_AT[3]}>
           <JuiceTray values={output} />
         </Place>
       </>}
     </div>
-  </section>;
+  </>;
 }
