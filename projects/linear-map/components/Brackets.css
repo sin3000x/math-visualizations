@@ -1,3 +1,3 @@
 .brackets { position: absolute; inset: 0; width: 1440px; height: 810px; pointer-events: none; }
 .brackets path { fill: none; stroke: #f6f2e7; stroke-width: 4; }
-.brackets.write > path { stroke-dasharray: 1 2; animation: draw .8s ease-in-out both; }
+.brackets.write > path { stroke-dasharray: 1 2; animation: draw .8s ease-in-out var(--delay, 0s) both; }

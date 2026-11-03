@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { vars } from "../lib/style";
 import "./Brackets.css";
 
 /** 一对方括号：两边各是一条带短钩的竖线，各自按 pathLength 绘出。 */
@@ -9,7 +10,8 @@ export function Bracket({ left, right, top, bottom }: { left: number; right: num
   </>;
 }
 
-/** 全画布的方括号层；write 时两边同时沿笔画画出。 */
-export function BracketLayer({ write = false, className = "", children }: { write?: boolean; className?: string; children: ReactNode }) {
-  return <svg className={`brackets${write ? " write" : ""} ${className}`} viewBox="0 0 1440 810" aria-hidden="true">{children}</svg>;
+/** 全画布的方括号层；write 时两边同时沿笔画画出，delay 秒后开始。 */
+export function BracketLayer({ write = false, delay, className = "", children }: { write?: boolean; delay?: number; className?: string; children: ReactNode }) {
+  return <svg className={`brackets${write ? " write" : ""} ${className}`} viewBox="0 0 1440 810" aria-hidden="true"
+    style={vars({ "--delay": `${delay ?? 0}s` })}>{children}</svg>;
 }

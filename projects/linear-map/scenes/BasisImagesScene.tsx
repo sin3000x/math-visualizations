@@ -11,15 +11,19 @@ const target: Quantities = [1, .5];
 const previous: Quantities = [2, 1];
 const { eq } = BASIS;
 
-/** 从左边原件处飞来的复制品：起点位置与大小都取原件的。 */
-const copyFrom = (x: number, y: number, fromX: number, fromY: number, fromScale: number) =>
-  vars({ "--from-x": `${fromX - x}px`, "--from-y": `${fromY - y}px`, "--from-s": String(fromScale / eq.scale) });
+/** 等式中两只基袋开始榨汁的时刻：上方的 T 先复制飞到它们下方。 */
+const TERM_RUN = .8;
+
+/** 从上方原件处飞来的复制品：起点位置与大小都取原件的。 */
+const copyFrom = (x: number, y: number, fromX: number, fromY: number, fromScale: number, toScale: number = eq.scale) =>
+  vars({ "--from-x": `${fromX - x}px`, "--from-y": `${fromY - y}px`, "--from-s": String(fromScale / toScale) });
 
 /**
  * 由线性，只需知道两只基袋的结果：(1, 0.5) = 1 × 苹果基袋 + 0.5 × 香蕉基袋，
  * 所以它的托盘 = 1 × 苹果托盘 + 0.5 × 香蕉托盘：T 把袋子的等式映成托盘的等式。
  * 步骤：0 复现 LinearityScene 结尾；1 上一幕淡出，T 移到苹果映射，基袋出现；2 两只基袋同时榨汁；
- * 3 分割线与 (1,0.5) 出现在等式左端；4 写成两只基袋的组合，基袋复制飞来；5 基袋托盘复制飞到下一行；6 得到 (1,0.5) 的托盘；
+ * 3 分割线与 (1,0.5) 出现在等式左端；4 写成两只基袋的组合，基袋复制飞来；
+ * 5 上方两台 T 复制飞到等式中两只基袋下方，基袋榨汁得到下一行的托盘，再写出系数与加号；6 得到 (1,0.5) 的托盘；
  * 7 T 放在 (1,0.5) 与它的托盘之间。
  */
 export function BasisImagesScene({ step }: { step: number }) {
@@ -38,7 +42,8 @@ export function BasisImagesScene({ step }: { step: number }) {
       <Bag bag={target} x={LIN.scale.C} y={LIN.bagY} scale={LIN.bagScale} className={`dim ${leaving}`} />
       <Juicer x={LIN.scale.P} y={LIN.juicerY} scale={LIN.juicerScale} className={`dim ${leaving}`} />
     </>}
-    <Arrows arrows={[...(step >= 2 ? bases.flatMap((_, i) => basisArrows(i)) : []), ...(step >= 7 ? equationArrows() : [])]} />
+    <Arrows arrows={[...(step >= 2 ? bases.flatMap((_, i) => basisArrows(i)) : []), ...(step >= 5 ? bases.flatMap((_, i) => equationArrows(eq.termX[i], `term-${i}`, step === 5 ? TERM_RUN : 0, step === 5 ? "" : "still")) : []),
+      ...(step >= 7 ? equationArrows() : [])]} />
 
     {/* 上方并排两张映射：基袋 → T → 托盘。苹果那台 T 是从上一幕移来的同一台。 */}
     {bases.map(({ bag, tone }, i) => <div key={i}>
@@ -65,11 +70,17 @@ export function BasisImagesScene({ step }: { step: number }) {
     </>}
     {step >= 5 && <>
       {bases.map(({ bag }, i) => <div key={`eq-tray-${i}`}>
-        <Op latex={`${target[i]}\\times`} x={eq.coefX[i]} y={eq.trayY} className={appear(5)} delay={.6} />
-        <Place x={eq.termX[i]} y={eq.trayY} scale={eq.scale} className={step === 5 ? "copy-fly" : ""}
-          style={copyFrom(eq.termX[i], eq.trayY, BASIS.trayX[i], BASIS.rowY, BASIS.trayScale)}><JuiceTray values={juiceOf(bag)} /></Place>
+        {/* 外层飞来，内层的榨汁机运转：两段动画都用 transform，分在两层。 */}
+        <Place x={eq.termX[i]} y={eq.juicerY} className={step === 5 ? "copy-fly" : ""}
+          style={copyFrom(eq.termX[i], eq.juicerY, BASIS.juicerX[i], BASIS.rowY, BASIS.juicerScale, eq.juicerScale)}>
+          <Juicer x={0} y={0} scale={eq.juicerScale} running={step === 5} delay={TERM_RUN + FLOW.run} />
+        </Place>
+        <Place x={eq.termX[i]} y={eq.trayY} scale={eq.scale} className={step === 5 ? "emerge-down" : ""} delay={TERM_RUN + FLOW.result}>
+          <JuiceTray values={juiceOf(bag)} />
+        </Place>
+        <Op latex={`${target[i]}\\times`} x={eq.coefX[i]} y={eq.trayY} className={appear(5)} delay={TERM_RUN + FLOW.result + .4} />
       </div>)}
-      <Op latex="+" x={eq.plusX} y={eq.trayY} className={appear(5)} delay={.6} />
+      <Op latex="+" x={eq.plusX} y={eq.trayY} className={appear(5)} delay={TERM_RUN + FLOW.result + .4} />
     </>}
     {step >= 6 && <>
       <Op latex="=" x={eq.equalsX} y={eq.trayY} className={appear(6)} />

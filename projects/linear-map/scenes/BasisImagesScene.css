@@ -1,3 +1,5 @@
-/* 复制品：从左边原件的位置与大小飞到等式中。 */
+/* 复制品：从上方原件的位置与大小飞到等式中。 */
 .basis-images .copy-fly { animation: copy-fly .8s ease-in-out var(--delay, 0s) both; }
 @keyframes copy-fly { from { transform: translate(var(--from-x), var(--from-y)) scale(var(--from-s)); } }
+/* 托盘从榨汁机下方落出。 */
+.basis-images .emerge-down { --from-x: 0px; --from-y: -26px; animation: emerge .5s ease-out var(--delay) both; }

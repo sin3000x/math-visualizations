@@ -73,18 +73,63 @@ export const basisArrows = (i: number, className?: string): Arrow[] => [
   { id: `basis-in-${i}`, from: [BASIS.bagX[i] + 75, BASIS.rowY], to: [BASIS.juicerX[i] - 55, BASIS.rowY], delay: 0, className },
   { id: `basis-out-${i}`, from: [BASIS.juicerX[i] + 55, BASIS.rowY], to: [BASIS.trayX[i] - 101, BASIS.rowY], delay: FLOW.out, className },
 ];
-/** 一般的一袋 → T → 它的托盘，竖直对准。 */
-export const equationArrows = (className?: string): Arrow[] => {
-  const { bagY, trayY, resultX: x, juicerY: y } = BASIS.eq;
+/** 等式中的一列：袋子 → T → 它的托盘，竖直对准；默认是一般的一袋 (1, 0.5)。delay 是这一列开始榨汁的时刻。 */
+export const equationArrows = (x: number = BASIS.eq.resultX, id = "eq", delay = 0, className?: string): Arrow[] => {
+  const { bagY, trayY, juicerY: y } = BASIS.eq;
   return [
-    { id: "eq-in", from: [x, bagY + 67], to: [x, y - 47], delay: 0, className },
-    { id: "eq-out", from: [x, y + 47], to: [x, trayY - 72], delay: FLOW.out, className },
+    { id: `${id}-in`, from: [x, bagY + 67], to: [x, y - 47], delay, className },
+    { id: `${id}-out`, from: [x, y + 47], to: [x, trayY - 72], delay: delay + FLOW.out, className },
   ];
 };
 
-/** MatrixVectorScene 中矩阵的位置：在安全区以上居中。 */
-export const MATRIX_END = {
-  columnX: [557, 707], rowY: [245, 340, 435], numberSize: 54,
-  /** 方括号相对列与行的外扩。 */
-  padX: 60, padY: 50,
-};
+/**
+ * MatrixScene 的布局。矩阵整组的位置在整幕中不变；简记时上方映射淡出，整组只上移 liftDY 一次，给下方收银台的行向量让出位置。
+ * MatrixVectorScene 第 1 步复现它的结尾：上移后的矩阵、记号与收银台。
+ */
+export const MATRIX_LAYOUT = (() => {
+  const columnX = [460, 610], rowY = [355, 450, 545];
+  // 收银台的行向量与上移后的矩阵共用两列；行首写新基 1，记号 [f]_{1←果} 的下标只有一项，整体左移紧贴方括号。
+  const row = { y: 570, headerY: 485, padY: 45, oneX: [893, 940, 990, 1037] };
+  return {
+    columnX, rowY, liftDY: -215, headerY: rowY[0] - 85, labelX: columnX[0] - 115,
+    numberSize: 54,
+    /** 方括号相对列与行的外扩。 */
+    padX: 60, padY: 50,
+    /** 记号 矩阵 = [T]_{杯←果}：等号与 T 在矩阵右边的中间一行，下标图标比列顶、行首图标小。 */
+    note: { equalsX: 735, tX: 830, bracketDX: 42, subY: rowY[1] + 40, cupX: [908, 943, 978], arrowX: 1025, fruitX: [1075, 1122], cupScale: .9, fruitScale: .8 },
+    row,
+    /**
+     * 收银台：缩放后放在行向量左边，略微上提以留在字幕安全区以上；屏幕上水果图标与单价数字相对收银台中心的位置。
+     * 屏幕上的单价字号 30、水果图标 36（收银台自身坐标）。
+     */
+    checkout: { x: 178, y: row.y - 15, scale: .55, fruit: [[-62, -62], [-62, -33]], price: [[-41, -62], [-41, -33]] },
+  } as const;
+})();
+
+/**
+ * MatrixVectorScene：上行是 T(v) = 1 × T(e1) + 0.5 × T(e2) 写成矩阵乘向量：[T] v = 1 × 第一列 + 0.5 × 第二列 = 结果；
+ * 下行是同一个等式的图形写法：榨汁机(一袋) = 1 × 榨汁机(苹果基袋) + 0.5 × 榨汁机(香蕉基袋) = 结果托盘。
+ * 两行逐项对齐：上下对应的项（矩阵乘向量与 榨汁机(一袋)、两列与两个 榨汁机(基袋)、结果列与托盘）中心在同一竖线上，
+ * 加号、等号也上下同位；系数紧贴各自的项。下行的项更宽，上行的运算符两侧因此留得更开。
+ * 两行放不进 1440 宽，本幕内容整体缩小 scale 倍放在舞台上，以下坐标都是舞台坐标（缩放前）。
+ * 舞台高 810 / scale，字幕安全区以上的部分高 680 / scale，内容在其中竖直居中。
+ */
+export const MATRIX_VECTOR = {
+  scale: .82,
+  /** 矩阵、列顶水果与行首杯子：彼此的相对位置与上一幕相同，第 2 步整组从上一幕的位置缩放移来。 */
+  columnX: [172, 322], rowY: [218, 313, 408], cupX: 57, headerDY: MATRIX_LAYOUT.headerY - MATRIX_LAYOUT.rowY[0],
+  /** 向量与它右侧的水果、结果列与它右侧的杯子：标出每一行对应的基。 */
+  vectorX: 452, vectorY: [265.5, 360.5], vectorFruitX: 543, vectorFruitScale: .8, resultX: 1608, resultCupX: 1695,
+  top: { equalsX: [608, 1506], coefX: [759, 1208], plusX: 1035, termX: [875, 1346] },
+  /** 单列向量的方括号相对数字的外扩。 */
+  vectorPadX: 58,
+  /** 下行：termX 是 榨汁机(基袋) 的袋子位置，trayX 是结果托盘。 */
+  bottom: { y: 670, equalsX: [608, 1506], coefX: [700, 1149], plusX: 1035, termX: [909, 1380], trayX: 1608 },
+  trayScale: .5,
+  /** 函数写法 榨汁机(袋)：v 在矩阵与向量下方，用大号；e1、e2 用小号。各部分相对袋子中心的位置。 */
+  bagX: 358,
+  apply: {
+    big: { bagScale: .62, juicerScale: .7, juicerDX: -167, parenDX: 91, parenSize: 120 },
+    small: { bagScale: .45, juicerScale: .5, juicerDX: -121, parenDX: 66, parenSize: 84 },
+  },
+} as const;

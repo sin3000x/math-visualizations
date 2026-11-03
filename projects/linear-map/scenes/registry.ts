@@ -13,5 +13,5 @@ export const concept = defineConcept({ title: "线性映射与矩阵", conceptId
   { id: "linearity", order: 20, title: "LinearityScene", summary: "先合并或缩放再榨汁，与先榨汁再合并或缩放，结果相同。", stepCount: 8, component: LinearityScene },
   { id: "basis-images", order: 30, title: "BasisImagesScene", summary: "由线性，确定了两只基袋的结果，任意一袋的结果也就确定：袋子写成基袋的组合，托盘就是基袋托盘的同一组合。", stepCount: 8, component: BasisImagesScene },
   { id: "matrix", order: 40, title: "MatrixScene", summary: "基袋结果按列排成矩阵；列顶的水果、行首的杯子与矩阵一起表示线性映射 T，矩阵记作 [T]_{杯←果}，默认基底时简记为 T；收银台背后的行向量就是新基为 1 的 V → R 矩阵。", stepCount: 16, component: MatrixScene },
-  { id: "matrix-vector", order: 50, title: "MatrixVectorScene", summary: "一袋水果的数量是矩阵各列的权重，加权和就是榨出的果汁。", stepCount: 4, component: MatrixVectorScene },
+  { id: "matrix-vector", order: 50, title: "MatrixVectorScene", summary: "矩阵乘向量：一袋水果的数量是矩阵各列的权重，[T] v = 1 × 第一列 + 0.5 × 第二列，与 T(v) = 1 × T(e1) + 0.5 × T(e2) 一一对应，加权和就是榨出的果汁。", stepCount: 6, component: MatrixVectorScene },
 ]});

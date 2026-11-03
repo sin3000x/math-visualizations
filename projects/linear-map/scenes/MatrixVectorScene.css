@@ -1,3 +1,23 @@
-.matrix-vector-scene .weight { color: #f6f2e7; }
-.matrix-vector-scene .weight-fly { animation: weight-fly .9s ease-in-out both; }
-@keyframes weight-fly { from { transform: translate(var(--fx), var(--fy)); } }
+.matrix-vector-scene .number { color: #f6f2e7; }
+/* 复现上一幕结尾：收银台的单价已经在屏幕上，不再淡入。 */
+.previous-end .probe-prices { animation: none; }
+/* 本幕内容整体缩小放在舞台上（舞台坐标按缩放前计）；方括号层超出 1440×810 的部分照常画出。 */
+.mv-stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.mv-stage .brackets { overflow: visible; }
+.matrix-shift { position: absolute; inset: 0; transform-origin: 0 0; transition: transform 1s ease-in-out; }
+/*
+ * 弧线飞行：外层只管水平（先加速后减速）与起步淡入，内层只管竖直（经过 --peak 再到终点）与大小（途中为 --ps）。
+ * 内层用独立的 translate、scale 属性，竖直位移不会被大小缩放。
+ */
+.matrix-vector-scene .arc { animation: arc-x 1s ease-in-out var(--delay, 0s) both; }
+.matrix-vector-scene .arc > .place-inner { animation: arc-y 1s linear var(--delay, 0s) both; }
+@keyframes arc-x { from { opacity: var(--fo); transform: translateX(var(--fx)); } 20% { opacity: 1; } }
+@keyframes arc-y {
+  0% { translate: 0 var(--fy); scale: var(--fs); animation-timing-function: ease-out; }
+  50% { translate: 0 var(--peak); scale: var(--ps); animation-timing-function: ease-in; }
+  100% { translate: 0 0; scale: 1; }
+}
+/* 浮起：从袋中数字原样出发，先竖直升起，再水平靠拢，没有越过终点的弧顶。 */
+.matrix-vector-scene .arc.rise { animation-timing-function: cubic-bezier(.6, 0, .4, 1); }
+.matrix-vector-scene .arc.rise > .place-inner { animation-name: rise-y; animation-timing-function: cubic-bezier(.4, 0, .2, 1); }
+@keyframes rise-y { from { translate: 0 var(--fy); scale: var(--fs); } }

@@ -6,7 +6,7 @@ import { JUICE_COLORS, JuiceTray } from "../components/JuiceTray";
 import { Arrows, Bag, Juicer, Op, Place } from "../components/Stage";
 import { columnOf, juiceOf, MATRIX } from "../lib/math/map";
 import { vars } from "../lib/style";
-import { BASIS, basisArrows, MATRIX_END } from "./layout";
+import { BASIS, basisArrows, MATRIX_LAYOUT } from "./layout";
 import "./MatrixScene.css";
 
 const fruits = [{ kind: "apple", bag: [1, 0] }, { kind: "banana", bag: [0, 1] }] as const;
@@ -17,17 +17,8 @@ const CUP_SCALE = [74 / 34, 128 / 42] as const;
 // 袋内水果图标相对袋子中心的位置（缩放 0.62 后）与它相对列顶图标的大小。
 const BAG_FRUIT = [-30, 7] as const, BAG_FRUIT_SCALE = .6;
 const { rowY, trayScale: s } = BASIS;
-const { numberSize: NUMBER_SIZE, padX, padY } = MATRIX_END;
-// 矩阵整组的位置在整幕中不变；简记时上方映射淡出，整组只上移 LIFT_DY 一次，给下方收银台的行向量让出位置。
-const COLUMN_X = [460, 610], ROW_Y = [355, 450, 545], LIFT_DY = -215;
-const HEADER_Y = ROW_Y[0] - 85, LABEL_X = COLUMN_X[0] - 115;
-// 记号 矩阵 = [T]_{杯←果}：等号与 T 在矩阵右边的中间一行，下标图标比列顶、行首图标小。
-const NOTE = { equalsX: 735, tX: 830, bracketDX: 42, subY: ROW_Y[1] + 40, cupX: [908, 943, 978], arrowX: 1025, fruitX: [1075, 1122], cupScale: .9, fruitScale: .8 };
-// 收银台的行向量与上移后的矩阵共用两列；行首写新基 1，记号 [f]_{1←果} 的下标只有一项，整体左移紧贴方括号。
-const ROW = { y: 570, headerY: 485, padY: 45, oneX: [893, 940, 990, 1037] };
-// 收银台：缩放后放在行向量左边，略微上提以留在字幕安全区以上；屏幕上水果图标与单价数字相对收银台中心的位置。
-// 屏幕上的单价字号 30、水果图标 36（收银台自身坐标）。
-const CHECKOUT = { x: 178, y: ROW.y - 15, scale: .55, fruit: [[-62, -62], [-62, -33]], price: [[-41, -62], [-41, -33]] } as const;
+const { numberSize: NUMBER_SIZE, padX, padY, columnX: COLUMN_X, rowY: ROW_Y, liftDY: LIFT_DY, headerY: HEADER_Y, labelX: LABEL_X,
+  note: NOTE, row: ROW, checkout: CHECKOUT } = MATRIX_LAYOUT;
 /** 步骤：方括号、列顶水果、行首杯子、第一列、第二列；再依次突出水果、杯子、矩阵；然后写出记号，简记为 T；
  * 再恢复基底图标，引入收银台，搭出它的行向量，写出它的记号。 */
 const AT = {
