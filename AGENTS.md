@@ -17,7 +17,7 @@
 以下是后续新建和修改教学画面的默认标准；用户对某一幕的明确要求优先。
 
 - **极简**：纯黑教学画布、大图形、充足留白；只保留表达当前关系必需的对象，避免装饰网格、渐变、光效和多余卡片。
-- **不显示标题和说明**：默认不放页面大标题、Scene 标题、副标题、段落说明、图下注释或操作提示。名称与讲解保留在元数据或文档中；只有辨认对象确有需要时才使用短标签。
+- **不显示标题和说明**：默认不放页面大标题、Scene 标题、副标题、段落说明、图下注释或操作提示。名称保留在注册表，讲解与分镜写在项目 README；只有辨认对象确有需要时才使用短标签。
 - **画布内不显示导航栏**：导航和“全屏录制”只在画布外，录屏时隐藏；细则见第 4 节。
 - **能画就不写**：优先用对象、位置、颜色、箭头、轮廓及具体结果表达关系。例如用水果袋经过收银台得到数值的画面表达映射，不再附一段同义说明。
 - **少用公式**：先呈现具体对象和变化，只在图形无法准确表达关键关系时加入最少的符号或公式；不默认叠加抽象定义、公理列表和推导。保留的数学表达式仍必须用 KaTeX，数学正确性与数值验证要求不变。
@@ -81,7 +81,6 @@ type SceneDefinition = Readonly<{
   order: number;
   route: string;
   title: string;
-  summary: string;
   viewport: Readonly<{ width: 1920; height: 1080 }>;
 }>;
 ```
@@ -91,8 +90,9 @@ type SceneDefinition = Readonly<{
 - `order`：控制排序；使用 `10, 20, 30` 等留有插入空间的值。
 - `route`：渲染该 Scene 的路由；多个 Scene 可以由同一路由和内部状态承载。
 - `title`：与对应 Scene 源文件的文件名一致，不含扩展名，保留大小写，不另起中文别名，例如 `DualBasisScene.tsx` 对应 `DualBasisScene`；用于画布外导航，不渲染到教学画布内。
-- `summary`：用中文登记一句话教学目标，默认不渲染到画面。
 - `viewport`：固定记录 1920×1080 的设计契约。
+
+各 Scene 的教学目标和分镜只写在项目 README，不在注册表里重复登记。`kkt-conditions` 沿用自己的历史类型，其 `summary` 仍渲染在页面上，不受此限。
 
 新项目在 `scenes/registry.ts` 用 scene-kit 的 `defineConcept({ title, conceptId, scenes })` 登记 `stepCount`、`component` 与以上元数据；`conceptId`、`route` 和 `viewport` 由它统一填写，根目录测试校验每个 `title` 与组件源文件名一致。`ScenePlayer` 统一管理导航与录屏，Scene 只接收 `step` 并负责教学内容。入口 `app/main.tsx` 只调用 `mountConcept(concept, { cover })`；不得另建按索引对应的步骤数数组或组件条件链。项目 `vite.config.ts` 复用 `@math-visualizations/config/vite`。模板默认每个 Scene 为 1–9 步，对应数字键直接跳转。
 

@@ -8,7 +8,6 @@ export type SceneDefinition = Readonly<{
   order: number;
   route: string;
   title: string;
-  summary: string;
   viewport: Readonly<{ width: 1920; height: 1080 }>;
   stepCount: number;
   component: ComponentType<SceneProps>;
