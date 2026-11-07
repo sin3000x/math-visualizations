@@ -11,7 +11,7 @@
 
 ## 生成轮廓
 
-`coordinate-shapes.json` 是轮廓数据，不是手工绘制的字形：由真实水果袋及 KaTeX 渲染截图提取，保留外轮廓、孔洞和颜色。截图只保存在忽略的 `exports/morph-source/`，运行时不需要 Python、截图或网络请求。
+`coordinate-shapes.json` 是轮廓数据，不是手工绘制的字形：由真实水果袋及 KaTeX 渲染截图提取，保留外轮廓、孔洞和颜色。截图只保存在忽略的 `exports/sources/morph-source/`，运行时不需要 Python、截图或网络请求。
 
 改变水果袋样式、字体、公式或颜色后，重新生成：
 
@@ -32,7 +32,7 @@ MORPH_PYTHON=/path/to/venv/bin/python npm run morph:export -w dual-basis
 
 `independence-shapes.json` 由 `scripts/export-independence-shapes.mjs` 从实际画面提取。每次代入各有三组完整结算项和两个运算符，共十组；源包含系数、收银台、托盘水果袋与标签。使用同一个 `animateContourTransform` 连续变形成下方结果，并保留上方等式。
 
-重新生成：先构建，再执行 `MORPH_PYTHON=/path/to/venv/bin/python node projects/dual-basis/scripts/export-independence-shapes.mjs`。截图和 manifest 保存在忽略的 `exports/independence-morph-source/`。
+重新生成：先构建，再执行 `MORPH_PYTHON=/path/to/venv/bin/python node projects/dual-basis/scripts/export-independence-shapes.mjs`。截图和 manifest 保存在忽略的 `exports/sources/independence-morph-source/`。
 
 ## 张成场景的系数变形
 

@@ -6,7 +6,7 @@ import { preview } from 'vite';
 const server = await preview({ preview: { host: '127.0.0.1', port: 0 } });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 try {
-  await mkdir('exports/qa-change-basis', { recursive: true });
+  await mkdir('exports/qa/change-basis', { recursive: true });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   await page.goto(`http://127.0.0.1:${server.httpServer.address().port}`);
   await page.getByRole('button', { name: '换基，价格不变', exact: true }).click();
@@ -73,7 +73,7 @@ try {
       assert(await page.locator('.change-quotes').evaluateAll(nodes => nodes.every(node => Number(getComputedStyle(node).opacity) === 0)), '报价移入行向量后不持久展示');
     }
     assert.equal(await page.locator('.katex-error').count(), 0);
-    await page.screenshot({ path: `exports/qa-change-basis/step-${step}.png` });
+    await page.screenshot({ path: `exports/qa/change-basis/step-${step}.png` });
   }
   console.log('8 步通过：基先于坐标、等号对齐、基袋异色、托盘接触、屏幕单价、数值动画来源及中途位移。');
 } finally {

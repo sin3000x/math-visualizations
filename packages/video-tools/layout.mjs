@@ -44,7 +44,7 @@ async function settle(page) {
 // beforeStep 在动画推进到结尾之前运行，可以检查中途状态；各尺寸并行运行，回调里的跨步骤状态要按 name 区分。
 export async function checkLayout({ root, beforeStep, checkStep, argv = process.argv.slice(2) }) {
   const only = selection(argv);
-  const output = path.join(root, 'exports/qa-layout');
+  const output = path.join(root, 'exports/qa/layout');
   await mkdir(output, { recursive: true });
   // 与录屏检查一致：构建到临时目录，不依赖、也不覆盖项目 dist/。
   const snapshot = await mkdtemp(path.join(tmpdir(), 'scene-layout-'));

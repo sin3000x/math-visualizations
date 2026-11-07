@@ -57,10 +57,10 @@ math-visualizations/
 ## 资源与导出目录
 
 - `public/`：网页运行时需要的静态资源，例如人物图片和 favicon；这些文件会随网站构建发布。
-- `exports/`：视频、封面 PNG、验收截图、时间线报告和录制素材；由 Git 忽略，不随网站发布。
-- `cover/`：可编辑的 React/CSS 封面源码；通过 `npm run cover:export -w <项目名>` 生成 `exports/<项目名>-video-cover.png`。
+- `exports/`：由 Git 忽略，不随网站发布。`videos/` 放成片与配套 FCPXML，`covers/` 放封面，`qa/` 放验收截图、检查日志和渲染报告，`sources/` 放提取轮廓用的中间素材。
+- `cover/`：可编辑的 React/CSS 封面源码；通过 `npm run cover:export -w <项目名>` 生成 `exports/covers/<项目名>-video-cover.png`。
 
-旧版封面 SVG/JPG 也保存在 `exports/`，仅供历史参考。KKT 的录屏及配套字幕位于 `projects/kkt-conditions/exports/videos/`。
+旧版封面 SVG/JPG 也保存在 `exports/covers/`，仅供历史参考。KKT 的录屏及配套字幕位于 `projects/kkt-conditions/exports/videos/`。
 
 ## 公共代码边界
 
@@ -88,14 +88,14 @@ npm run check:all                   # 顺序运行 check 与 check:visual
 
 `check` 先构建再测试，KKT 的生产 HTML 测试复用本轮构建产物，避免重复构建。根目录和 KKT 子目录中的独立 `npm test` 仍会自动构建 KKT。`test:built` 仅适合已有最新构建产物时使用：它运行测试本体，并通过 `--ignore-scripts` 跳过 workspace 的 `pretest` / `posttest` 生命周期。
 
-`check:visual` 由 `scripts/check-visual.mjs` 并行运行各 workspace 的视觉检查：每个项目内先 `check:layout` 再 `video:check`，二者都构建到临时目录，不读写 `dist/`。可用 `-- --jobs 2` 调整并行数、`-- --only linear-map` 只跑指定项目；日志写入各项目 `exports/check-visual.log`，结束时汇总通过情况。未声明对应脚本的 workspace 会跳过；当前自动覆盖如下，KKT 的画面仍需人工验收：
+`check:visual` 由 `scripts/check-visual.mjs` 并行运行各 workspace 的视觉检查：每个项目内先 `check:layout` 再 `video:check`，二者都构建到临时目录，不读写 `dist/`。可用 `-- --jobs 2` 调整并行数、`-- --only linear-map` 只跑指定项目；日志写入各项目 `exports/qa/check-visual.log`，结束时汇总通过情况。未声明对应脚本的 workspace 会跳过；当前自动覆盖如下，KKT 的画面仍需人工验收：
 
 | 检查 | 当前覆盖 |
 | --- | --- |
 | `check:layout` | 对偶的对偶；基、坐标、行向量；对偶基；线性映射与矩阵；模板 |
 | `video:check` | 对偶空间；对偶的对偶；基、坐标、行向量；对偶基；线性映射与矩阵；模板 |
 
-视觉检查需要本机 Chrome，输出截图与报告到各项目的 `exports/`；也可用 `npm run check:layout -w dual-basis` 或 `npm run video:check -w dual-basis` 只检查当前主题；布局检查还可加 `-- --scene <id> --mode desktop` 只查某几个 Scene、某种尺寸（`--mode` 可选 desktop、narrow、recording）。布局检查把每一步的动画直接推到结尾再断言，三种尺寸并行运行；回调 `beforeStep` 在推进之前执行，用于检查动画中途的状态。命令通过代表自动断言通过，画面关系、遮挡与可读性仍应结合输出截图确认。
+视觉检查需要本机 Chrome，输出截图与报告到各项目的 `exports/qa/`；也可用 `npm run check:layout -w dual-basis` 或 `npm run video:check -w dual-basis` 只检查当前主题；布局检查还可加 `-- --scene <id> --mode desktop` 只查某几个 Scene、某种尺寸（`--mode` 可选 desktop、narrow、recording）。布局检查把每一步的动画直接推到结尾再断言，三种尺寸并行运行；回调 `beforeStep` 在推进之前执行，用于检查动画中途的状态。命令通过代表自动断言通过，画面关系、遮挡与可读性仍应结合输出截图确认。
 
 进入子项目后仍可执行 `npm run dev` 等命令。通用 Scene 契约测试位于 `packages/scene-kit/tests/`，录屏测试位于 `packages/video-tools/tests/`；根目录 `npm test` 统一运行这些测试与各主题的数学测试。无主题专属测试的项目不重复声明 `test` 脚本。新增依赖用 `npm install <包名> -w <项目名>`，将项目声明和根锁文件一起提交。不要为 workspace 单独生成锁文件。首次从旧结构迁移时，可先删除三个主题及模板内旧的 `node_modules`，再在根目录执行 `npm ci`。KKT 迁移时也由根目录 `npm ci` 重建依赖，不保留旧的 `.pnpm` 安装目录。
 

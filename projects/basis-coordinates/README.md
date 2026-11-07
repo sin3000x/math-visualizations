@@ -17,7 +17,7 @@
 
 播放器来自 scene-project 模板；FruitBag 与样式放在一起，图标复制自稳定项目。数学计算放在 lib/math/bags.ts，数字格式不固定四舍五入到一位小数。两集旧项目未迁移。后续独立教学目标以新增 Scene 扩展，不提前引入通用线性代数框架。
 
-`npm run check:layout` 检查普通桌面、窄屏和 1080p 的全部步骤、对象边界与键盘导航，截图输出至 `exports/qa-layout/`。
+`npm run check:layout` 检查普通桌面、窄屏和 1080p 的全部步骤、对象边界与键盘导航，截图输出至 `exports/qa/layout/`。
 
 ## 第二幕：用基袋测出单价
 
@@ -71,7 +71,7 @@
 npm run video:production
 ```
 
-输出 `exports/basis-coordinates-production.mp4`，1920×1080、60fps、H.264，无音轨。自动播放注册表中的五幕共 33 步，不显示鼠标或导航。逐帧推进浏览器动画时钟，机器渲染慢不会造成丢帧或加速。
+输出 `exports/videos/basis-coordinates-production.mp4`，1920×1080、60fps、H.264，无音轨。自动播放注册表中的五幕共 33 步，不显示鼠标或导航。逐帧推进浏览器动画时钟，机器渲染慢不会造成丢帧或加速。
 
 每一步先完整播放 CSS / Web Animations 动画（包含延迟），再停留 3 秒；每幕最后一步停留 4 秒，然后按右方向键继续。无限循环装饰动画不阻止推进。当前场景使用的动画均由此时钟覆盖。
 
@@ -86,10 +86,10 @@ npm run video:debug
 npm run video:check
 ```
 
-`--output exports/custom.mp4` 可指定文件名。视频旁的 `.mp4.json` 记录各步开始时间、动画时长、停留开始时间与结束时间，便于对照配音。`--limit-seconds` 仅用于截取调试，会截断动画或停留；完整导出不要使用。编码成功后才生成最终文件名，`.partial.mp4` 是未完成的临时文件。视频与验收产物均不提交到 Git。
+`--output exports/videos/custom.mp4` 可指定文件名。`exports/qa/<视频名>.json` 记录各步开始时间、动画时长、停留开始时间与结束时间，便于对照配音。`--limit-seconds` 仅用于截取调试，会截断动画或停留；完整导出不要使用。编码成功后才生成最终文件名，`.partial.mp4` 是未完成的临时文件。视频与验收产物均不提交到 Git。
 
 ## PNG 视频封面
 
-在本目录运行 `npm run cover:export`，输出 `exports/basis-coordinates-video-cover.png`。
+在本目录运行 `npm run cover:export`，输出 `exports/covers/basis-coordinates-video-cover.png`。
 开发服务网址加 `?cover=1` 可预览；修改 `cover/Cover.tsx` 和 `cover/cover.css`，图形直接复用现有组件。
 完整用法见[视频封面说明](../../docs/video-covers.md)。

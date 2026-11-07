@@ -24,14 +24,19 @@ export function installRenderClock() {
         return Number.isFinite(end) ? Math.max(0, end - Number(animation.currentTime ?? 0)) : 0;
       }));
     },
+    // 返回画面是否已静止：没有未结束或无限循环的动画，也没有待执行的 rAF 回调。
     sync() {
+      let moving = callbacks.size > 0;
       for (const animation of document.getAnimations()) {
         if (!starts.has(animation)) {
           starts.set(animation, now);
           animation.pause();
         }
         animation.currentTime = now - starts.get(animation);
+        const end = animation.effect?.getComputedTiming().endTime;
+        if (!Number.isFinite(end) || Number(animation.currentTime) < end) moving = true;
       }
+      return !moving;
     },
   };
 }

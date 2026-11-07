@@ -32,6 +32,6 @@ W 是三维空间，但这个映射的输出只落在其中一个二维子空间
 
 ## 检查
 
-`npm run check`；`npm run check:layout -w linear-map`；`npm run video:check -w linear-map`。录制入口和停留时间位于 scripts/video；输出全部写入被 Git 忽略的 exports。
+`npm run check`；`npm run check:layout -w linear-map`；`npm run video:check -w linear-map`。录制入口和停留时间位于 scripts/video；输出全部写入被 Git 忽略的 exports（成片在 exports/videos，检查结果在 exports/qa）。
 
 榨汁机使用公共组件 `@math-visualizations/scene-kit/JuicerIcon`，用法见 [公共组件说明](../../packages/scene-kit/juicer-icon.md)。

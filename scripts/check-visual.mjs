@@ -1,5 +1,5 @@
 // 并行运行各 workspace 的视觉检查（check:layout，再 video:check），最后汇总结果。
-// 每个项目内部仍按顺序执行；日志写入 <项目>/exports/check-visual.log。
+// 每个项目内部仍按顺序执行；日志写入 <项目>/exports/qa/check-visual.log。
 import { spawn } from 'node:child_process';
 import { createWriteStream } from 'node:fs';
 import { mkdir, readFile } from 'node:fs/promises';
@@ -58,7 +58,7 @@ async function main() {
   const queue = [...targets];
   await Promise.all(Array.from({ length: Math.min(jobs, queue.length) }, async () => {
     for (let target = queue.shift(); target; target = queue.shift()) {
-      const directory = path.join(repository, target.folder, 'exports');
+      const directory = path.join(repository, target.folder, 'exports', 'qa');
       await mkdir(directory, { recursive: true });
       const logFile = path.join(directory, 'check-visual.log');
       const log = createWriteStream(logFile);

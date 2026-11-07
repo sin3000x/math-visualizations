@@ -6,7 +6,7 @@ import { preview } from 'vite';
 import { execFileSync } from 'node:child_process';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const output = path.join(root, 'exports/morph-source');
+const output = path.join(root, 'exports/sources/morph-source');
 await mkdir(output, { recursive: true });
 const server = await preview({ root, preview: { host: '127.0.0.1', port: 0 } });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });

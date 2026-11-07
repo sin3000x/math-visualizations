@@ -31,7 +31,7 @@
 
 - `npm run lint -w dual-basis`
 - `npm test -w dual-basis`
-- `npm run check:layout -w dual-basis`：构建后检查桌面、窄屏与 1920×1080 全部步骤及导航，截图保存到忽略的 exports/qa-layout。
+- `npm run check:layout -w dual-basis`：构建后检查桌面、窄屏与 1920×1080 全部步骤及导航，截图保存到忽略的 exports/qa/layout。
 - `npm run video:check -w dual-basis`
 - `npm run video:production -w dual-basis`：动画结束后停留，再进入下一步。
 

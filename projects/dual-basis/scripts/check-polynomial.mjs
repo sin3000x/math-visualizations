@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import { preview } from 'vite';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const output = path.join(root, 'exports/qa-polynomial');
+const output = path.join(root, 'exports/qa/polynomial');
 const sceneId = 'dual-basis-polynomial-space';
 const readingLatex = ['p(0)', "p'(0)", "\\frac{p''(0)}{2}"];
 

@@ -17,8 +17,8 @@ npm run dev
 
 | 命令 | 输出 | 默认文件 |
 | --- | --- | --- |
-| `npm run video:debug` | 640×360，30 fps | `exports/dual-space-debug.mp4` |
-| `npm run video:production` | 1920×1080，60 fps | `exports/dual-space-production.mp4` |
+| `npm run video:debug` | 640×360，30 fps | `exports/videos/dual-space-debug.mp4` |
+| `npm run video:production` | 1920×1080，60 fps | `exports/videos/dual-space-production.mp4` |
 
 两个预设使用相同的 1920×1080 CSS 视口，调试版以 1/3 像素比例栅格化，保留相同构图。逐帧推进 JavaScript 与 CSS 动画时间，PNG 通过管道交给 FFmpeg 编码为 H.264 MP4；不会保留中间帧。正式版 CRF 18，调试版 CRF 22。相同默认输出路径再次运行会替换上次成功导出的视频；失败时保留旧视频并清理未完成文件。
 
@@ -26,8 +26,8 @@ npm run dev
 
 ```bash
 # 先输出短片验证编码与清晰度
-npm run video:production -- --limit-seconds 5 --output exports/production-sample.mp4
-# 仅导出指定一幕，保存为 exports/dual-space-debug-DualSpaceIntroScene.mp4
+npm run video:production -- --limit-seconds 5 --output exports/videos/production-sample.mp4
+# 仅导出指定一幕，保存为 exports/videos/dual-space-debug-DualSpaceIntroScene.mp4
 npm run video:debug -- DualSpaceIntroScene
 # 检查全部步骤、内部动画阶段、点击结果、公式与画布尺寸；输出采样帧和报告
 npm run video:check
@@ -35,7 +35,7 @@ npm run video:check
 npm run video:debug -- --check
 ```
 
-生成文件均在 Git 忽略范围内。检查输出在 `exports/qa-production/` 或 `exports/qa-debug/`。可用 `VIDEO_BROWSER=chromium` 指定已由 Playwright 安装的 Chromium。
+生成文件均在 Git 忽略范围内。检查输出在 `exports/qa/video-production/` 或 `exports/qa/video-debug/`。可用 `VIDEO_BROWSER=chromium` 指定已由 Playwright 安装的 Chromium。
 
 第一节分七步揭示袋子与收银台，点完收银台后光标消失并停顿，再出现「线性空间」，再停顿后出现「对偶空间」；第二节先定义袋子运算，再逐条验证八条线性空间公理；第三节在一幅画面中展示收银台的加法与数乘，用不同颜色的收银台作用于同一个确定的袋子，展示加法与乘以 0.8 的定义，不显示内部价格。两行用“定义为”符号连接。方向右键依次展示加法左式与定义符号、淡入加法右式、展示数乘左式与定义符号、淡入数乘右式；方向左键逐步返回，数字键 1–4 直接跳转。画面底部不显示按钮。普通模式的场景导航栏可直接跳转任意一幕。方向键或 `PageUp` / `PageDown` 可跨步骤、跨 Scene 导航，数字键跳转当前 Scene 内步骤，`Escape` 退出录制模式。
 
@@ -50,6 +50,6 @@ npm run video:debug -- --check
 
 ## PNG 视频封面
 
-在本目录运行 `npm run cover:export`，输出 `exports/dual-space-video-cover.png`。
+在本目录运行 `npm run cover:export`，输出 `exports/covers/dual-space-video-cover.png`。
 开发服务网址加 `?cover=1` 可预览；修改 `cover/Cover.tsx` 和 `cover/cover.css`，图形直接复用现有组件。
 完整用法见[视频封面说明](../../docs/video-covers.md)。

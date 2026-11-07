@@ -1,6 +1,8 @@
 export const presets = {
   debug: { width: 640, height: 360, fps: 30, crf: 22 },
   production: { width: 1920, height: 1080, fps: 60, crf: 18 },
+  // 以 2 倍像素渲染（同 Retina），在高分屏全屏播放或上传平台时更清晰。
+  "4k": { width: 3840, height: 2160, fps: 60, crf: 18 },
 };
 
 // 秒数仅表示动画全部结束后的停留时间，动画时长由浏览器自动测量。以稳定 Scene ID 为键，数组下标对应从零开始的步骤。

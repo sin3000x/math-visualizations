@@ -20,7 +20,7 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     await page.route('**/favicon.ico', route => route.fulfill({ status: 204 }));
-    const output = `${root}/projects/${project}/exports/qa-placement`;
+    const output = `${root}/projects/${project}/exports/qa/placement`;
     await mkdir(output, { recursive: true });
     try {
       for (const [scene, step] of cases) {

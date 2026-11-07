@@ -67,10 +67,10 @@ npm run video:debug -- --limit-seconds 5
 npm run video:production -- <Scene稳定ID>
 ```
 
-默认输出 `exports/<项目名>-<预设>.mp4`，可用 `--output exports/custom.mp4` 指定。`exports/` 不提交 Git。需本机 Chrome；可用 `VIDEO_BROWSER` 指定 Playwright 浏览器通道，`FFMPEG_PATH` 指定编码器。
+默认输出 `exports/videos/<项目名>-<预设>.mp4`，可用 `--output exports/videos/custom.mp4` 指定。`exports/` 不提交 Git。需本机 Chrome；可用 `VIDEO_BROWSER` 指定 Playwright 浏览器通道，`FFMPEG_PATH` 指定编码器。
 
 在 `scripts/video/timeline.mjs` 修改 `timing`：动画全部播放完后，普通步骤再停留 3 秒，每幕末步再停留 4 秒；无动画则直接停留；`overrides` 按 Scene ID 配置各步骤的秒数，例如 `{ "my-scene": [3, 5, 4] }`。脚本自动读取浏览器中有限 CSS / Web Animations 动画的剩余时间（包括延迟和重复次数），等待最晚结束的动画后才开始计停留时间；无限循环的装饰动画不阻塞推进。动画逐帧采集，渲染耗时不改变视频速度。`?export=1` 直接进入无工具栏录屏画面，`&scene=<ID>` 从指定 Scene 开始；Escape 可退出。
 
 新项目仍使用仓库根目录的 `node scripts/create-project.mjs <项目名>` 创建，入口和配置随模板生成，录屏引擎修复统一应用到各项目。
 
-`npm run check:layout` 检查普通桌面、窄屏和 1080p 的全部步骤、对象边界与键盘导航，截图输出至 `exports/qa-layout/`。
+`npm run check:layout` 检查普通桌面、窄屏和 1080p 的全部步骤、对象边界与键盘导航，截图输出至 `exports/qa/layout/`。

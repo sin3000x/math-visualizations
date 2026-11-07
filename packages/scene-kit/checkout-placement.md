@@ -19,4 +19,4 @@ import { CheckoutPlacement } from '@math-visualizations/scene-kit/CheckoutPlacem
 
 已统一接入：对偶空间的线性结算、双对偶开场与超市队列、基坐标的基袋/一般袋/换基结算，以及对偶基四次配对。
 
-回归检查：在根目录运行 `node scripts/check-checkout-placement.mjs`，检查四个项目的真实动画起点、托盘接触、快速回退及 KaTeX/控制台，并在各项目的 `exports/qa-placement` 保存截图。
+回归检查：在根目录运行 `node scripts/check-checkout-placement.mjs`，检查四个项目的真实动画起点、托盘接触、快速回退及 KaTeX/控制台，并在各项目的 `exports/qa/placement` 保存截图。

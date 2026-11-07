@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "video:debug": "node scripts/video/render.mjs --preset debug",
     "video:production": "node scripts/video/render.mjs --preset production",
+    "video:4k": "node scripts/video/render.mjs --preset 4k",
     "video:check": "node scripts/video/render.mjs --preset production --check",
     "check:layout": "node scripts/check-layout.mjs",
     "test": "node --experimental-strip-types --test tests/*.test.ts"

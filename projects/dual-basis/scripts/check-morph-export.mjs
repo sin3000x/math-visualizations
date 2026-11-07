@@ -5,7 +5,7 @@ import { preview } from 'vite';
 import { installRenderClock } from '../../../packages/video-tools/browser-clock.mjs';
 
 const root = new URL('../', import.meta.url).pathname;
-const output = `${root}exports/qa-morph-export`;
+const output = `${root}exports/qa/morph-export`;
 await mkdir(output, { recursive: true });
 const server = await preview({ root, preview: { host: '127.0.0.1', port: 0 } });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });

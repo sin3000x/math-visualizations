@@ -9,7 +9,7 @@ for (const coefficients of [[0, 0, 0], [1, 2, -1], [-2, .5, 3]]) {
   const p = x => coefficients[0] + coefficients[1] * x + coefficients[2] * x * x;
   for (const x of [-2, -.5, 0, .3, 1, 2]) assert(Math.abs(p(x) - lagrangeNodes.reduce((sum, node, i) => sum + p(node) * lagrangeValue(i, x), 0)) < 1e-12);
 }
-await mkdir(`${root}exports/qa-lagrange`, { recursive: true });
+await mkdir(`${root}exports/qa/lagrange`, { recursive: true });
 const server = await preview({ root, preview: { host: '127.0.0.1', port: 0 } });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 try {
@@ -60,7 +60,7 @@ try {
             assert.equal(await page.locator('[data-role=reconstruction-term]').count(), 0);
             assert(await page.locator('.lagrange-basis-graph svg').evaluateAll(nodes => nodes.every(n => getComputedStyle(n).opacity === '1')));
           }
-          if (recording) await page.screenshot({ path: `${root}exports/qa-lagrange/scaling-${time}.png` });
+          if (recording) await page.screenshot({ path: `${root}exports/qa/lagrange/scaling-${time}.png` });
         }
         await page.evaluate(() => document.getAnimations().forEach(a => a.finish()));
       }
@@ -103,7 +103,7 @@ try {
       assert.equal(await page.locator('.lagrange-polynomial').count(), step >= 9 ? 1 : 0);
       if (step >= 9) assert(await page.locator('.lagrange-reading').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).color === 'rgb(186, 145, 239)')));
 
-      await page.screenshot({ path: `${root}exports/qa-lagrange/${name}-${step}.png` });
+      await page.screenshot({ path: `${root}exports/qa/lagrange/${name}-${step}.png` });
     }
     await page.keyboard.press('ArrowLeft');
     assert.equal(await page.locator('[data-role=reconstruction-term]').count(), 0);

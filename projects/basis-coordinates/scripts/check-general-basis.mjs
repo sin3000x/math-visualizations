@@ -17,7 +17,7 @@ for (const [v1, v2] of [[[1, 0], [0, 1]], [[1, 1], [0, 1]], [[2, -1], [1, 3]]]) 
 const server = await preview({ preview: { host: '127.0.0.1', port: 0 } });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 try {
-  await mkdir('exports/qa-general-basis', { recursive: true });
+  await mkdir('exports/qa/general-basis', { recursive: true });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -54,7 +54,7 @@ try {
       assert(await page.locator('.general-basis-quote').evaluateAll(nodes => nodes.every(node => Number(getComputedStyle(node).opacity) === 0)));
     }
     assert.equal(await page.locator('.katex-error').count(), 0);
-    await page.screenshot({ path: `exports/qa-general-basis/step-${step}.png` });
+    await page.screenshot({ path: `exports/qa/general-basis/step-${step}.png` });
   }
   assert.deepEqual(errors, []);
   console.log('一般基 6 步通过：任意基数值验证、先基后坐标、逐项结账入行、坐标入列、动画来源与袋底接触。');

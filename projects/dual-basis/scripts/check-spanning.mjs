@@ -59,7 +59,7 @@ try {
    assert(morph.moving && morph.continuous, '3、2 必须连续补间到完整结算图标');
    for (const [label, time] of [['quarter', 250], ['midpoint', 500], ['three-quarter', 750], ['near-end', 999]]) {
     await page.locator('.spanning-morph-layer').evaluate((layer, time) => layer.getAnimations({ subtree: true }).forEach(a => { a.currentTime = time; }), time);
-    await page.screenshot({ path: `exports/qa-layout/spanning-morph-${label}.png` });
+    await page.screenshot({ path: `exports/qa/layout/spanning-morph-${label}.png` });
    }
    await page.locator('.spanning-morph-layer').evaluate(layer => layer.getAnimations({ subtree: true }).forEach(a => a.play()));
   }
@@ -98,7 +98,7 @@ try {
     assert(movement.middle[i].y < box.y - 30, '实际抬起袋子，沿弧线提取');
     for (const key of ['x', 'y', 'width']) assert(Math.abs(movement.end[i][key] - movement.destination[key]) < 1, '两袋最终落在共同输入处');
    });
-   await page.screenshot({ path: 'exports/qa-layout/spanning-extraction-midpoint.png' });
+   await page.screenshot({ path: 'exports/qa/layout/spanning-extraction-midpoint.png' });
    await page.locator('.spanning-extraction').evaluate(layer => layer.getAnimations({ subtree: true }).forEach(a => a.play()));
   }
   if (step === 5) {
@@ -136,7 +136,7 @@ try {
    assert.equal(scrolling.frames[0][0], scrolling.frames[1][0], '到位后停留 0.2 秒');
    assert(scrolling.frames[2][0] > scrolling.frames[3][0] && scrolling.frames[3][0] > scrolling.frames[4][0], '袋子轮廓必须持续向上移动');
    assert.equal(scrolling.frames[5][0], scrolling.frames[6][0]);
-   await page.screenshot({ path: 'exports/qa-layout/spanning-bag-roll-midpoint.png' });
+   await page.screenshot({ path: 'exports/qa/layout/spanning-bag-roll-midpoint.png' });
    await page.evaluate(() => {
     const clock = document.querySelector('.spanning-clock').getAnimations()[0];
     clock.currentTime = 3800;
@@ -151,7 +151,7 @@ try {
    });
    assert(fading.every(node => node.opacity > 0 && node.opacity < 1));
    assert(fading.every(node => node.value === '水果袋：4 斤苹果，3 斤香蕉'), '淡出时保留滚动结束的最后一袋');
-   await page.screenshot({ path: 'exports/qa-layout/spanning-final-fade-midpoint.png' });
+   await page.screenshot({ path: 'exports/qa/layout/spanning-final-fade-midpoint.png' });
    await page.locator('.evaluation-0 > [data-checkout-placement], .spanning-argument').evaluateAll(nodes => nodes.flatMap(n => n.getAnimations()).forEach(a => a.play()));
   }
   await page.waitForFunction(() => document.getAnimations().every(a => a.playState === 'finished' || a.playState === 'idle'));
@@ -188,7 +188,7 @@ try {
    assert.equal(await page.locator('.spanning-content').evaluate(node => new DOMMatrixReadOnly(getComputedStyle(node).transform).m42), -210);
    assert(!(await page.locator('.spanning-argument').isVisible()));
   }
-  await page.screenshot({ path: `exports/qa-layout/spanning-${step}.png` });
+  await page.screenshot({ path: `exports/qa/layout/spanning-${step}.png` });
  }
  await page.keyboard.press('6');
  assert(await page.locator('[data-role="bag-reel-strip"]').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).transform === 'none')), '从分解式回退时恢复第一袋位置');
