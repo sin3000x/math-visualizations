@@ -61,7 +61,7 @@ git diff --check
 
 ```sh
 npm run video:debug              # 640×360，30 fps
-npm run video:production         # 1920×1080，60 fps
+npm run video:production         # 3840×2160，60 fps（video:1080p 导出 1080p 预览）
 npm run video:check              # 全步骤 1080p 抽帧检查，输出截图和 report.json
 npm run video:debug -- --limit-seconds 5
 npm run video:production -- <Scene稳定ID>

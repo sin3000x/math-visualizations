@@ -35,7 +35,7 @@ export async function renderVideo({ root, timing = defaultTiming, scriptedTimeli
     check: { type: "boolean", default: false },
   } });
   const preset = presets[values.preset];
-  if (!Object.hasOwn(presets, values.preset)) throw new Error("预设必须为 debug、production 或 4k");
+  if (!Object.hasOwn(presets, values.preset)) throw new Error("预设必须为 debug、1080p 或 production");
   if (!Object.hasOwn(codecs, values.codec)) throw new Error("编码必须为 h264 或 prores");
   const codec = codecs[values.codec];
   const jobs = values.jobs === undefined ? defaultJobs() : Number(values.jobs);

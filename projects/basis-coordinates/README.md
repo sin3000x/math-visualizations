@@ -71,7 +71,7 @@
 npm run video:production
 ```
 
-输出 `exports/videos/basis-coordinates-production.mp4`，1920×1080、60fps、H.264，无音轨。自动播放注册表中的五幕共 33 步，不显示鼠标或导航。逐帧推进浏览器动画时钟，机器渲染慢不会造成丢帧或加速。
+输出 `exports/videos/basis-coordinates-production.mp4`，3840×2160、60fps、H.264，无音轨（`npm run video:1080p` 导出 1920×1080 预览）。自动播放注册表中的五幕共 33 步，不显示鼠标或导航。逐帧推进浏览器动画时钟，机器渲染慢不会造成丢帧或加速。
 
 每一步先完整播放 CSS / Web Animations 动画（包含延迟），再停留 3 秒；每幕最后一步停留 4 秒，然后按右方向键继续。无限循环装饰动画不阻止推进。当前场景使用的动画均由此时钟覆盖。
 

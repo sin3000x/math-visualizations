@@ -18,9 +18,10 @@ npm run dev
 | 命令 | 输出 | 默认文件 |
 | --- | --- | --- |
 | `npm run video:debug` | 640×360，30 fps | `exports/videos/dual-space-debug.mp4` |
-| `npm run video:production` | 1920×1080，60 fps | `exports/videos/dual-space-production.mp4` |
+| `npm run video:1080p` | 1920×1080，60 fps（预览） | `exports/videos/dual-space-1080p.mp4` |
+| `npm run video:production` | 3840×2160，60 fps | `exports/videos/dual-space-production.mp4` |
 
-两个预设使用相同的 1920×1080 CSS 视口，调试版以 1/3 像素比例栅格化，保留相同构图。逐帧推进 JavaScript 与 CSS 动画时间，PNG 通过管道交给 FFmpeg 编码为 H.264 MP4；不会保留中间帧。正式版 CRF 18，调试版 CRF 22。相同默认输出路径再次运行会替换上次成功导出的视频；失败时保留旧视频并清理未完成文件。
+各预设使用相同的 1920×1080 CSS 视口，调试版以 1/3、正式版以 2 倍像素比例栅格化，保留相同构图。逐帧推进 JavaScript 与 CSS 动画时间，PNG 通过管道交给 FFmpeg 编码为 H.264 MP4；不会保留中间帧。正式版 CRF 18，调试版 CRF 22。相同默认输出路径再次运行会替换上次成功导出的视频；失败时保留旧视频并清理未完成文件。
 
 播放脚本在 `scripts/video/timeline.mjs`：第一幕展示全部袋子后点击第二、第三个袋子，展示全部收银台后点击第二、第三个收银台。使用放大的白色箭头，每次用约 1.2 秒移到目标，到达后点击并直接进入下一个动作，不额外悬停或停留；点击后释放焦点，避免下一次方向键产生蓝色焦点框。点完最后一个收银台后光标消失并停顿，再出现「线性空间」，再停顿后出现「对偶空间」。其余通过右方向键推进。普通步骤默认 2.5 秒，袋子公理动画步骤 3 秒（动画约 1 秒，之后停留约 2 秒），结尾两幕各 4 秒。循环漂浮动画在停顿期间继续播放。所有时间单位为秒，帧率切换不改变播放速度。
 
@@ -35,7 +36,7 @@ npm run video:check
 npm run video:debug -- --check
 ```
 
-生成文件均在 Git 忽略范围内。检查输出在 `exports/qa/video-production/` 或 `exports/qa/video-debug/`。可用 `VIDEO_BROWSER=chromium` 指定已由 Playwright 安装的 Chromium。
+生成文件均在 Git 忽略范围内。检查输出在 `exports/qa/video-1080p/` 或 `exports/qa/video-debug/`。可用 `VIDEO_BROWSER=chromium` 指定已由 Playwright 安装的 Chromium。
 
 第一节分七步揭示袋子与收银台，点完收银台后光标消失并停顿，再出现「线性空间」，再停顿后出现「对偶空间」；第二节先定义袋子运算，再逐条验证八条线性空间公理；第三节在一幅画面中展示收银台的加法与数乘，用不同颜色的收银台作用于同一个确定的袋子，展示加法与乘以 0.8 的定义，不显示内部价格。两行用“定义为”符号连接。方向右键依次展示加法左式与定义符号、淡入加法右式、展示数乘左式与定义符号、淡入数乘右式；方向左键逐步返回，数字键 1–4 直接跳转。画面底部不显示按钮。普通模式的场景导航栏可直接跳转任意一幕。方向键或 `PageUp` / `PageDown` 可跨步骤、跨 Scene 导航，数字键跳转当前 Scene 内步骤，`Escape` 退出录制模式。
 

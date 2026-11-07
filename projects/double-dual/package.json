@@ -13,8 +13,8 @@
     "check:layout": "node scripts/check-layout.mjs",
     "video:debug": "node scripts/video/render.mjs --preset debug",
     "video:production": "node scripts/video/render.mjs --preset production",
-    "video:4k": "node scripts/video/render.mjs --preset 4k",
-    "video:check": "node scripts/video/render.mjs --preset production --check",
+    "video:1080p": "node scripts/video/render.mjs --preset 1080p",
+    "video:check": "node scripts/video/render.mjs --preset 1080p --check",
     "cover:export": "node ../../scripts/export-cover.mjs double-dual"
   },
   "dependencies": {
