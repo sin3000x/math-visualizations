@@ -68,6 +68,8 @@ export const BASIS = {
     juicerY: 450, juicerScale: .6,
   },
   divider: { y: 208, left: 90, right: 1350 },
+  /** 基袋左边的名字 e1、e2：口播称一斤苹果、一斤香蕉为 e1、e2。 */
+  label: { dx: -97, size: 44 },
 };
 export const basisArrows = (i: number, className?: string): Arrow[] => [
   { id: `basis-in-${i}`, from: [BASIS.bagX[i] + 75, BASIS.rowY], to: [BASIS.juicerX[i] - 55, BASIS.rowY], delay: 0, className },
@@ -89,14 +91,16 @@ export const equationArrows = (x: number = BASIS.eq.resultX, id = "eq", delay = 
 export const MATRIX_LAYOUT = (() => {
   const columnX = [460, 610], rowY = [355, 450, 545];
   // 收银台的行向量与上移后的矩阵共用两列；行首写新基 1，记号 [f]_{1←果} 的下标只有一项，整体左移紧贴方括号。
-  const row = { y: 570, headerY: 485, padY: 45, oneX: [893, 940, 990, 1037] };
+  const row = { y: 570, headerY: 485, padY: 45, oneX: [895, 946, 1002, 1058] };
   return {
     columnX, rowY, liftDY: -215, headerY: rowY[0] - 85, labelX: columnX[0] - 115,
     numberSize: 54,
     /** 方括号相对列与行的外扩。 */
     padX: 60, padY: 50,
     /** 记号 矩阵 = [T]_{杯←果}：等号与 T 在矩阵右边的中间一行，下标图标比列顶、行首图标小。 */
-    note: { equalsX: 735, tX: 830, bracketDX: 42, subY: rowY[1] + 40, cupX: [908, 943, 978], arrowX: 1025, fruitX: [1075, 1122], cupScale: .9, fruitScale: .8 },
+    note: { equalsX: 735, tX: 830, bracketDX: 42, subY: rowY[1] + 40, cupX: [912, 956, 1000], arrowX: 1052, fruitX: [1106, 1162], cupScale: 1.15, fruitScale: 1, subSize: 50 },
+    /** W 的自然基：三个只装一份的托盘竖排在左边（比矩阵的行距更松，读数才看得清），再收成行首的杯子。 */
+    basisTray: { x: 160, y: [300, 450, 600], scale: .6 },
     row,
     /**
      * 收银台：缩放后放在行向量左边，略微上提以留在字幕安全区以上；屏幕上水果图标与单价数字相对收银台中心的位置。
@@ -120,12 +124,13 @@ export const MATRIX_VECTOR = {
   columnX: [172, 322], rowY: [218, 313, 408], cupX: 57, headerDY: MATRIX_LAYOUT.headerY - MATRIX_LAYOUT.rowY[0],
   /** 向量与它右侧的水果、结果列与它右侧的杯子：标出每一行对应的基。 */
   vectorX: 452, vectorY: [265.5, 360.5], vectorFruitX: 543, vectorFruitScale: .8, resultX: 1608, resultCupX: 1695,
-  top: { equalsX: [608, 1506], coefX: [759, 1208], plusX: 1035, termX: [875, 1346] },
+  top: { equalsX: [608, 1494], coefX: [759, 1208], plusX: 1035, termX: [875, 1346] },
   /** 单列向量的方括号相对数字的外扩。 */
   vectorPadX: 58,
   /** 下行：termX 是 榨汁机(基袋) 的袋子位置，trayX 是结果托盘。 */
-  bottom: { y: 670, equalsX: [608, 1506], coefX: [700, 1149], plusX: 1035, termX: [909, 1380], trayX: 1608 },
-  trayScale: .5,
+  bottom: { y: 670, equalsX: [608, 1494], coefX: [700, 1149], plusX: 1035, termX: [909, 1380], trayX: 1608 },
+  /** 下行的托盘：结果托盘，以及最后一步 榨汁机(基袋) 换成的两只托盘（以整项中心为准，在袋子左边 trayDX）。 */
+  trayScale: .58, trayDX: -35,
   /** 函数写法 榨汁机(袋)：v 在矩阵与向量下方，用大号；e1、e2 用小号。各部分相对袋子中心的位置。 */
   bagX: 358,
   apply: {

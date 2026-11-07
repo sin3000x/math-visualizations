@@ -1,12 +1,12 @@
 .matrix-fruit { display: block; width: 52px; height: 52px; }
 .mini-cup { display: block; width: 26px; height: 38px; border: 4px solid currentColor; border-top: 0; border-radius: 0 0 7px 7px; background: linear-gradient(transparent 40%, color-mix(in srgb, currentColor 62%, transparent) 40%); }
 /* 复制品：原件留在原处，复制品从原件的位置与大小飞来；外形不同的复制品起步时淡入。 */
-.matrix-scene .copy-fly { animation: copy-fly 1s ease-in-out both; }
+.matrix-scene .copy-fly { animation: copy-fly 1s ease-in-out var(--delay, 0s) both; }
 @keyframes copy-fly { from { opacity: var(--fo); transform: translate(var(--fx), var(--fy)) scale(var(--fsx), var(--fsy)); } 25% { opacity: 1; } }
 /* 突出：被讲到的部分轻轻放大一次，其余部分变暗。 */
 .matrix-part, .matrix-group { transition: opacity .5s ease; }
 .matrix-group { position: absolute; inset: 0; transition: opacity .5s ease, transform 1s ease-in-out; }
-.matrix-scene .pulse { animation: pulse .8s ease-in-out both; }
+.matrix-scene .pulse { animation: pulse .8s ease-in-out var(--delay, 0s) both; }
 @keyframes pulse { 50% { scale: 1.12; } }
 .juicer-block { position: absolute; inset: 0; transition: transform 1s ease-in-out; }
 .checkout-machine { position: relative; width: 460px; }

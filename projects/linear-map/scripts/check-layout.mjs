@@ -9,16 +9,16 @@ const expectedJuice = {
   machines: ['5,4,3|5,7,4|6,3,3', '', '5,4,3|3,5,2|4,2,6'],
   linearity: ['5,4,3|3,5,2|4,2,6', '', '', '3,3,2|2,1,1|5,4,3', '3,3,2|2,1,1|5,4,3', '', '5,4,3|2.5,2,1.5', '5,4,3|2.5,2,1.5'],
   'basis-images': ['5,4,3|2.5,2,1.5', '', '2,1,1|1,2,1', '2,1,1|1,2,1', '2,1,1|1,2,1', '2,1,1|1,2,1|2,1,1|1,2,1', '2,1,1|1,2,1|2,1,1|1,2,1|2.5,2,1.5', '2,1,1|1,2,1|2,1,1|1,2,1|2.5,2,1.5'],
-  matrix: [...Array(10).fill('2,1,1|1,2,1'), ...Array(6).fill('')],
-  'matrix-vector': ['', '', '', '', '', '2.5,2,1.5'],
-  takeaway: ['2.5,2,1.5', '2.5,2,1.5', '2.5,2,1.5', '2.5,2,1.5|2,1,1', '2.5,2,1.5|2,1,1|1,2,1'],
+  matrix: [...Array(3).fill('2,1,1|1,2,1'), '2,1,1|1,2,1|1,0,0|0,1,0|0,0,1', ...Array(8).fill('2,1,1|1,2,1'), ...Array(6).fill('')],
+  'matrix-vector': ['', '', '', '', '', '2.5,2,1.5', '2,1,1|1,2,1|2.5,2,1.5'],
+  takeaway: ['2,1,1|1,2,1|2.5,2,1.5', '2.5,2,1.5', '2.5,2,1.5', '2.5,2,1.5|2,1,1', '2.5,2,1.5|2,1,1|1,2,1'],
 };
 
 await checkLayout({
   root: fileURLToPath(new URL('../', import.meta.url)),
   beforeStep: async ({ page, state }) => {
-    // 第 4、5 步：每个矩阵元素从上方托盘的读数原地复制出发，原读数留在原处。
-    if (state.scene === 'matrix' && (state.step === 4 || state.step === 5)) {
+    // 第 6、7 步：每个矩阵元素从上方托盘的读数原地复制出发，原读数留在原处。
+    if (state.scene === 'matrix' && (state.step === 5 || state.step === 6)) {
       const starts = await page.evaluate(() => {
         const center = node => { const b = node.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2, b.height]; };
         const readings = [...document.querySelectorAll('.tray-reading')].map(center);

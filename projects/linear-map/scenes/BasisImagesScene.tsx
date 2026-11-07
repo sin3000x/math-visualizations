@@ -14,6 +14,11 @@ const { eq } = BASIS;
 /** 等式中两只基袋开始榨汁的时刻：上方的 T 先复制飞到它们下方。 */
 const TERM_RUN = .8;
 
+/** 基袋左边的名字 e1、e2；本幕与 MatrixScene 开头共用。 */
+export function BasisLabels({ className = "", delay }: { className?: string; delay?: number }) {
+  return <>{BASIS.bagX.map((x, i) => <Op key={i} latex={`e_${i + 1}`} size={BASIS.label.size} x={x + BASIS.label.dx} y={BASIS.rowY} className={className} delay={delay} />)}</>;
+}
+
 /** 从上方原件处飞来的复制品：起点位置与大小都取原件的。 */
 const copyFrom = (x: number, y: number, fromX: number, fromY: number, fromScale: number, toScale: number = eq.scale) =>
   vars({ "--from-x": `${fromX - x}px`, "--from-y": `${fromY - y}px`, "--from-s": String(fromScale / toScale) });
@@ -21,7 +26,7 @@ const copyFrom = (x: number, y: number, fromX: number, fromY: number, fromScale:
 /**
  * 由线性，只需知道两只基袋的结果：(1, 0.5) = 1 × 苹果基袋 + 0.5 × 香蕉基袋，
  * 所以它的托盘 = 1 × 苹果托盘 + 0.5 × 香蕉托盘：T 把袋子的等式映成托盘的等式。
- * 步骤：0 复现 LinearityScene 结尾；1 上一幕淡出，T 移到苹果映射，基袋出现；2 两只基袋同时榨汁；
+ * 步骤：0 复现 LinearityScene 结尾；1 上一幕淡出，T 移到苹果映射，基袋与它们的名字 e1、e2 出现；2 两只基袋同时榨汁；
  * 3 分割线与 (1,0.5) 出现在等式左端；4 写成两只基袋的组合，基袋复制飞来；
  * 5 上方两台 T 复制飞到等式中两只基袋下方，基袋榨汁得到下一行的托盘，再写出系数与加号；6 得到 (1,0.5) 的托盘；
  * 7 T 放在 (1,0.5) 与它的托盘之间。
@@ -46,6 +51,7 @@ export function BasisImagesScene({ step }: { step: number }) {
       ...(step >= 7 ? equationArrows() : [])]} />
 
     {/* 上方并排两张映射：基袋 → T → 托盘。苹果那台 T 是从上一幕移来的同一台。 */}
+    {settled && <BasisLabels className={enter} delay={.8} />}
     {bases.map(({ bag, tone }, i) => <div key={i}>
       {settled && <Bag bag={bag} tone={tone} x={BASIS.bagX[i]} y={BASIS.rowY} scale={BASIS.bagScale} className={enter} delay={.5} />}
       {(i === 0 || settled) && <Juicer x={i === 0 && !settled ? LIN.scale.C : BASIS.juicerX[i]} y={i === 0 && !settled ? LIN.juicerY : BASIS.rowY}

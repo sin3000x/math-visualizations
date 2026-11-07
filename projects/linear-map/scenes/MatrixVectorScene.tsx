@@ -16,7 +16,7 @@ const columns = [columnOf(MATRIX, 0), columnOf(MATRIX, 1)] as const;
 const output = juiceOf(input);
 const { numberSize: NUMBER_SIZE, padX, padY, note, row, checkout } = MATRIX_LAYOUT;
 const { scale: S, columnX, rowY, cupX, headerDY, vectorX, vectorY, vectorFruitX, vectorFruitScale, resultX, resultCupX,
-  top, bottom, vectorPadX, trayScale, bagX, apply } = MATRIX_VECTOR;
+  top, bottom, vectorPadX, trayScale, trayDX, bagX, apply } = MATRIX_VECTOR;
 const { equalsX, coefX, plusX, termX } = top, bottomY = bottom.y;
 /** 上一幕结尾（屏幕坐标）：矩阵上移后的行与 [T] 下标的高度。 */
 const PREV_ROW_Y = MATRIX_LAYOUT.rowY.map(y => y + MATRIX_LAYOUT.liftDY);
@@ -29,7 +29,7 @@ const LABEL_X = MATRIX_LAYOUT.labelX, SUB_Y = note.subY + MATRIX_LAYOUT.liftDY;
 const FROM = [(MATRIX_LAYOUT.columnX[0] - columnX[0]) / S, (PREV_ROW_Y[0] - rowY[0]) / S];
 // 袋内两个数字相对袋子中心的位置与字号（缩放后）：数量从这里原样浮起，再飞成向量。
 const BAG_DIGIT = [[-1, -11], [6, 25]] as const, BAG_DIGIT_SCALE = 27 * apply.big.bagScale / NUMBER_SIZE;
-const AT = { move: 1, lift: 2, combination: 3, result: 4, juice: 5 } as const;
+const AT = { move: 1, lift: 2, combination: 3, result: 4, juice: 5, trays: 6 } as const;
 /**
  * 第 2 步：数量从袋中依次浮起。第 3 步：每一列连同它的权重一起飞出，第二列在 COLUMN_LAG 秒后飞出。
  * 路线互不交叉：列在途中缩小并收拢到 COLUMN_PEAK_Y，第一列从矩阵下方与下行之间的空白穿过，
@@ -77,7 +77,7 @@ function PreviousEnd({ className }: { className: string }) {
     {[-1, 1].map(side => <Op key={side} latex={side < 0 ? "[" : "]"} size={72} x={note.tX + side * note.bracketDX} y={PREV_ROW_Y[1]} />)}
     <Op latex="T" size={72} x={note.tX} y={PREV_ROW_Y[1]} />
     {note.cupX.map((x, i) => <Place key={i} x={x} y={SUB_Y} scale={note.cupScale} data-layout-content><span className="mini-cup" style={{ color: JUICE_COLORS[i] }} /></Place>)}
-    <Op latex={"\\leftarrow"} size={42} x={note.arrowX} y={SUB_Y} />
+    <Op latex={"\\leftarrow"} size={note.subSize} x={note.arrowX} y={SUB_Y} />
     {fruits.map((kind, j) => fruitMark(kind, note.fruitX[j], SUB_Y, note.fruitScale))}
 
     <Place x={checkout.x} y={checkout.y} scale={checkout.scale}>
@@ -90,8 +90,8 @@ function PreviousEnd({ className }: { className: string }) {
     <Op latex="=" x={note.equalsX} y={row.y} />
     {[-1, 1].map(side => <Op key={side} latex={side < 0 ? "[" : "]"} size={72} x={note.tX + side * note.bracketDX} y={row.y} />)}
     <Op latex="f" size={72} x={note.tX} y={row.y} />
-    <Op latex="1" size={42} x={row.oneX[0]} y={row.y + 40} />
-    <Op latex={"\\leftarrow"} size={42} x={row.oneX[1]} y={row.y + 40} />
+    <Op latex="1" size={note.subSize} x={row.oneX[0]} y={row.y + 40} />
+    <Op latex={"\\leftarrow"} size={note.subSize} x={row.oneX[1]} y={row.y + 40} />
     {fruits.map((kind, j) => fruitMark(kind, row.oneX[2 + j], row.y + 40, note.fruitScale))}
   </div>;
 }
@@ -102,7 +102,8 @@ function PreviousEnd({ className }: { className: string }) {
  * 步骤：0 复现 MatrixScene 结尾；1 其余淡出，矩阵连同列顶水果、行首杯子缩放移到本幕位置，同时下方写出 榨汁机(一袋 (1, 0.5))；
  * 2 袋中数量依次浮起，沿弧线飞上去成为向量 v，向量右侧标出对应的水果；
  * 3 写出 = 1 × 第一列 + 0.5 × 第二列，两列连同权重依次沿弧线飞出；4 加权和得到结果列，右侧标出对应的杯子；
- * 5 下行：= 1 × 榨汁机(苹果基袋) + 0.5 × 榨汁机(香蕉基袋) = 结果托盘，与上行逐项对齐，从左到右逐项出现。
+ * 5 下行：= 1 × 榨汁机(苹果基袋) + 0.5 × 榨汁机(香蕉基袋) = 结果托盘，与上行逐项对齐，从左到右逐项出现；
+ * 6 下行的两个 榨汁机(基袋) 换成它们榨出的托盘，与上行的两列上下对应。
  */
 export function MatrixVectorScene({ step }: { step: number }) {
   return <section className="lesson matrix-vector-scene" data-step={step} aria-label="水果数量是矩阵各列的权重，加权和就是榨出的果汁">
@@ -173,7 +174,11 @@ export function MatrixVectorContent({ step }: { step: number }) {
         <Op latex="=" x={bottom.equalsX[0]} y={bottomY} className={appear(AT.juice)} delay={TERM_AT[0]} />
         {bases.map(({ bag, tone }, j) => <div key={j}>
           <Op latex={`${input[j]}\\times`} x={bottom.coefX[j]} y={bottomY} className={appear(AT.juice)} delay={TERM_AT[j + 1]} />
-          <Application bag={bag} tone={tone} x={bottom.termX[j]} y={bottomY} size={apply.small} className={appear(AT.juice)} delay={TERM_AT[j + 1]} />
+          <Application bag={bag} tone={tone} x={bottom.termX[j]} y={bottomY} size={apply.small}
+            className={`basis-apply ${step === AT.trays ? "fade-out" : appear(AT.juice)}`} delay={step === AT.juice ? TERM_AT[j + 1] : undefined} />
+          {step >= AT.trays && <Place x={bottom.termX[j] + trayDX} y={bottomY} scale={trayScale} className={step === AT.trays ? "emerge" : ""} delay={.35 + j * .2}>
+            <JuiceTray values={columns[j]} />
+          </Place>}
         </div>)}
         <Op latex="+" x={bottom.plusX} y={bottomY} className={appear(AT.juice)} delay={TERM_AT[2]} />
         <Op latex="=" x={bottom.equalsX[1]} y={bottomY} className={appear(AT.juice)} delay={TERM_AT[3]} />

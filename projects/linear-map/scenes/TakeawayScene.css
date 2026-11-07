@@ -1,6 +1,6 @@
 /* 复现上一幕结尾：动画直接停在终态；榨汁机(一袋) 与结果托盘由本幕自己画出，以便移动。 */
 .takeaway-scene .mv-end *, .takeaway-scene .mv-end .place-inner { animation: none !important; transition: none !important; }
-.takeaway-scene .mv-end :is(.input-apply, .result-tray) { opacity: 0; }
+.takeaway-scene .mv-end :is(.input-apply, .result-tray, .basis-apply) { opacity: 0; }
 /* 复制品：从托盘读数的位置与大小飞进矩阵。 */
 .takeaway-scene .copy { animation: takeaway-copy .8s ease-in-out var(--delay, 0s) both; }
 @keyframes takeaway-copy { from { transform: translate(var(--from-x), var(--from-y)) scale(var(--from-s)); } }

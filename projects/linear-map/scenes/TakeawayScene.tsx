@@ -46,7 +46,7 @@ export function TakeawayScene({ step }: { step: number }) {
   const appear = (at: number) => step === at ? "fade-in" : "";
   const columnShown = AT.columns.map(at => step >= at);
   return <section className="lesson takeaway-scene" data-step={step} aria-label="榨汁机是把水果袋对应到果汁托盘的线性映射，它的矩阵两列是两只基袋的结果">
-    {step <= AT.move && <div className={`mv-end matrix-vector-scene ${leave}`}><MatrixVectorContent step={5} /></div>}
+    {step <= AT.move && <div className={`mv-end matrix-vector-scene ${leave}`}><MatrixVectorContent step={6} /></div>}
 
     {step <= AT.move && [-1, 1].map((side, k) => <Op key={side} latex={side < 0 ? "(" : ")"} size={PREV.parenSize} x={PREV.parenX[k]} y={PREV.y} className={leave} />)}
     <Arrows arrows={[
