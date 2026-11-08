@@ -15,6 +15,7 @@
 
 - **FCPXML 标记**：每次导出同时生成 `exports/videos/<名称>.fcpxml`（FCPXML 1.10）。在 Final Cut Pro 中「文件 → 导入 → XML」，得到一个放好整段视频的项目：每一步打两个点：步骤开始（`<Scene ID> · <步骤>`，即上一步停顿结束；每个 Scene 第一步用章节标记，名为 Scene ID）和动画结束（`<Scene ID> · <步骤> 动画结束`，即停顿开始）。没有动画的步骤两点重合，只保留开始标记。标记按整帧对齐。视频移动位置后需在 Final Cut Pro 中重新链接。
 - **分辨率**：`npm run video:production -w <项目>` 是正式交付，默认以 2 倍像素（同 Retina）渲染 3840×2160 60fps；1080p 成品在平台二次压缩后小字发虚。`npm run video:1080p -w <项目>` 导出 1920×1080，只用于快速预览；`video:check` 也按 1080p 抽帧。4K 截图像素是 1080p 的 4 倍，渲染更慢。
+- **字幕**：`npm run subtitles -- --project <项目> --audio <录音> --script <文案>`（仓库根目录）用 faster-whisper 识别旁白的逐字时间，把文案对齐上去，写出 `exports/videos/<录音名>.srt`；断行规则与术语表在 `subtitles/`。完整流程见 `.claude/skills/subtitles/SKILL.md`。
 - **ProRes**：`--codec prores` 输出 ProRes 422（10 bit）`.mov`，体积是 h264 的数百倍（2 分钟 4K 约数 GB 到十几 GB），一般不需要；Final Cut Pro 剪辑卡顿时，优先在其中「转码媒体 → 创建优化的媒体」。
 
 ### 加速

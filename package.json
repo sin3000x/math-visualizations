@@ -26,6 +26,7 @@
     "check": "npm run lint && npm run build && npm run test:built",
     "test:built": "node --test tests/*.test.mjs && npm run test --workspaces --if-present --ignore-scripts",
     "check:visual": "node scripts/check-visual.mjs",
-    "check:all": "npm run check && npm run check:visual"
+    "check:all": "npm run check && npm run check:visual",
+    "subtitles": "uv run --python 3.11 --with faster-whisper --with jieba python packages/video-tools/subtitles/make_srt.py"
   }
 }
