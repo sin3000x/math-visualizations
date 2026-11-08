@@ -5,23 +5,31 @@ const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": 
 const escapeXml = text => String(text).replace(/[&<>"']/g, character => entities[character]);
 const standardFormats = { "1920x1080": "1080p", "1280x720": "720p", "3840x2160": "2160p" };
 
-// 生成 Final Cut Pro 可导入的 FCPXML：一条时间线放入整段视频，每个 Scene 一个章节标记，之后每一步一个标记。
-// 时间均以整帧有理数表示，标记与视频帧严格对齐。
+// 生成 Final Cut Pro 可导入的 FCPXML：一条时间线放入整段视频。每一步打两个点：
+// 步骤开始（即上一步停顿结束；每个 Scene 第一步用章节标记）与动画结束（即停顿开始）。
+// 没有动画的步骤两点重合，只保留开始标记。时间均以整帧有理数表示，标记与视频帧严格对齐。
 export function createFcpxml({ videoPath, name, fps, width, height, totalFrames, shots }) {
   const at = frames => frames === 0 ? "0s" : `${frames}/${fps}s`;
   const duration = at(totalFrames);
   const standard = standardFormats[`${width}x${height}`];
   const formatName = standard ? ` name="FFVideoFormat${standard}${fps}"` : "";
   const markers = [];
-  const seen = new Set();
+  const startedSteps = new Set();
+  const scenes = new Set();
   for (const shot of shots) {
     const key = `${shot.scene}\u0000${shot.step}`;
-    if (seen.has(key) || shot.startFrame >= totalFrames) continue;
-    seen.add(key);
-    const firstOfScene = !markers.some(marker => marker.scene === shot.scene);
-    markers.push({ scene: shot.scene, frame: shot.startFrame, chapter: firstOfScene,
-      label: firstOfScene ? shot.scene : `${shot.scene} · ${shot.step + 1}` });
+    if (!startedSteps.has(key) && shot.startFrame < totalFrames) {
+      startedSteps.add(key);
+      const chapter = !scenes.has(shot.scene);
+      scenes.add(shot.scene);
+      markers.push({ frame: shot.startFrame, chapter, label: chapter ? shot.scene : `${shot.scene} · ${shot.step + 1}` });
+    }
+    const holdStart = shot.holdStartFrame ?? shot.startFrame;
+    if (holdStart > shot.startFrame && holdStart < totalFrames) {
+      markers.push({ frame: holdStart, chapter: false, label: `${shot.scene} · ${shot.step + 1} 动画结束` });
+    }
   }
+  markers.sort((first, second) => first.frame - second.frame);
   const markerXml = markers.map(marker => marker.chapter
     ? `              <chapter-marker start="${at(marker.frame)}" duration="${at(1)}" value="${escapeXml(marker.label)}" posterOffset="0s"/>`
     : `              <marker start="${at(marker.frame)}" duration="${at(1)}" value="${escapeXml(marker.label)}"/>`).join("\n");
