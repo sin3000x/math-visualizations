@@ -4,7 +4,7 @@
 
 ## 导出
 
-在仓库根目录一次生成五张：
+在仓库根目录一次生成全部项目的封面：
 
 ```sh
 node scripts/export-cover.mjs
@@ -81,3 +81,7 @@ node scripts/export-cover.mjs basis-coordinates --output /tmp/row-vector.png
 ## 对偶基封面
 
 `projects/dual-basis/cover/` 复用水果袋与 Scene 的 `PricedCheckout` 组件，展示基和对应的两台收银台。运行 `npm run cover:export -w dual-basis`，输出 `projects/dual-basis/exports/covers/dual-basis-video-cover.png`。
+
+## 线性映射封面
+
+`projects/linear-map/cover/` 复用公共 `JuicerIcon`、`FruitIcon` 与 KaTeX，表达本期结论“榨汁机 = 矩阵”：列顶苹果、香蕉，行首 A、B、C 三杯，读数取 `lib/math/map.ts` 的 `MATRIX` 并沿用各行果汁颜色。运行 `npm run cover:export -w linear-map`，输出 `projects/linear-map/exports/covers/linear-map-video-cover.png`。

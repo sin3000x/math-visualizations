@@ -1,0 +1,14 @@
+/* 封面只负责构图，图形外观由现有组件提供；缩略图增强只作用于 .linear-map-cover。 */
+.cover-preview { position:fixed; inset:0; display:grid; place-items:center; background:#000; }
+.cover-frame { position:relative; width:min(100vw, calc(100vh * 16 / 9)); aspect-ratio:16 / 9; container-type:inline-size; }
+.linear-map-cover { position:absolute; width:1920px; height:1080px; background:#000; color:#f6f2e7; transform:scale(calc(100cqw / 1920px)); transform-origin:top left; }
+.linear-map-cover *, .linear-map-cover *::before, .linear-map-cover *::after { animation:none !important; transition:none !important; }
+.linear-map-cover .cover-place { position:absolute; transform:translate(-50%, -50%); display:grid; place-items:center; }
+.linear-map-cover .cover-juicer svg { display:block; }
+.linear-map-cover .cover-op { font-size:200px; }
+.linear-map-cover .cover-number { font-size:190px; line-height:1; }
+.linear-map-cover :is(.cover-op, .cover-number) .katex { -webkit-text-stroke:3px currentColor; }
+.linear-map-cover .cover-fruit { width:150px; height:150px; }
+.linear-map-cover .cover-cup { display:block; width:80px; height:116px; border:11px solid currentColor; border-top:0; border-radius:0 0 20px 20px; background:linear-gradient(transparent 40%, color-mix(in srgb, currentColor 62%, transparent) 40%); }
+.linear-map-cover .cover-brackets { position:absolute; inset:0; width:1920px; height:1080px; pointer-events:none; }
+.linear-map-cover .cover-brackets path { fill:none; stroke:#f6f2e7; stroke-width:13; }

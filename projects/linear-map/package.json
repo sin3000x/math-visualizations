@@ -15,6 +15,7 @@
     "video:1080p": "node scripts/video/render.mjs --preset 1080p",
     "video:check": "node scripts/video/render.mjs --preset 1080p --check",
     "check:layout": "node scripts/check-layout.mjs",
+    "cover:export": "node ../../scripts/export-cover.mjs linear-map",
     "test": "node --experimental-strip-types --test tests/*.test.ts"
   },
   "dependencies": {
