@@ -3,7 +3,7 @@ import { readdir, readFile, access } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
 
-// 使用 ScenePlayer 的主题：Scene 显示名称必须与组件源文件名一致（AGENTS.md §3.2、§4）。
+// 使用 ScenePlayer 的主题：Scene 显示名称必须与组件源文件名一致（AGENTS.md 第 2 节）。
 const repository = new URL('../', import.meta.url);
 const roots = [
   ...(await readdir(new URL('projects/', repository))).map(name => `projects/${name}`),
