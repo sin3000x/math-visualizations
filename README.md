@@ -30,13 +30,15 @@ math-visualizations/
 ├── scripts/create-project.mjs
 ├── templates/scene-project/  # 新项目的可运行起点
 └── projects/                # 独立教学子工程
-    ├── dual-space/          # 当前教学与视觉参考
+    ├── dual-space/          # 对偶空间系列第一集；视觉参考
     ├── double-dual/         # 第二集：双对偶
     ├── basis-coordinates/   # 第三集：基、坐标、行向量
     ├── dual-basis/          # 第四集：对偶基
-    ├── linear-map/          # 水果袋到三种果汁：线性映射与矩阵
+    ├── linear-map/          # 第五集：线性映射与矩阵
     └── kkt-conditions/      # 保留 vinext/Cloudflare 构建方式
 ```
+
+对偶空间系列（dual-space 到 linear-map）的集数、共用约定与后续计划见 [docs/series/dual-space.md](./docs/series/dual-space.md)。
 
 每个新项目内部按三层组织：
 

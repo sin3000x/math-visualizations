@@ -1,6 +1,6 @@
 # 对偶的对偶
 
-独立的第二集开场原型。水果袋、收银台及样式复制自 dual-space，在本项目内维护，通用公式、播放器和 Scene 基础设施从 `@math-visualizations/scene-kit` 的子路径导入。
+[对偶空间系列](../../docs/series/dual-space.md)第 2 集。水果图标来自 scene-kit；水果袋、收银台及样式复制自 dual-space，在本项目内维护，通用公式、播放器和 Scene 基础设施从 `@math-visualizations/scene-kit` 的子路径导入。
 
 ```sh
 npm ci --prefix ..

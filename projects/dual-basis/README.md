@@ -1,6 +1,6 @@
 # 对偶基
 
-对偶空间系列的独立项目。沿用 basis-coordinates 的水果袋和 double-dual 的收银台图形，使用共享 ScenePlayer 与 KaTeX。
+[对偶空间系列](../../docs/series/dual-space.md)第 4 集。沿用 basis-coordinates 的水果袋和 double-dual 的收银台图形，使用共享 ScenePlayer 与 KaTeX。
 
 在仓库根目录执行 `npm run dev -w dual-basis`。方向键逐步前后切换，数字键 1–9 直达当前 Scene 的已有步骤，0 直达第十步，点击“全屏录制”进入录屏模式，Escape 退出。
 
