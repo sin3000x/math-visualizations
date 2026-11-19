@@ -4,4 +4,3 @@ export type Arrow = Readonly<{ id: string; d: string; head: readonly [number, nu
 /** 直线箭头。 */
 export const straight = (id: string, [x1, y1]: readonly [number, number], [x2, y2]: readonly [number, number], rest: Partial<Arrow> = {}): Arrow =>
   ({ id, d: `M${x1} ${y1}L${x2} ${y2}`, head: [x2, y2, Math.atan2(y2 - y1, x2 - x1)], ...rest });
-
