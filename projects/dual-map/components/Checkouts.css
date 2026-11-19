@@ -1,0 +1,25 @@
+/* 两台收银台的自身坐标：水果 610×400，果汁 640×400；放进 Place 后整体等比缩放。 */
+.fruit-checkout { position: relative; width: 610px; height: 400px; }
+.fruit-checkout-machine { position: relative; width: 460px; }
+.fruit-checkout-shelf { position: absolute; left: 383px; top: 250px; width: 224px; height: 8px; border-radius: 4px; background: #b6b9ad; }
+.fruit-checkout .probe-prices [data-source] { display: inline-block; }
+.checkout-slot { position: absolute; }
+/* 袋底与托板顶边重合。 */
+.fruit-slot { left: 390px; top: 60px; width: 210px; height: 190px; }
+
+.juice-checkout { position: relative; width: 640px; height: 400px; }
+.juice-checkout-icon { display: block; width: 460px; overflow: visible; filter: drop-shadow(0 10px 8px rgba(0,0,0,.24)); }
+.jc-shadow { fill: rgba(0,0,0,.35); }
+.jc-shell, .jc-base { fill: #6b4a2f; stroke: #e0a060; stroke-width: 3; }
+.jc-pole { fill: #4d3623; }
+.jc-screen { fill: #f6e7c8; }
+.jc-dot { fill: #e0a060; }
+/* 屏幕 126×82 单位，按 460/220 换算成像素。 */
+.juice-prices { position: absolute; left: 56px; top: 23px; width: 264px; height: 171px; display: grid; align-content: center; justify-content: center; gap: 6px; color: #18211e; animation: fade-in .6s both; }
+.juice-price { display: flex; align-items: center; gap: 14px; font-size: 34px; }
+.mini-cup { display: block; width: 24px; height: 32px; border: 5px solid currentColor; border-top: 0; border-radius: 0 0 8px 8px; background: linear-gradient(transparent 38%, color-mix(in srgb, currentColor 70%, transparent) 38%); }
+/* 托臂与水果收银台的托板同高（y = 250），从立杆伸到右端；托盘宽 266、底边距托盘顶 141，读数落在托臂下方的黑底上。 */
+.juice-checkout-shelf { position: absolute; left: 205px; top: 250px; width: 435px; height: 8px; border-radius: 4px; background: #e0a060; }
+.juice-slot { left: 370px; top: 109px; width: 266px; height: 200px; }
+/* 放上收银台的袋子或托盘：容器与内容同宽，放袋动画的起始缩放按实际宽度计算。 */
+.slot-object { position: absolute; left: 0; top: 0; width: max-content; }

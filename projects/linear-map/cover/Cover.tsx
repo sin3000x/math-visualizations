@@ -1,7 +1,7 @@
 import { FruitIcon } from "@math-visualizations/scene-kit/FruitIcon";
 import { JuicerIcon } from "@math-visualizations/scene-kit/JuicerIcon";
 import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
-import { JUICE_COLORS } from "../components/JuiceTray";
+import { JUICE_COLORS } from "@math-visualizations/scene-kit/JuiceTray";
 import { MATRIX } from "../lib/math/map";
 import "./cover.css";
 

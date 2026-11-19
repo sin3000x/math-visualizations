@@ -1,6 +1,6 @@
 import { FruitIcon } from "@math-visualizations/scene-kit/FruitIcon";
 import { Bracket, BracketLayer } from "../components/Brackets";
-import { JUICE_COLORS, JuiceTray } from "../components/JuiceTray";
+import { JUICE_COLORS, JuiceTray } from "@math-visualizations/scene-kit/JuiceTray";
 import { Arrows, Bag, FLOW, Juicer, Op, Place, type Arrow } from "../components/Stage";
 import { juiceOf, type Bag as Quantities } from "../lib/math/map";
 import { vars } from "../lib/style";

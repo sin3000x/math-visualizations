@@ -2,7 +2,7 @@ import { CheckoutIcon } from "@math-visualizations/scene-kit/CheckoutIcon";
 import { FruitIcon } from "@math-visualizations/scene-kit/FruitIcon";
 import { UnitPrices } from "@math-visualizations/scene-kit/UnitPrices";
 import { Bracket, BracketLayer } from "../components/Brackets";
-import { JUICE_COLORS, JuiceTray } from "../components/JuiceTray";
+import { JUICE_COLORS, JuiceTray } from "@math-visualizations/scene-kit/JuiceTray";
 import { Bag, Juicer, Op, Place } from "../components/Stage";
 import { columnOf, juiceOf, MATRIX, type Bag as Quantities } from "../lib/math/map";
 import { vars } from "../lib/style";

@@ -1,0 +1,8 @@
+/* 框：紫色虚线表示“这一整套是对偶空间 V* 里的一台收银台”；draw 时先出现在复合体上，再移到水果收银台上。 */
+.composite-frame { position: absolute; box-sizing: border-box; border: 5px dashed var(--purple); border-radius: 28px; pointer-events: none;
+  left: var(--x1); top: var(--y1); width: var(--w1); height: var(--h1); }
+.composite-frame.draw { animation: fade-in .6s ease both, frame-glide 1s ease-in-out 1.8s both; }
+@keyframes frame-glide {
+  from { left: var(--x0); top: var(--y0); width: var(--w0); height: var(--h0); }
+  to { left: var(--x1); top: var(--y1); width: var(--w1); height: var(--h1); }
+}

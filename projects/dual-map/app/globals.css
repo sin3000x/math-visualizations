@@ -1,0 +1,3 @@
+/* 一般水果袋用中性浅灰：苹果红、香蕉黄留给基袋，青、蓝、紫留给三种果汁（沿用第 5 集）。 */
+.scene-design { --vector-color: #cfcbc2; }
+.lesson { position: relative; width: 1440px; height: 810px; }

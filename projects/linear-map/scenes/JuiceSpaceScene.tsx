@@ -1,4 +1,4 @@
-import { JuiceTray } from "../components/JuiceTray";
+import { JuiceTray } from "@math-visualizations/scene-kit/JuiceTray";
 import { Op, Place, Space } from "../components/Stage";
 import { addJuice, scaleJuice, type Juice } from "../lib/math/map";
 import { SPACE_TRAYS, SPACE_TRAY_SCALE, W_OVAL } from "./layout";

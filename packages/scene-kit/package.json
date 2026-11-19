@@ -18,7 +18,8 @@
     "./ScenePlayer.css": "./ScenePlayer.css",
     "./FruitBag": "./FruitBag.tsx",
     "./FruitBag.css": "./FruitBag.css",
-    "./mount": "./mount.tsx"
+    "./mount": "./mount.tsx",
+    "./JuiceTray": "./JuiceTray.tsx"
   },
   "scripts": {
     "lint": "eslint .",

@@ -1,8 +1,12 @@
 import type { CSSProperties, ReactNode } from "react";
-import { MathFormula } from "@math-visualizations/scene-kit/MathFormula";
-import { addJuice, type Juice } from "../lib/math/map";
-import { vars } from "../lib/style";
+import { MathFormula } from "./MathFormula.tsx";
 import "./JuiceTray.css";
+
+/** 一托盘三杯果汁的读数，从左到右为 A、B、C。 */
+export type Juice = readonly [number, number, number];
+const addJuice = (x: Juice, y: Juice): Juice => [x[0] + y[0], x[1] + y[1], x[2] + y[2]];
+/** 带 CSS 自定义属性的内联样式。 */
+const vars = (style: Record<string, string | number | undefined>) => style as CSSProperties;
 
 /** 三种果汁从左到右固定为 A、B、C，颜色为青、蓝、紫。 */
 export const JUICE_COLORS = ["#62d2c3", "#73a7ef", "#ba91ef"] as const;

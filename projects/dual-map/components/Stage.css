@@ -1,0 +1,35 @@
+.place { position: absolute; translate: -50% -50%; }
+.place-inner { width: max-content; }
+.operator { color: #d9d6cc; line-height: 1; }
+.price { color: #f4efe1; font-size: 50px; line-height: 1.2; }
+.price-value { display: inline-block; }
+.price-breakdown { display: inline-block; margin-right: 10px; }
+
+.flow-arrows { position: absolute; inset: 0; width: 1440px; height: 810px; overflow: visible; pointer-events: none; }
+.arrow { color: #f6f2e7; }
+.arrow-shaft, .arrow-head { fill: none; stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+/* 间隔长于箭杆，且开始绘制前完全隐藏：零长度虚线段配圆头会在两端画出小点。 */
+.arrow-shaft { stroke-dasharray: 1 2; animation: draw .5s ease-in-out var(--delay) both, show 1ms linear var(--delay) both; }
+.arrow-head { animation: fade-in .1s linear calc(var(--delay) + .45s) both; }
+/* 虚线箭头（不存在的操作）：整条淡入。 */
+.arrow.dashed .arrow-shaft { stroke-dasharray: .025 .02; animation: fade-in .6s ease var(--delay) both; }
+.arrow.still .arrow-shaft, .arrow.still .arrow-head { animation: none; }
+
+.juicer-run { animation: juicer-run .35s ease-in-out var(--delay) both; }
+.emerge { animation: emerge .5s ease-out var(--delay, 0s) both; }
+.fade-in { animation: fade-in .5s ease var(--delay, 0s) both; }
+.fade-out { animation: fade-out .4s ease var(--delay, 0s) both; }
+.arrow.fade-out { animation: fade-out .4s ease both; }
+.gone { opacity: 0; }
+/* 跨步骤保留的对象：位置与大小连续过渡。 */
+.glide { transition: left 1s ease-in-out, top 1s ease-in-out; }
+.glide > .place-inner { transition: scale 1s ease-in-out; }
+
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes show { from { opacity: 0; } to { opacity: 1; } }
+@keyframes juicer-run { 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
+@keyframes emerge { from { opacity: 0; transform: translateY(-24px) scale(.85); } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+/* 对偶一侧（V*、W*、T*）用紫色。 */
+.dual-name { color: var(--purple); }

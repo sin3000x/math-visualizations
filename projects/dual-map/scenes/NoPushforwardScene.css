@@ -1,0 +1,5 @@
+.no-way { color: var(--coral); }
+.no-way:not(.still) { animation: fade-in .4s ease .5s both; }
+.no-way-cross { position: absolute; inset: 0; width: 1440px; height: 810px; overflow: visible; pointer-events: none; }
+.no-way-cross path { fill: none; stroke: var(--coral); stroke-width: 9; stroke-linecap: round; stroke-dasharray: 1 2; }
+.no-way-cross.draw path { animation: draw .6s ease-in-out both; }
